@@ -58,9 +58,9 @@ for dm in dm_list:
 			cursor.execute("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text) VALUES ({}, 0, {}, '{}')".format(dm.id, dm.sender_id, dm.text))
 			db.commit()
 			#api.send_direct_message(user_id = dm.sender_id, text = "Tip bot is under maintenance.  Your message will be processed once we turn back on the system.  Do not resend commands you do not want processed.  Please send feedback to nanotipbot@gmail.com!")
-		except MySQLdb.IntegrityError:
-			print("Caught the error")
-			raise
+		except MySQLdb.IntegrityError as e:
+			print(e)
+			raise	
 		except:
 			raise	
 	"""
@@ -162,7 +162,7 @@ for row in unprocessed_dms:
 			try:
 				receiver_id_info = api.get_user(dm_array[1])
 			except:
-				api_send_direct_message(user_id = dm.sender_id, text = "The username you provided is not valid.  Please double check and resend.")
+				api.send_direct_message(user_id = dm.sender_id, text = "The username you provided is not valid.  Please double check and resend.")
 				print("Sender sent invalid username")
 				receiver_id_info = 0
 			if float(receiver_id_info.id) == float(BOT_ID):
