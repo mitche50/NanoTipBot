@@ -40,9 +40,9 @@ cursor.execute("SELECT user_id FROM users\
 unregistered_users = cursor.fetchall()
 
 for row in unregistered_users:
-    api.send_direct_message(user=row.user_id, text="Just a reminder that someone sent you a tip and you haven't"
-                            "registered your account yet!  Reply to this message with !register to do so, then"
-                            "!help to see all my commands!")
+    api.send_direct_message(user=row[0], text="Just a reminder that someone sent you a tip and you haven't"
+                            " registered your account yet!  Reply to this message with !register to do so, then"
+                            " !help to see all my commands!")
 
 # Find users who have not registered in 29 days and give them a final reminder
 unregistered_users = []
@@ -52,8 +52,8 @@ cursor.execute("SELECT user_id FROM users\
 unregistered_users = cursor.fetchall()
 
 for row in unregistered_users:
-    api.send_direct_message(user=row.user_id, text="This is your final notice!  If you do not register your account"
-                                                   "by tomorrow, your tip will be sent back to the user that tipped"
-                                                   "you.")
+    api.send_direct_message(user=row[0], text="This is your final notice!  If you do not register your account"
+                                                   " by tomorrow, your tip will be sent back to the user that tipped"
+                                                   " you.")
 
 # TODO:Send back the tip
