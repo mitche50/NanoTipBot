@@ -180,6 +180,8 @@ for row in unprocessed_dms:
                                          "is {}".format(sender_account))
             print("User has a registered account.  Message sent.")
     elif dm_array[0].lower() == '!tip':
+        # Initialize the tip_error flag
+        tip_error = 0
         # check if there are 3 arguments
         if len(dm_array) == 3:
             # check if dm_array[1] is a valid username
@@ -190,11 +192,13 @@ for row in unprocessed_dms:
                                         text="The username you provided is not valid.  Please double check and resend.")
                 print("Sender sent invalid username")
                 receiver_id_info = 0
+                tip_error = 1
             if float(receiver_id_info.id) == float(BOT_ID):
                 print("Sender tried to tip the bot")
                 api.send_direct_message(user_id=dm.sender_id,
                                         text="You can't tip the bot, silly!  If you'd like to donate, \
                                               try using the !donate command.")
+                tip_error = 1
             if receiver_id_info != 0 and receiver_id_info.id != BOT_ID:
                 receiver_id = receiver_id_info.id
                 # check if the sender has an account
@@ -207,6 +211,7 @@ for row in unprocessed_dms:
                     api.send_direct_message(user_id=dm.sender_id,
                                             text="There is no account linked to your username.  Please respond with "
                                                   "!register to create an account!")
+                    tip_error = 1
                 else:
                     sender_account = data[0]
                     # check if there are pending blocks for the user's account
@@ -223,22 +228,25 @@ for row in unprocessed_dms:
                     # Check to see if the tip amount is formatted correctly.
                     wrong_tip = 0
                     try:
-                        print("The user is sending {} NANO".format(float(dm_array[2])))
+                        print("The user is sending {} NANO".format(dm_array[2]))
                     except:
                         wrong_tip = 1
                     if wrong_tip == 1:
                         api.send_direct_message(user_id=dm.sender_id, text="Only number amounts are accepted.  "
                                                         "Please resend as !tip @username 1234")
+                        tip_error = 1
                     elif float(balance) < float(dm_array[2]):
                         print("Sender tried to send more than their account")
                         api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried"
                                             " to send {}.  Please add more Nano to your account, or lower your "
                                             "tip amount.".format(balance, float(dm_array[2])))
+                        tip_error = 1
                     elif float(dm_array[2]) < 0.00001:
                         print("Sender tried to send less than 0.00001")
                         api.send_direct_message(user_id=dm.sender_id,
                                                 text="The minimum tip amount is 0.00001.  Please update your tip "
                                                       "amount and resend.")
+                        tip_error = 1
                     else:
                         # retrieve the receiver's account from the db
                         cursor.execute("SELECT account FROM users\
@@ -269,14 +277,19 @@ for row in unprocessed_dms:
                         # Inform the receiver that they got a tip!
                         dm_send_amount = float(dm_array[2])
                         sender_id_info = api.get_user(dm.sender_id)
-                        api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @nanotipbot a DM "
+                        api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @NanoTipBot a DM "
                                                   "with !register to claim your funds or !help for more commands.  "
-                                                  "If you want to learn more about Nano, go to https://nano.org/".format(
-                                                                            receiver_id_info.screen_name,
-                                                                            sender_id_info.screen_name, dm_array[2]))
+                                                  "If you want to learn more about Nano, go to https://nano.org/"
+                                                  .format(receiver_id_info.screen_name,sender_id_info.screen_name,
+                                                          dm_array[2]))
+                        # Update the dm_list with the receiver's ID and amount sent
+                        cursor.execute("UPDATE dm_list SET receiver_id = {}, amount = {} WHERE dm_id={}"
+                                       .format(receiver_id, float(dm_array[2]), dm.id))
+                        db.commit()
         else:
             api.send_direct_message(user_id=dm.sender_id,
                                     text="Incorrect syntax.  Please use the format !tip @username 123")
+            tip_error = 1
     elif dm_array[0].lower() == '!withdraw':
         # check if there is a 2nd argument
         if len(dm_array) == 2:
@@ -395,9 +408,10 @@ for row in unprocessed_dms:
         api.send_direct_message(user_id=dm.sender_id,
                                 text="That command or syntax is not recognized.  Please send !help for a list of "
                                       "commands and what they do.")
-        cursor.execute("UPDATE dm_list\
+    cursor = db.cursor()
+    cursor.execute("UPDATE dm_list\
                 SET processed=2 WHERE dm_id={}".format(dm.id))
-        db.commit()
+    db.commit()
     index += 1
 
 old_file.close()
