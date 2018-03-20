@@ -228,7 +228,7 @@ for row in unprocessed_dms:
                     # Check to see if the tip amount is formatted correctly.
                     wrong_tip = 0
                     try:
-                        print("The user is sending {} NANO".format(float(dm_array[2])))
+                        print("The user is sending {} NANO".format(dm_array[2]))
                     except:
                         wrong_tip = 1
                     if wrong_tip == 1:
@@ -284,7 +284,8 @@ for row in unprocessed_dms:
                                                           dm_array[2]))
                         # Update the dm_list with the receiver's ID and amount sent
                         cursor.execute("UPDATE dm_list SET receiver_id = {}, amount = {} WHERE dm_id={}"
-                                       .format(receiver_account, float(dm_array[2]), dm.id))
+                                       .format(receiver_id, float(dm_array[2]), dm.id))
+                        db.commit()
         else:
             api.send_direct_message(user_id=dm.sender_id,
                                     text="Incorrect syntax.  Please use the format !tip @username 123")
@@ -407,9 +408,10 @@ for row in unprocessed_dms:
         api.send_direct_message(user_id=dm.sender_id,
                                 text="That command or syntax is not recognized.  Please send !help for a list of "
                                       "commands and what they do.")
-        cursor.execute("UPDATE dm_list\
+    cursor = db.cursor()
+    cursor.execute("UPDATE dm_list\
                 SET processed=2 WHERE dm_id={}".format(dm.id))
-        db.commit()
+    db.commit()
     index += 1
 
 old_file.close()
