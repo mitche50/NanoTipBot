@@ -150,7 +150,7 @@ for row in unprocessed_dms:
     elif dm_array[0].lower() == '!register':
         # Find the user's account information from the db
         cursor = db.cursor()
-        cursor.execute("SELECT account FROM users\
+        cursor.execute("SELECT account, processed FROM users\
                            where user_id = {}".format(dm.sender_id))
         data = cursor.fetchone()
         if data is None:
@@ -163,14 +163,22 @@ for row in unprocessed_dms:
                                     text="You have successfully registered for an account.  Your account is {}.".format(
                                         sender_account))
             print("Register successful!")
-        else:
-            # The user is already registered, so send a message to the user with their account
+        elif data[1] == '0':
+            # The user has an account, but needed to register, so send a message to the user with their account
             sender_account = data[0]
             cursor.execute("UPDATE users\
                         SET register = 1 WHERE user_id = {} AND register = 0".format(dm.sender_id))
             api.send_direct_message(user_id=dm.sender_id,
-                                    text="You're already registered.  Your account number is {}".format(sender_account))
-            print("User already registered.  Message sent")
+                                    text="You have successfully registered for an account.  Your account "
+                                         "number is {}".format(sender_account))
+            print("User has an account, but needed to register.  Message sent")
+        else:
+            # The user had an account and already registered, so let them know their account.
+            sender_account = data[0]
+            api.send_direct_message(user_id=dm.sender_id,
+                                    text="You already have registered your account.  Your account number "
+                                         "is {}".format(sender_account))
+            print("User has a registered account.  Message sent.")
     elif dm_array[0].lower() == '!tip':
         # check if there are 3 arguments
         if len(dm_array) == 3:
