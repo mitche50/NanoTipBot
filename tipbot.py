@@ -104,20 +104,20 @@ for row in unprocessed_dms:
     dm_array = dm.text.split(" ")
     print('Sender ID: {} - DM ID {}: {}'.format(dm.sender_id, dm.id, dm.text))
     if dm_array[0].lower() == '!help':
-        api.send_direct_message(user_id=dm.sender_id, text="Thank you for using the Nano Tip Bot!  Below is a list of \
-        commands, and a description of what they do:\n\n" + BULLET.encode("utf-8") + "!help: That's this command!  \
-        Shows a list of all available commands and what they do.\n" + BULLET.encode( "utf-8") + " !register: Registers \
-        your twitter ID for an account that's tied to it.  This is used to store your tips. Make sure to withdraw to a \
-        private wallet, as the tip bot is not meant to be a long term storage device for Nano.\n" +
+        api.send_direct_message(user_id=dm.sender_id, text="Thank you for using the Nano Tip Bot!  Below is a list of "
+        "commands, and a description of what they do:\n\n" + BULLET.encode("utf-8") + "!help: That's this command! "
+        "Shows a list of all available commands and what they do.\n" + BULLET.encode( "utf-8") + " !register: Registers"
+        " your twitter ID for an account that's tied to it.  This is used to store your tips. Make sure to withdraw to"
+        " a private wallet, as the tip bot is not meant to be a long term storage device for Nano.\n" +
         BULLET.encode("utf-8") + " !balance: This returns the balance of the account linked with your Twitter ID.\n" +
-        BULLET.encode("utf-8") + " !tip: Proper usage is !tip @username 1234.  This will send the \
-        requested amount of Nano to the account linked to that user's twitter ID.\n" + BULLET.encode("utf-8") +
-        " !account: Once your registered, send !account to see your account.  You can use this to deposit more Nano to \
-        tip from your personal wallet.\n" + BULLET.encode("utf-8") + " !withdraw: Proper usage is !withdraw xrb_12345.  \
-        This will send the full balance of your tip account to the provided Nano account.\n" + BULLET.encode("utf-8") +
-        " !donate: Proper usage is !donate 1234.  This will send the requested donation to the Nano Tip \
-        Bot donation account to help fund the developer's efforts.\n\nNOTE: The tipbot processes actions at the top \
-        of every minute.  Please be patient!")
+        BULLET.encode("utf-8") + " !tip: Proper usage is !tip @username 1234.  This will send the "
+        "requested amount of Nano to the account linked to that user's twitter ID.\n" + BULLET.encode("utf-8") +
+        " !account: Once your registered, send !account to see your account.  You can use this to deposit more Nano to "
+        "tip from your personal wallet.\n" + BULLET.encode("utf-8") + " !withdraw: Proper usage is !withdraw xrb_12345."
+        "  This will send the full balance of your tip account to the provided Nano account.\n" +
+        BULLET.encode("utf-8") + " !donate: Proper usage is !donate 1234.  This will send the requested donation to the"
+        " Nano Tip Bot donation account to help fund the developer's efforts.\n\nNOTE: The tipbot processes actions at"
+        " the top of every minute.  Please be patient!")
         print("Help message sent!")
     elif dm_array[0].lower() == '!balance':
         # Find the user's account information from the db
@@ -128,8 +128,8 @@ for row in unprocessed_dms:
         if data is None:
             print("User tried to check balance without an account")
             api.send_direct_message(user_id=dm.sender_id,
-                                    text="There is no account linked to your username.  Please respond with \
-                                    !register to create an account!")
+                                    text="There is no account linked to your username.  Please respond with "
+                                    "!register to create an account!")
         else:
             sender_account = data[0]
             # check if there are pending blocks for the user's account
@@ -197,8 +197,8 @@ for row in unprocessed_dms:
                 if data is None:
                     print("Sender tried to tip without an account")
                     api.send_direct_message(user_id=dm.sender_id,
-                                            text="There is no account linked to your username.  Please respond with \
-                                                  !register to create an account!")
+                                            text="There is no account linked to your username.  Please respond with "
+                                                  "!register to create an account!")
                 else:
                     sender_account = data[0]
                     # check if there are pending blocks for the user's account
@@ -219,18 +219,18 @@ for row in unprocessed_dms:
                     except:
                         wrong_tip = 1
                     if wrong_tip == 1:
-                        api.send_direct_message(user_id=dm.sender_id, text="Only number amounts are accepted.  Please resend \
-                                        as !tip @username 1234")
+                        api.send_direct_message(user_id=dm.sender_id, text="Only number amounts are accepted.  "
+                                                        "Please resend as !tip @username 1234")
                     elif float(balance) < float(dm_array[2]):
                         print("Sender tried to send more than their account")
-                        api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried to send {}. \
-                                    Please add more Nano to your account, or lower your tip amount.".format(balance,
-                                                                                                float(dm_array[2])))
+                        api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried"
+                                            " to send {}.  Please add more Nano to your account, or lower your "
+                                            "tip amount.".format(balance, float(dm_array[2])))
                     elif float(dm_array[2]) < 0.00001:
                         print("Sender tried to send less than 0.00001")
                         api.send_direct_message(user_id=dm.sender_id,
-                                                text="The minimum tip amount is 0.00001.  Please update your tip \
-                                                      amount and resend.")
+                                                text="The minimum tip amount is 0.00001.  Please update your tip "
+                                                      "amount and resend.")
                     else:
                         # retrieve the receiver's account from the db
                         cursor.execute("SELECT account FROM users\
@@ -253,16 +253,17 @@ for row in unprocessed_dms:
                                              destination="{}".format(receiver_account),
                                              amount="{:f}".format(send_amount))
                         # Inform the user that the tip was sent with the hash
-                        api.send_direct_message(user_id=dm.sender_id, text="You've successfully sent a {} NANO tip to @{}! \
-                            You can check block hash {} on https://www.nanode.co/".format(dm_array[2],
+                        api.send_direct_message(user_id=dm.sender_id, text="You've successfully sent a {} NANO tip to "
+                                                        "@{}! You can check block hash {} "
+                                                        "on https://www.nanode.co/".format(dm_array[2],
                                                                                           receiver_id_info.screen_name,
                                                                                           send_hash))
                         # Inform the receiver that they got a tip!
                         dm_send_amount = float(dm_array[2])
                         sender_id_info = api.get_user(dm.sender_id)
-                        api.update_status(status='Hey @{}, @{} just sent you a {} $NANO tip!  Send @nanotipbot a DM \
-                                                  with !register to claim your funds or !help for more commands.  \
-                                                  If you want to learn more about Nano, go to https://nano.org/'.format(
+                        api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @nanotipbot a DM "
+                                                  "with !register to claim your funds or !help for more commands.  "
+                                                  "If you want to learn more about Nano, go to https://nano.org/".format(
                                                                             receiver_id_info.screen_name,
                                                                             sender_id_info.screen_name, dm_array[2]))
         else:
@@ -296,22 +297,23 @@ for row in unprocessed_dms:
                 if rpc.validate_account_number(receiver_account) == 0:
                     print("The xrb account number is invalid: {}".format(receiver_account))
                     api.send_direct_message(user_id=dm.sender_id,
-                                            text="The account number you provided is invalid.  Please double check \
-                                                  and resend your request.")
+                                            text="The account number you provided is invalid.  Please double check "
+                                                  "and resend your request.")
                 elif balance_return['balance'] == 0:
                     print("The user tried to withdraw with 0 balance")
-                    api.send_direct_message(user_id=dm.sender_id, text="You have a 0 balance in your account.  Please deposit to your address \
-                                                                             {} to send more tips!".format(
-                        sender_account))
+                    api.send_direct_message(user_id=dm.sender_id, text="You have a 0 balance in your account.  Please "
+                                                    "deposit to your address {} to send more tips!".format(
+                                                                                                    sender_account))
                 else:
                     # send the total balance to the provided account
                     send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                          destination="{}".format(receiver_account), amount=balance_return['balance'])
                     # respond that the withdraw has been processed
                     balance = convert(balance_return['balance'], from_unit='raw', to_unit='XRB')
-                    api.send_direct_message(user_id=dm.sender_id, text="You've successfully withdrawn {} NANO to account {}.  \
-                        You can check block hash {} on https://www.nanode.co/".format(float(balance), receiver_account,
-                                                                                      send_hash))
+                    api.send_direct_message(user_id=dm.sender_id, text="You've successfully withdrawn {} NANO to "
+                    "account {}.  You can check block hash {} on https://www.nanode.co/".format(float(balance),
+                                                                                                receiver_account,
+                                                                                                send_hash))
                     print("Withdraw processed.  Hash: {}".format(send_hash))
         else:
             print("User sent a withdraw with invalid syntax.")
@@ -340,14 +342,14 @@ for row in unprocessed_dms:
             balance = convert(balance_return['balance'], from_unit='raw', to_unit='XRB')
             if float(balance) < float(dm_array[1]):
                 print("User tried to donate more than their balance.")
-                api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried to send {}. \
-                                 Please add more Nano to your account, or lower your donation \
-                                 amount.".format(balance, float(dm_array[1])))
+                api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried to send "
+                                 "{}. Please add more Nano to your account, or lower your donation "
+                                 "amount.".format(balance, float(dm_array[1])))
             elif float(dm_array[1]) < 0.000001:
                 print("User tried to donate less than 0.000001")
                 api.send_direct_message(user_id=dm.sender_id,
-                                        text="The minimum donation amount is 0.000001.  Please update your donation \
-                                              amount and resend.")
+                                        text="The minimum donation amount is 0.000001.  Please update your donation "
+                                              "amount and resend.")
             else:
                 # convert the send amount to raw
                 send_amount = convert(dm_array[1], from_unit='XRB', to_unit='raw')
@@ -355,10 +357,10 @@ for row in unprocessed_dms:
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                      destination="{}".format(receiver_account), amount="{:f}".format(send_amount))
                 # Inform the user that the tip was sent with the hash
-                api.send_direct_message(user_id=dm.sender_id, text="Thank you for your generosity!\
-                                                                    You can check your donation status \
-                                                                    under block hash {} on \
-                                                                    https://www.nanode.co/".format(send_hash))
+                api.send_direct_message(user_id=dm.sender_id, text="Thank you for your generosity! "
+                                                                    "You can check your donation status "
+                                                                    "under block hash {} on "
+                                                                    "https://www.nanode.co/".format(send_hash))
                 print("Donation processed.  Hash: {}".format(send_hash))
         else:
             print("User sent a donation with invalid syntax")
@@ -383,8 +385,8 @@ for row in unprocessed_dms:
     else:
         print("User sent message that does not match any key commands")
         api.send_direct_message(user_id=dm.sender_id,
-                                text="That command or syntax is not recognized.  Please send !help for a list of \
-                                      commands and what they do.")
+                                text="That command or syntax is not recognized.  Please send !help for a list of "
+                                      "commands and what they do.")
         cursor.execute("UPDATE dm_list\
                 SET processed=2 WHERE dm_id={}".format(dm.id))
         db.commit()
