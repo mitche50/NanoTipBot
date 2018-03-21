@@ -139,7 +139,7 @@ for row in unprocessed_dms:
     elif dm_array[0].lower() == '!register':
         # Find the user's account information from the db
         cursor = db.cursor()
-        cursor.execute("SELECT account, processed FROM users\
+        cursor.execute("SELECT account, register FROM users\
                            where user_id = {}".format(dm.sender_id))
         data = cursor.fetchone()
         if data is None:
@@ -152,7 +152,7 @@ for row in unprocessed_dms:
                                     text="You have successfully registered for an account.  Your account is {}.".format(
                                         sender_account))
             print("Register successful!")
-        elif data[1] == '0':
+        elif data[1] == 0:
             # The user has an account, but needed to register, so send a message to the user with their account
             sender_account = data[0]
             cursor.execute("UPDATE users\
