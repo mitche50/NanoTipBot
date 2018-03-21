@@ -9,8 +9,7 @@ from nano import convert
 
 # TODO LIST ===========================================
 # TODO: Make user register before gaining access to any other command.
-# TODO: Make a tipcheck.py script that checks accounts that have register = 0 and reminds them to register
-# TODO: Add to tipcheck.py to return a tip if the sent account does not register in 30 days
+# TODO: Create functions for identified calls to handle errors better.
 # CONFIG CONSTANTS =====================================
 config = SafeConfigParser()
 config.read('/root/nanotipbot/config.ini')
@@ -62,21 +61,11 @@ for dm in dm_list:
                                                  dm.sender_id,
                                                  dm.text))
             db.commit()
-            # api.send_direct_message(user_id = dm.sender_id, text = "Tip bot is under maintenance.  Your message
-            # will be processed once we turn back on the system.  Do not resend commands you do not want processed.
-            # Please send feedback to nanotipbot@gmail.com!")
         except MySQLdb.IntegrityError:
             print("Caught the error")
             raise
         except:
             raise
-    """
-    elif dm.sender_id == 158041278:
-        cursor = db.cursor()
-        print("Sender is admin.  DM ID {} entered into table".format(dm.id))
-        cursor.execute("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text) VALUES ({}, 0, {}, '{}')".format(
-                                                                                        dm.id,dm.sender_id, dm.text))
-    """
     index += 1
 # if there were new DMs found, update the most recent DM
 if index > 0:
