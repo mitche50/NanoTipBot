@@ -26,6 +26,7 @@ WALLET = config.get('main', 'wallet')
 BOT_ID = config.get('main', 'bot_id')
 BOT_ACCOUNT = config.get('main', 'bot_account')
 BULLET = u"\u2022"
+tip_error = 0
 
 # Connect to Twitter
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -116,6 +117,7 @@ for row in unprocessed_dms:
         data = cursor.fetchone()
         if data is None:
             print("User tried to check balance without an account")
+            tip_error = 1
             api.send_direct_message(user_id=dm.sender_id,
                                     text="There is no account linked to your username.  Please respond with "
                                     "!register to create an account!")
@@ -291,6 +293,7 @@ for row in unprocessed_dms:
                 api.send_direct_message(user_id=dm.sender_id,
                                         text="You do not have an account.  Respond with !register to set one up.")
                 print("User tried to withdraw with no account")
+                tip_error = 1
             else:
                 sender_account = data[0]
                 # check if there are pending blocks for the user's account
@@ -306,11 +309,13 @@ for row in unprocessed_dms:
                 # if the balance is 0, send a message that they have nothing to withdraw
                 if rpc.validate_account_number(receiver_account) == 0:
                     print("The xrb account number is invalid: {}".format(receiver_account))
+                    tip_error = 1
                     api.send_direct_message(user_id=dm.sender_id,
                                             text="The account number you provided is invalid.  Please double check "
                                                   "and resend your request.")
                 elif balance_return['balance'] == 0:
                     print("The user tried to withdraw with 0 balance")
+                    tip_error = 1
                     api.send_direct_message(user_id=dm.sender_id, text="You have a 0 balance in your account.  Please "
                                                     "deposit to your address {} to send more tips!".format(
                                                                                                     sender_account))
@@ -327,9 +332,11 @@ for row in unprocessed_dms:
                     print("Withdraw processed.  Hash: {}".format(send_hash))
         else:
             print("User sent a withdraw with invalid syntax.")
+            tip_error = 1
             api.send_direct_message(user_id=dm.sender_id,
                                     text="Incorrect syntax.  Please use the format !withdraw (account)")
     elif dm_array[0].lower() == '!donate':
+        tip_error = 0
         # check if there are 2 arguments
         if len(dm_array) == 2:
             # if there are, retrieve the sender's account and wallet
@@ -352,11 +359,13 @@ for row in unprocessed_dms:
             balance = convert(balance_return['balance'], from_unit='raw', to_unit='XRB')
             if float(balance) < float(dm_array[1]):
                 print("User tried to donate more than their balance.")
+                tip_error = 1
                 api.send_direct_message(user_id=dm.sender_id, text="Your balance is only {} Nano and you tried to send "
                                  "{}. Please add more Nano to your account, or lower your donation "
                                  "amount.".format(balance, float(dm_array[1])))
             elif float(dm_array[1]) < 0.000001:
                 print("User tried to donate less than 0.000001")
+                tip_error = 1
                 api.send_direct_message(user_id=dm.sender_id,
                                         text="The minimum donation amount is 0.000001.  Please update your donation "
                                               "amount and resend.")
@@ -374,9 +383,11 @@ for row in unprocessed_dms:
                 print("Donation processed.  Hash: {}".format(send_hash))
         else:
             print("User sent a donation with invalid syntax")
+            tip_error = 1
             api.send_direct_message(user_id=dm.sender_id, text="Incorrect synatx.  Please use the format !donate 1234")
 
     elif dm_array[0].lower() == '!account':
+        tip_error = 0
         cursor = db.cursor()
         cursor.execute("SELECT account FROM users\
                                 where user_id = {}".format(dm.sender_id))
@@ -384,6 +395,7 @@ for row in unprocessed_dms:
         if data is None:
             api.send_direct_message(user_id=dm.sender_id,
                                     text="You do not have an account.  Please respond with !register to set one up.")
+            tip_error = 1
             print("User tried to find their account, but is not registered")
         else:
             sender_account = data[0]
@@ -398,8 +410,12 @@ for row in unprocessed_dms:
                                 text="That command or syntax is not recognized.  Please send !help for a list of "
                                       "commands and what they do.")
     cursor = db.cursor()
-    cursor.execute("UPDATE dm_list\
-                SET processed=2 WHERE dm_id={}".format(dm.id))
+    if tip_error == 1:
+        cursor.execute("UPDATE dm_list\
+                       SET processed=3 WHERE dm_id={}".format(dm.id))
+    else:
+        cursor.execute("UPDATE dm_list\
+                       SET processed=2 WHERE dm_id={}".format(dm.id))
     db.commit()
     index += 1
 
