@@ -9,7 +9,6 @@ from nano import convert
 
 # TODO LIST ===========================================
 # TODO: Make user register before gaining access to any other command.
-# TODO: Add !privatetip to allow users to tip without sending a public tweet
 # CONFIG CONSTANTS =====================================
 config = SafeConfigParser()
 config.read('/root/nanotipbot/config.ini')
@@ -60,41 +59,48 @@ def main():
         flag_in_process = ("UPDATE dm_list SET processed=1 WHERE dm_id={}".format(dm.id))
         setDBInfo(flag_in_process)
         dm_array = dm.text.split(" ")
+        dm_action = dm_array[0].lower()
         print('Sender ID: {} - DM ID {}: {}'.format(dm.sender_id, dm.id, dm.text))
 
         # Check the command sent by the user
-        if dm_array[0].lower() == '!help':
+        if dm_action == '!help':
             stored_response, tip_error = helpProcess(dm, tip_error)
 
-        elif dm_array[0].lower() == '!balance':
+        elif dm_action == '!balance':
             stored_response, tip_error = balanceProcess(dm, tip_error)
 
-        elif dm_array[0].lower() == '!register':
+        elif dm_action == '!register':
             tip_error = registerProcess(dm, tip_error)
 
-        elif dm_array[0].lower() == '!tip':
-            tip_error = tipProcess(dm, dm_array, tip_error)
+        elif dm_action == '!tip':
+            private_tip = 0
+            tip_error = tipProcess(dm, dm_array, tip_error, private_tip)
 
-        elif dm_array[0].lower() == '!withdraw':
+        elif dm_action == '!withdraw':
             tip_error = withdrawProcess(dm, dm_array, tip_error)
 
-        elif dm_array[0].lower() == '!donate':
+        elif dm_action == '!donate':
             tip_error = donateProcess(dm, dm_array, tip_error)
 
-        elif dm_array[0].lower() == '!account':
+        elif dm_action == '!account':
             tip_error = accountProcess(dm, tip_error)
+
+        elif dm_action == '!privatetip':
+            private_tip = 1
+            tip_error = tipProcess(dm, dm_array, tip_error, private_tip)
 
         else:
             tip_error = wrongMessageProcess(dm)
 
         # Check if there are any errors and log them
-        errorCheck(dm, stored_response, tip_error)
+        errorCheck(dm, tip_error)
 
         old_file.close()
         db.commit()
 
 
-def errorCheck(dm, stored_response, tip_error):
+def errorCheck(dm, tip_error):
+    global stored_response
 
     if tip_error == 1:
         error_set = ("UPDATE dm_list SET processed=3 WHERE dm_id={}".format(dm.id))
@@ -261,7 +267,7 @@ def withdrawProcess(dm, dm_array, tip_error):
     return tip_error
 
 
-def tipProcess(dm, dm_array, tip_error):
+def tipProcess(dm, dm_array, tip_error, private_tip):
     global stored_response
     # check if there are 3 arguments
     if len(dm_array) == 3:
@@ -345,7 +351,7 @@ def tipProcess(dm, dm_array, tip_error):
                                                        "'{}',0)".format(receiver_id, receiver_account))
                             setDBInfo(create_receiver_account)
                             print("{}: Sender sent to a new receiving account.  Created  account {}".format(
-                                                                        str(datetime.now()),receiver_account))
+                                                                        str(datetime.now()), receiver_account))
                         else:
                             receiver_account = receiver_account_data[0][0]
                         # convert the send amount to raw
@@ -355,19 +361,34 @@ def tipProcess(dm, dm_array, tip_error):
                                              destination="{}".format(receiver_account),
                                              amount="{:f}".format(send_amount))
                         # Inform the user that the tip was sent with the hash
-                        sent_tip_text = ("You've successfully sent a {} NANO tip to @{}!  You can check the transaction"
-                                         "at https://www.nanode.co/block/{}".format(dm_array[2],
-                                                                                    receiver_id_info.screen_name,
-                                                                                    send_hash))
+                        if private_tip == 0:
+                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{}!  You can check the transaction"
+                                             "at https://www.nanode.co/block/{}".format(dm_array[2],
+                                                                                        receiver_id_info.screen_name,
+                                                                                        send_hash))
+                        else:
+                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{} privately!  You can check "
+                                             "the transaction at https://www.nanode.co/block/{}".format(dm_array[2],
+                                                                                        receiver_id_info.screen_name,
+                                                                                        send_hash))
                         stored_response = sent_tip_text
                         tip_error = sendDM(dm.sender_id, sent_tip_text, tip_error)
                         # Inform the receiver that they got a tip!
                         sender_id_info = api.get_user(dm.sender_id)
-                        api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @NanoTipBot a DM "
-                                                 "with !register to claim your funds or !help for more commands.  "
-                                                 "If you want to learn more about Nano, go to https://nano.org/"
-                                          .format(receiver_id_info.screen_name, sender_id_info.screen_name,
-                                                  dm_array[2]))
+                        if private_tip == 0:
+                            api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @NanoTipBot a DM "
+                                                     "with !register to claim your funds or !help for more commands.  "
+                                                     "If you want to learn more about NANO, go to https://nano.org/"
+                                              .format(receiver_id_info.screen_name, sender_id_info.screen_name,
+                                                      dm_array[2]))
+                        else:
+                            receiver_tip_text = ("@{} just sent you a {} NANO tip!  If you haven't registered an account,"
+                                                 " send a reply with !register to get started, or !help to see a list of "
+                                                 "commands!  Learn more about NANO at https://nano.org/".format(
+                                                sender_id_info.screen_name, dm_array[2]))
+                            stored_response = receiver_tip_text
+                            tip_error = sendDM(receiver_id, receiver_tip_text, tip_error)
+
                         # Update the dm_list with the receiver's ID and amount sent
                         update_receiver_info = ("UPDATE dm_list SET receiver_id = {}, amount = {} WHERE dm_id={}"
                                                 .format(receiver_id, float(dm_array[2]), dm.id))
@@ -493,8 +514,10 @@ def helpProcess(dm, tip_error):
                     "private wallet, as the tip bot is not meant to be a long term storage device for Nano.\n" + BULLET
                     + " !balance: This returns the balance of the account linked with your Twitter ID.\n" + BULLET +
                     " !tip: Proper usage is !tip @username 1234.  This will send the requested amount of Nano to the "
-                    "account linked to that user's twitter ID.\n" + BULLET + " !account: Once your registered, send "
-                    "!account to see your account.  You can use this to deposit more Nano to tip from your personal "
+                    "account linked to that user's twitter ID.\n" + BULLET + " !privatetip: This will send a tip to "
+                    "another user without posting a tweet.  If you would like your tip amount to be private, use this "
+                    "function!  Proper usage is !privatetip @username 1234\n" + BULLET + " !account: Once your "
+                    "registered, send !account to see your account.  You can use this to deposit more Nano to tip from your personal "
                     "wallet.\n" + BULLET + " !withdraw: Proper usage is !withdraw xrb_12345.  This will send "
                     "the full balance of your tip account to the provided Nano account.\n" + BULLET + " !donate: Proper "
                     "usage is !donate 1234.  This will send the requested donation to the Nano Tip Bot donation account"
