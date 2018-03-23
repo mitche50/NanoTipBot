@@ -9,6 +9,7 @@ from nano import convert
 
 # TODO LIST ===========================================
 # TODO: Make user register before gaining access to any other command.
+# TODO: update tipcheck.py to remove the account and the record for the receiver after 30 days of not registering
 # CONFIG CONSTANTS =====================================
 config = SafeConfigParser()
 config.read('/root/nanotipbot/config.ini')
@@ -157,6 +158,7 @@ def donateProcess(dm, dm_array, tip_error):
         sender_account_call = ("SELECT account FROM users where user_id = {}".format(dm.sender_id))
         donate_data = getDBInfo(sender_account_call)
         sender_account = donate_data[0][0]
+        send_amount = dm_array[1]
         # check pending blocks for the user's account
         receivePending(sender_account)
         # find the total balance of the account
@@ -167,7 +169,7 @@ def donateProcess(dm, dm_array, tip_error):
         # Check to see if the tip amount is formatted correctly.
         wrong_donate = 0
         try:
-            print("{}: The user is donating {} NANO".format(str(datetime.now()), float(dm_array[1])))
+            print("{}: The user is donating {} NANO".format(str(datetime.now()), float(send_amount)))
         except:
             wrong_donate = 1
         if wrong_donate == 1:
@@ -176,14 +178,14 @@ def donateProcess(dm, dm_array, tip_error):
             stored_response = wrong_donate_text
             tip_error = sendDM(dm.sender_id, wrong_donate_text, tip_error)
             print("{}: User sent a donation that wasn't a number.".format(str(datetime.now())))
-        elif float(balance) < float(dm_array[1]):
+        elif float(balance) < float(send_amount):
             tip_error = 1
             large_donate_text = ("Your balance is only {} NANO and you tried to send {}.  Please add more NANO"
-                                 " to your account, or lower your donation amount.".format(balance, float(dm_array[1])))
+                                 " to your account, or lower your donation amount.".format(balance, float(send_amount)))
             stored_response = large_donate_text
             tip_error = sendDM(dm.sender_id, large_donate_text, tip_error)
             print("User tried to donate more than their balance.")
-        elif float(dm_array[1]) < 0.000001:
+        elif float(send_amount) < 0.000001:
             tip_error = 1
             small_donate_text = ("The minimum donation amount is 0.000001.  Please update your donation amount "
                                  "and resend.")
@@ -192,17 +194,17 @@ def donateProcess(dm, dm_array, tip_error):
             print("User tried to donate less than 0.000001")
         else:
             # convert the send amount to raw
-            send_amount = convert(dm_array[1], from_unit='XRB', to_unit='raw')
+            send_amount_raw = convert(send_amount, from_unit='XRB', to_unit='raw')
             # Send the tip
             send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
-                                 destination="{}".format(receiver_account), amount="{:f}".format(send_amount))
+                                 destination="{}".format(receiver_account), amount="{:f}".format(send_amount_raw))
             # Inform the user that the tip was sent with the hash
             donate_text = ("Thank you for your generosity!  You've successfully donated {} NANO!  You can check the "
-                           "transaction at https://www.nanode.co/block/{}".format(float(dm_array[1]), send_hash))
+                           "transaction at https://www.nanode.co/block/{}".format(float(send_amount), send_hash))
             stored_response = donate_text
             tip_error = sendDM(dm.sender_id, donate_text, tip_error)
             print(
-                "{}: {} NANO donation processed.  Hash: {}".format(str(datetime.now()), float(dm_array[1]), send_hash))
+                "{}: {} NANO donation processed.  Hash: {}".format(str(datetime.now()), float(send_amount), send_hash))
     else:
         tip_error = 1
         incorrect_donate_text = "Incorrect syntax.  Please use the format !donate 1234"
@@ -271,9 +273,11 @@ def tipProcess(dm, dm_array, tip_error, private_tip):
     global stored_response
     # check if there are 3 arguments
     if len(dm_array) == 3:
-        # check if dm_array[1] is a valid username
+        receiver_id_input = dm_array[1]
+        tip_amount = dm_array[2]
+        # check if receiver_id_input is a valid username
         try:
-            receiver_id_info = api.get_user(dm_array[1])
+            receiver_id_info = api.get_user(receiver_id_input)
         except:
             invalid_username_text = "The username you provided is not valid.  Please double check and resend."
             tip_error = 1
@@ -316,7 +320,7 @@ def tipProcess(dm, dm_array, tip_error, private_tip):
                     # Check to see if the tip amount is formatted correctly.
                     wrong_tip = 0
                     try:
-                        print("{}: The user is sending {} NANO".format(str(datetime.now()), float(dm_array[2])))
+                        print("{}: The user is sending {} NANO".format(str(datetime.now()), float(tip_amount)))
                     except:
                         wrong_tip = 1
                     if wrong_tip == 1:
@@ -325,15 +329,15 @@ def tipProcess(dm, dm_array, tip_error, private_tip):
                         stored_response = wrong_tip_text
                         tip_error = sendDM(dm.sender_id, wrong_tip_text, tip_error)
                         print("{}: User sent a tip that wasn't a number.".format(str(datetime.now())))
-                    elif float(balance) < float(dm_array[2]):
+                    elif float(balance) < float(tip_amount):
                         low_balance_text = ("Your balance is only {} NANO and you tried to send {}.  Please add "
                                             "more NANO to your account, or lower your tip amount."
-                                            .format(balance, float(dm_array[2])))
+                                            .format(balance, float(tip_amount)))
                         tip_error = 1
                         stored_response = low_balance_text
                         tip_error = sendDM(dm.sender_id, low_balance_text, tip_error)
                         print("{}: Sender tried to send more than their account".format(str(datetime.now())))
-                    elif float(dm_array[2]) < 0.00001:
+                    elif float(tip_amount) < 0.00001:
                         small_tip_text = ("The minimum tip amount is 0.00001.  Please update your tip amount and "
                                           "resend.")
                         tip_error = 1
@@ -355,43 +359,40 @@ def tipProcess(dm, dm_array, tip_error, private_tip):
                         else:
                             receiver_account = receiver_account_data[0][0]
                         # convert the send amount to raw
-                        send_amount = convert(dm_array[2], from_unit='XRB', to_unit='raw')
+                        send_amount = convert(tip_amount, from_unit='XRB', to_unit='raw')
                         # Send the tip
                         send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                              destination="{}".format(receiver_account),
                                              amount="{:f}".format(send_amount))
-                        # Inform the user that the tip was sent with the hash
-                        if private_tip == 0:
-                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{}!  You can check the transaction"
-                                             "at https://www.nanode.co/block/{}".format(dm_array[2],
-                                                                                        receiver_id_info.screen_name,
-                                                                                        send_hash))
-                        else:
-                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{} privately!  You can check "
-                                             "the transaction at https://www.nanode.co/block/{}".format(dm_array[2],
-                                                                                        receiver_id_info.screen_name,
-                                                                                        send_hash))
-                        stored_response = sent_tip_text
-                        tip_error = sendDM(dm.sender_id, sent_tip_text, tip_error)
-                        # Inform the receiver that they got a tip!
+                        # Inform the users that the tip was sent with the hash
                         sender_id_info = api.get_user(dm.sender_id)
                         if private_tip == 0:
+                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{}!  You can check the transaction"
+                                             "at https://www.nanode.co/block/{}".format(tip_amount,
+                                                                                        receiver_id_info.screen_name,
+                                                                                        send_hash))
                             api.update_status(status="Hey @{}, @{} just sent you a {} $NANO tip!  Send @NanoTipBot a DM "
                                                      "with !register to claim your funds or !help for more commands.  "
                                                      "If you want to learn more about NANO, go to https://nano.org/"
                                               .format(receiver_id_info.screen_name, sender_id_info.screen_name,
-                                                      dm_array[2]))
+                                                      tip_amount))
                         else:
-                            receiver_tip_text = ("@{} just sent you a {} NANO tip!  If you haven't registered an account,"
+                            sent_tip_text = ("You've successfully sent a {} NANO tip to @{} privately!  You can check "
+                                             "the transaction at https://www.nanode.co/block/{}".format(tip_amount,
+                                                                                        receiver_id_info.screen_name,
+                                                                                        send_hash))
+                        receiver_tip_text = ("@{} just sent you a {} NANO tip!  If you haven't registered an account,"
                                                  " send a reply with !register to get started, or !help to see a list of "
                                                  "commands!  Learn more about NANO at https://nano.org/".format(
-                                                sender_id_info.screen_name, dm_array[2]))
-                            stored_response = receiver_tip_text
-                            tip_error = sendDM(receiver_id, receiver_tip_text, tip_error)
+                                                sender_id_info.screen_name, tip_amount))
+                        stored_response = receiver_tip_text
+                        tip_error = sendDM(receiver_id, receiver_tip_text, tip_error)
+                        stored_response = sent_tip_text
+                        tip_error = sendDM(dm.sender_id, sent_tip_text, tip_error)
 
                         # Update the dm_list with the receiver's ID and amount sent
                         update_receiver_info = ("UPDATE dm_list SET receiver_id = {}, amount = {} WHERE dm_id={}"
-                                                .format(receiver_id, float(dm_array[2]), dm.id))
+                                                .format(receiver_id, float(tip_amount), dm.id))
                         setDBInfo(update_receiver_info)
                         print("{}: Tip processed successfully under hash {}.".format(str(datetime.now()), send_hash))
     else:
