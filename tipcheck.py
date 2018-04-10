@@ -4,11 +4,11 @@ from datetime import datetime
 import MySQLdb
 import nano
 import tweepy
-from ConfigParser import SafeConfigParser
+import configparser
 from nano import convert
 
 # CONFIG CONSTANTS =====================================
-config = SafeConfigParser()
+config = configparser.ConfigParser()
 config.read('/root/nanotipbot/config.ini')
 
 CONSUMER_KEY = config.get('main', 'consumer_key')
@@ -33,7 +33,6 @@ rpc = nano.rpc.Client('http://[::1]:7076')
 db = MySQLdb.connect(DB_HOST, DB_USER, DB_PW, DB_SCHEMA)
 
 # Find users who have not registered in 10 days and remind them to register
-unregistered_users = []
 cursor = db.cursor()
 cursor.execute("SELECT user_id FROM users\
                 WHERE register = 0 AND DATE(created_ts) BETWEEN DATE_SUB(NOW(), INTERVAL 10 DAY)\
@@ -47,7 +46,7 @@ for row in unregistered_users:
     print("{}: User {} reminded after 10 days.".format(str(datetime.now()), row[0]))
 
 # Find users who have not registered in 29 days and give them a final reminder
-unregistered_users = []
+unregistered_users[:] = []
 cursor = db.cursor()
 cursor.execute("SELECT user_id FROM users\
                WHERE register = 0 AND DATE(created_ts) BETWEEN DATE_SUB(NOW(), INTERVAL 29 DAY)\
@@ -60,8 +59,8 @@ for row in unregistered_users:
                                                    " you.")
     print("{}: User {} given final notice after 29 days.".format(str(datetime.now()), row[0]))
 
-# TODO:Send back the tip to users not registered in 30 days
-unregistered_users = []
+# Send back the tip to users not registered in 30 days
+unregistered_users[:] = []
 cursor = db.cursor()
 cursor.execute("SELECT user_id, account FROM users\
                WHERE register = 0 AND DATE(created_ts) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) \
@@ -86,8 +85,9 @@ for row in unregistered_users:
                         WHERE user_id = {}".format(sender_id))
         sender_account_info = cursor.fetchone()
         sender_account = sender_account_info[0]
+        send_amount = convert(str(amount), from_unit='XRB', to_unit='raw')
         send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
-                             destination="{}".format(sender_account), amount=amount)
+                             destination="{}".format(sender_account), amount=send_amount)
         print("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
         # Inform the sender that the receiver did not claim their tips and they have been returned
         receiver_id_info = api.get_user(receiver_id)
