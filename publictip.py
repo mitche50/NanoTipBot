@@ -224,12 +224,16 @@ class MyStreamListener(tweepy.StreamListener):
                                              "commands!  Learn more about NANO at https://nano.org/".format(
                                             sender_screen_name, tip_amount))
                         self.sendDM(receiver_id, receiver_tip_text)
+
+                        # Removing tagging tipped users due to Twitter API restrictions
+                        """
                         try:
                             api.update_status("Hey {}!  @{} just sent you a {} $NANO tip!  Check out this transaction at "
                                           "https://www.nanode.co/block/{}".format(receiver_screen_name, sender_screen_name,
                                                                                   tip_amount, send_hash))
                         except tweepy.TweepError as e:
                             logging.info("{}: Tweepy Error: {}".format(datetime.now(TIMEZONE), e))
+                        """
 
                         logging.info("{}: tip sent to {} via hash {}".format(datetime.now(TIMEZONE), receiver_id_info.screen_name,
                                                                       send_hash))
