@@ -61,7 +61,6 @@ def setTweetInfo(status, message):
     """
     Set the tweet information into the message dictionary
     """
-    logging.info("{}: Entered setTweetInfo.".format(datetime.now(TIMEZONE)))
     if hasattr(status, 'retweeted_status'):
         logging.info("{}: Retweets are ignored.".format(datetime.now(TIMEZONE)))
         message['id'] = None
@@ -76,15 +75,12 @@ def setTweetInfo(status, message):
             dm_text = status.extended_tweet['full_text']
 
         message['text'] = dm_text.split(" ")
-        logging.info("{}: Message: {}".format(datetime.now(TIMEZONE), message))
 
-
+        
 def checkTweetAction(message):
     """
     Check to see if there are any key action values mentioned in the tweet.
     """
-    logging.info("{}: Entered checkTweetAction".format(datetime.now(TIMEZONE)))
-    logging.info("{}: Message before: {}".format(datetime.now(TIMEZONE), message))
     try:
         message['action_index'] = message['text'].index("!tip")
     except ValueError:
@@ -93,14 +89,12 @@ def checkTweetAction(message):
 
     message['action'] = message['text'][message['action_index']].lower()
     message['starting_point'] = message['action_index'] + 1
-    logging.info("{}: Message after: {}".format(datetime.now(TIMEZONE), message))
 
 
 def validateTipAmount(message):
     """
     Validate the tweet includes an amount to tip, and if that tip amount is greater than the minimum tip amount.
     """
-    logging.info("{}: Entered validateTipAmount".format(datetime.now(TIMEZONE)))
     try:
         message['tip_amount'] = float(message['text'][message['starting_point']])
     except ValueError:
@@ -115,8 +109,6 @@ def validateTipAmount(message):
         message['tip_amount'] = -1
         return
 
-    logging.info("{}: message['tip_amount']: {}".format(datetime.now(TIMEZONE), message['tip_amount']))
-
     if float(message['tip_amount']) < float(MIN_TIP):
         try:
             api.update_status("@{} The minimum tip amount is {} NANO.  Please update your tip amount"
@@ -128,7 +120,6 @@ def validateTipAmount(message):
         logging.info("{}: User tipped less than {} NANO.".format(datetime.now(TIMEZONE), MIN_TIP))
         return
 
-    logging.info("{}: Converting tip amount to raw.".format(datetime.now(TIMEZONE)))
     try:
         message['tip_amount_raw'] = convert(str(message['tip_amount']), from_unit='XRB', to_unit='raw')
     except Exception as e:
@@ -140,8 +131,6 @@ def validateTipAmount(message):
         message['tip_amount_text'] = "0{}".format(str(message['tip_amount']))
     else:
         message['tip_amount_text'] = str(message['tip_amount'])
-
-    logging.info("{}: tip_amount_text: {}".format(datetime.now(TIMEZONE), message['tip_amount_text']))
 
 
 def validateTotalTipAmount(message):
@@ -167,7 +156,6 @@ def setTipList(message, users_to_tip):
     Loop through the message starting after the tip amount and identify any users that were tagged for a tip.  Add the
     user object to the users_to_tip dict to process the tips.
     """
-    logging.info("{}: Entered setTipList".format(datetime.now(TIMEZONE)))
     for index in range(message['starting_point'] + 1, len(message['text'])):
         if len(message['text'][index]) > 0:
             logging.info("message['text'][index][0]: {}".format(str(message['text'][index])[0]))
@@ -181,13 +169,9 @@ def setTipList(message, users_to_tip):
                     logging.info("{}: Tweep error: {}".format(datetime.now(TIMEZONE), e))
                     return
 
-                logging.info("{}: User {} added to tip list.".format(datetime.now(TIMEZONE), message['text'][index]))
                 user_dict = {'receiver_id': user_info.id, 'receiver_screen_name': user_info.screen_name, 'receiver_account': None, 'receiver_register': None}
                 users_to_tip.append(user_dict)
                 logging.info("{}: Users_to_tip: {}".format(datetime.now(TIMEZONE), users_to_tip))
-
-    logging.info("{}: len(users_to_tip): {}".format(datetime.now(TIMEZONE), len(users_to_tip)))
-    logging.info("{}: message['tip_amount']")
 
     if len(users_to_tip) > 0 and message['tip_amount'] != -1:
         message['total_tip_amount'] = message['tip_amount'] * len(users_to_tip)
@@ -202,17 +186,11 @@ def getDBData(db_call):
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8")
-    logging.info("{}: Entered getDBData".format(datetime.now(TIMEZONE)))
     db_cursor = db.cursor()
-    logging.info("{}: cursor created".format(datetime.now(TIMEZONE)))
     db_cursor.execute(db_call)
-    logging.info("{}: SQL executed".format(datetime.now(TIMEZONE)))
     db_data = db_cursor.fetchall()
-    logging.info("{}: info retrieved".format(datetime.now(TIMEZONE)))
     db_cursor.close()
-    logging.info("{}: cursor closed".format(datetime.now(TIMEZONE)))
     db.close()
-    logging.info("{}: DB closed".format(datetime.now(TIMEZONE)))
     return db_data
 
 
@@ -220,7 +198,6 @@ def setDBData(db_call):
     """
     Enter data into DB
     """
-    logging.info("{}: entered setDBData".format(datetime.now(TIMEZONE)))
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8")
     try:
@@ -239,7 +216,6 @@ def stripEmoji(text):
     """
     Remove Emojis from tweet text to prevent issues with logging
     """
-    logging.info("{}: entered stripEmoji".format(datetime.now(TIMEZONE)))
     text = str(text)
     return RE_EMOJI.sub(r'', text)
 
@@ -248,7 +224,6 @@ def receivePending(account):
     """
     Receive the pending blocks for the provided account.
     """
-    logging.info("{}: Entered receivePending".format(datetime.now(TIMEZONE)))
     pending_blocks = rpc.pending(account='{}'.format(account))
     if len(pending_blocks) > 0:
         for block in pending_blocks:
@@ -260,7 +235,6 @@ def sendDM(receiver_id, dm_text):
     """
     Send a Direct Message to the provided receiver ID including the provided text.
     """
-    logging.info("{}: entered sendDM".format(datetime.now(TIMEZONE)))
     try:
         api.send_direct_message(user_id=receiver_id, text=dm_text)
     except tweepy.TweepError as e:
@@ -277,7 +251,6 @@ def setDBDataTip(message, users_to_tip, index):
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8")
-    logging.info("{}: Entered setDBDataTip".format(datetime.now(TIMEZONE)))
     try:
         db_cursor = db.cursor()
         db_cursor.execute("INSERT INTO tip_list (dm_id, tx_id, processed, sender_id, receiver_id, dm_text, amount)"
@@ -297,11 +270,8 @@ def validateSender(message):
     """
     Validate that the sender has an account with the tip bot, and has enough NANO to cover the tip.
     """
-    logging.info("{}: Entered validateSender".format(datetime.now(TIMEZONE)))
     db_call = "SELECT account, register FROM users where user_id = {}".format(message['sender_id'])
-    logging.info("{}:Sending account information request.".format(datetime.now(TIMEZONE)))
     sender_account_info = getDBData(db_call)
-    logging.info("{}: Account information retrieved.".format(datetime.now(TIMEZONE)))
 
     if not sender_account_info:
         try:
@@ -320,9 +290,6 @@ def validateSender(message):
     if message['sender_register'] != 1:
         db_call = "UPDATE users SET register = 1 WHERE user_id = {}".format(message['sender_id'])
         setDBData(db_call)
-        logging.info("{}: Updated the register value for sender's account.".format(datetime.now(TIMEZONE)))
-
-    logging.info("{}: account {} register {} retrieved.".format(datetime.now(TIMEZONE), message['sender_account'], message['sender_register']))
 
     receivePending(message['sender_account'])
     message['sender_balance_raw'] = rpc.account_balance(account='{}'.format(message['sender_account']))
@@ -333,7 +300,6 @@ def sendTip(message, users_to_tip, index):
     """
     Process tip for specified user
     """
-    logging.info("{}: Entered sendTip".format(datetime.now(TIMEZONE)))
     logging.info("{}: sending tip to {}".format(datetime.now(TIMEZONE), users_to_tip[index]['receiver_screen_name']))
     if str(users_to_tip[index]['receiver_id']) == str(message['sender_id']):
         try:
@@ -347,7 +313,6 @@ def sendTip(message, users_to_tip, index):
 
     # Check if the receiver has an account
     receiver_account_get = ("SELECT account FROM users where user_id = {}".format(int(users_to_tip[index]['receiver_id'])))
-    logging.info("{}: SQL to get receiver: {}".format(datetime.now(TIMEZONE), receiver_account_get))
     receiver_account_data = getDBData(receiver_account_get)
     # If they don't, create an account for them
     if not receiver_account_data:
@@ -383,8 +348,6 @@ def tipProcess(message, users_to_tip):
     """
     Main orchestration process to handle tips
     """
-    logging.info("{}: Entered tipProcess, message['action']: {}".format(datetime.now(TIMEZONE), message['action']))
-
     setTipList(message, users_to_tip)
     if len(users_to_tip) < 1:
         try:
@@ -462,7 +425,6 @@ class MyStreamListener(tweepy.StreamListener):
         ]
 
         logging.info("{}: Message received.".format(datetime.now(TIMEZONE)))
-        logging.info("hasattr retweet: {}".format(hasattr(status, 'retweeted_status')))
 
         setTweetInfo(status, message)
         if message['id'] is None:
