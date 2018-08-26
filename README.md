@@ -3,7 +3,7 @@ The Nano Tip Bot allows users to send the Nano cryptocurrency to users using onl
 
 Commands
 
-DM Commands: The below commands are handled through sending a DM to @NanoTipBot. They are processed at the top of every minute, so please be patient.
+DM Commands: The below commands are handled through sending a DM to @NanoTipBot.
 
     !help: The tip bot will respond to your DM with a list of commands and their functions. If you forget something, use this to get a hint of how to do it!
     !register: The tip bot will create an account, or validate the account that is currently tied to your Twitter user name. This will return a message containing your account number.
