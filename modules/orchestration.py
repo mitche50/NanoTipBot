@@ -156,18 +156,19 @@ def help_process(message):
             "Thank you for using the Nano Tip Bot!  Below is a list of commands, and a description of what they do:\n\n"
             + BULLET + " !help: The tip bot will respond to your DM with a list of commands and their functions. If you"
                        " forget something, use this to get a hint of how to do it!\n\n"
-            + BULLET + " !register: Registers your twitter ID for an account that is tied to it.  This is used to store"
+            + BULLET + " !register: Registers your user ID for an account that is tied to it.  This is used to store"
                        " your tips. Make sure to withdraw to a private wallet, as the tip bot is not meant to be a "
                        "long term storage device for Nano.\n\n"
-            + BULLET + " !balance: This returns the balance of the account linked with your Twitter ID.\n\n"
-            + BULLET + " !tip: Tips are sent through public tweets.  Tag @NanoTipBot in a tweet and mention !tip "
-                       "<amount> <@username>.  Example: @NanoTipBot !tip 1 @mitche50 would send a 1 Nano tip to user "
-                       "@mitche50.\n\n"
-            + BULLET + " !privatetip: Currently disabled.  Will be enabled when live DM monitoring is possible through "
-                       "twitter.  This will send a tip to another user without posting a tweet.  If you would like your"
-                       " tip amount to be private, use this function!  Proper usage is !privatetip @username 1234\n\n"
-            + BULLET + " !account: Returns the account number that is tied to your Twitter handle.  You can use this to"
-                       " deposit more Nano to tip from your personal wallet.\n\n"
+            + BULLET + " !balance: This returns the balance of the account linked with your user ID.\n\n"
+            + BULLET + " !tip: Tips are sent through public tweets or in Telegram groups.\n"
+                       " On Twitter: Tag @NanoTipBot in a tweet and mention !tip <amount> <@username>.  "
+                       "Example: @NanoTipBot !tip 1 @mitche50 would send a 1 Nano tip to user @mitche50.\n"
+                       " On Telegram send !tip <amount> <@username> to tip in the group.\n\n"
+            + BULLET + " !privatetip: Currently disabled.  This will send a tip to another user through DM.  If you "
+                       "would like your tip amount to be private, use this function!  Proper usage is !privatetip "
+                       "@username 1234\n\n"
+            + BULLET + " !account: Returns the account number that is tied to your user ID (currently unique to "
+                       "platform).  You can use this to deposit more Nano to tip from your personal wallet.\n\n"
             + BULLET + " !withdraw: Proper usage is !withdraw xrb_12345.  This will send the full balance of your tip "
                        "account to the provided Nano account.  Optional: You can include an amount to withdraw by "
                        "sending !withdraw <amount> <address>.  Example: !withdraw 1 xrb_iaoia83if221lodoepq would "
@@ -197,18 +198,27 @@ def balance_process(message):
         sender_register = data[0][1]
 
         if sender_register == 0:
-            set_register_call = ("UPDATE users SET register = 1 WHERE user_id = {} AND system = '{}' AND "
-                                 "register = 0".format(message['sender_id'], message['system']))
-            set_db_data(set_register_call)
+            set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s AND register = 0"
+            set_register_values = [message['sender_id'], message['system']]
+            err = set_db_data(set_register_call, set_register_values)
 
         receive_pending(message['sender_account'])
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']
+        message['sender_pending_raw'] = balance_return['pending']
         message['sender_balance'] = balance_return['balance'] / 1000000000000000000000000000000
-        if message['sender_balance'] == 0:
+        message['sender_pending'] = balance_return['pending'] / 1000000000000000000000000000000
+        if message['sender_balance'] == 0 and message['sender_pending'] == 0:
             balance_text = "Your balance is 0 NANO."
+        elif message['sender_balance'] == 0 and message['sender_pending'] > 0:
+            balance_text = "Available: 0 NANO\n" \
+                           "Pending: {} NANO".format(message['sender_pending'])
+        elif message['sender_balance'] > 0 and message['sender_pending'] == 0:
+            balance_text = "Available: {} NANO\n" \
+                           "Pending: 0 NANO".format(message['sender_balance'])
         else:
-            balance_text = "Your balance is {} NANO.".format(message['sender_balance'])
+            balance_text = "Available: {} NANO\n" \
+                           "Pending: {} NANO".format(message['sender_balance'], message['sender_pending'])
         send_dm(message['sender_id'], balance_text, message['system'])
         logging.info("{}: Balance Message Sent!".format(datetime.now()))
 
@@ -227,9 +237,10 @@ def register_process(message):
         # Create an account for the user
         sender_account = rpc.account_create(wallet="{}".format(WALLET), work=False)
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
-                               "VALUES({}, '{}', '{}', '{}',1)".format(message['sender_id'], message['system'],
-                                                                       message['sender_screen_name'], sender_account))
-        set_db_data(account_create_call)
+                               "VALUES(%s, %s, %s, %s, 1)")
+        account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
+        err = set_db_data(account_create_call, account_create_values)
+
         account_text = "You have successfully registered for an account.  Your account number is:"
         send_account_message(account_text, message, sender_account)
 
@@ -238,9 +249,9 @@ def register_process(message):
     elif data[0][1] == 0:
         # The user has an account, but needed to register, so send a message to the user with their account
         sender_account = data[0][0]
-        account_registration_update = ("UPDATE users SET register = 1 WHERE user_id = {} AND "
-                                       "register = 0".format(message['sender_id']))
-        set_db_data(account_registration_update)
+        account_registration_update = "UPDATE users SET register = 1 WHERE user_id = %s AND register = 0"
+        account_registration_values = [message['sender_id'],]
+        err = set_db_data(account_registration_update, account_registration_values)
 
         account_registration_text = "You have successfully registered for an account.  Your account number is:"
         send_account_message(account_registration_text, message, sender_account)
@@ -267,11 +278,12 @@ def account_process(message):
                                                                                           message['system']))
     account_data = get_db_data(sender_account_call)
     if not account_data:
+        logging.info("Creating account using wallet: {}".format(WALLET))
         sender_account = rpc.account_create(wallet="{}".format(WALLET), work=True)
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
-                               "VALUES({}, '{}', '{}', '{}',1)".format(message['sender_id'], message['system'],
-                                                                       message['sender_screen_name'], sender_account))
-        set_db_data(account_create_call)
+                               "VALUES(%s, %s, %s, %s, 1)")
+        account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
+        err = set_db_data(account_create_call, account_create_values)
 
         account_text = "You didn't have an account set up, so I set one up for you.  Your account number is:"
         send_account_message(account_text, message, sender_account)
@@ -284,9 +296,9 @@ def account_process(message):
 
         if sender_register == 0:
             set_register_call = (
-                "UPDATE users SET register = 1 WHERE user_id = {} AND system = '{}' AND register = 0".format(
-                    message['sender_id'], message['system']))
-            set_db_data(set_register_call)
+                "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s AND register = 0")
+            set_register_values = [message['sender_id'], message['system']]
+            err = set_db_data(set_register_call, set_register_values)
 
         account_text = "Your account number is:"
         send_account_message(account_text, message, sender_account)
@@ -360,7 +372,7 @@ def withdraw_process(message):
                     send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                          destination="{}".format(receiver_account), amount=withdraw_amount_raw)
                 else:
-                    logging.info("{}: processed with work: {}".format(datetime.now(), work))
+                    logging.info("{}: processed with work: {} using wallet: {}".format(datetime.now(), work, WALLET))
                     send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                          destination="{}".format(receiver_account), amount=withdraw_amount_raw,
                                          work=work)
@@ -409,7 +421,7 @@ def donate_process(message):
             wrong_donate_text = "Only number amounts are accepted.  Please resend as !donate 1234"
             send_dm(message['sender_id'], wrong_donate_text, message['system'])
             return ''
-
+        logging.info("balance: {} - send_amount: {}".format(Decimal(balance), Decimal(send_amount)))
         if Decimal(balance) < Decimal(send_amount):
             large_donate_text = ("Your balance is only {} NANO and you tried to send {}.  Please add more NANO"
                                  " to your account, or lower your donation amount.".format(balance,
@@ -424,7 +436,7 @@ def donate_process(message):
             logging.info("{}: User tried to donate less than 0.000001".format(datetime.now()))
 
         else:
-            send_amount_raw = Decimal(send_amount * 1000000000000000000000000000000)
+            send_amount_raw = Decimal(send_amount) * 1000000000000000000000000000000
             work = get_pow(sender_account)
             if work == '':
                 logging.info("{}: Processing donation without work.".format(datetime.now()))
@@ -450,13 +462,17 @@ def donate_process(message):
         logging.info("{}: User sent a donation with invalid syntax".format(datetime.now()))
 
 
-def tip_process(message, users_to_tip):
+def tip_process(message, users_to_tip, request_json):
     """
     Main orchestration process to handle tips
     """
     logging.info("{}: in tip_process".format(datetime.now()))
 
-    message, users_to_tip = set_tip_list(message, users_to_tip)
+    # tips_suspended_text = "Tips have been temporarily suspended.  Please follow @NanoTipBot on Twitter for any updates."
+    # send_dm(message['sender_id'], tips_suspended_text, message['system'])
+    # return
+
+    message, users_to_tip = set_tip_list(message, users_to_tip, request_json)
     if len(users_to_tip) < 1 and message['system'] != 'telegram':
         no_users_text = ("Looks like you didn't enter in anyone to tip, or you mistyped someone's handle.  You can try "
                          "to tip again using the format !tip 1234 @username")

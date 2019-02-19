@@ -11,14 +11,17 @@ import time
 import tweepy
 from contextlib import closing
 from datetime import datetime
+from datetime import timedelta
 from decimal import *
-from flask import Flask, render_template, request, send_from_directory, make_response
+from flask import Flask, render_template, request, send_from_directory, make_response, url_for
 from http import HTTPStatus
 from modules.db import *
 from modules.currency import *
 from modules.social import *
 from modules.orchestration import *
+from modules.pdfs import create_pdf
 from sys import getsizeof
+from flask_weasyprint import HTML, CSS, render_pdf
 
 
 # Set Log File
@@ -57,7 +60,118 @@ api = tweepy.API(auth)
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 
+def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
+    """
+    Get the current fiat price conversion for the provided fiat:crypto pair
+    """
+    fiat = fiat.upper()
+    crypto_currency = crypto_currency.upper()
+    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
+    try:
+        # Retrieve price conversion from API
+        response = requests.get(post_url)
+        response_json = json.loads(response.text)
+        logging.info("response: {}".format(response_json))
+        price = Decimal(response_json['{}'.format(fiat)])
+        # Find value of 0.01 in the retrieved crypto
+        penny_value = Decimal(0.01) / price
+        # Find precise amount of the fiat amount in crypto
+        precision = 1
+        crypto_value = Decimal(fiat_amount) / price
+        # Find the precision of 0.01 in crypto
+        crypto_convert = precision * penny_value
+        while Decimal(crypto_convert) < 1:
+            precision *= 10
+            crypto_convert = precision * penny_value
+        # Round the expected amount to the nearest 0.01
+        temp_convert = crypto_value * precision
+        temp_convert = str(round(temp_convert))
+        final_convert = Decimal(temp_convert) / Decimal(str(precision))
+
+        return final_convert
+    except Exception as e:
+        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logging.info("{}: {}".format(datetime.now(), e))
+        raise e
+
+
+def get_fiat_price(fiat, crypto_currency):
+    fiat = fiat.upper()
+    crypto_currency = crypto_currency.upper()
+    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
+    try:
+        # Retrieve price conversion from API
+        response = requests.get(post_url)
+        response_json = json.loads(response.text)
+        price = response_json['{}'.format(fiat)]
+
+        return price
+    except Exception as e:
+        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logging.info("{}: {}".format(datetime.now(), e))
+        raise e
+
+
 # Flask routing
+@app.route('/test/papertip')
+def papertiptest():
+
+    exp_length = 30
+
+    currency_amount = 5.00
+    currency_type = 'EUR'
+    crypto_currency = 'NANO'
+    nano_amount = get_fiat_conversion(currency_type, crypto_currency, currency_amount)
+
+    if currency_type == 'USD':
+        currency_mark = '$'
+    elif currency_type == 'EUR':
+        currency_mark = u"\u20AC"
+    else:
+        currency_mark = u"\u00A3"
+
+    gen_date = datetime.now().strftime("%b %d, %y")
+    exp_date = (datetime.now() + timedelta(days=exp_length)).strftime("%b %d, %y")
+    nano_price = get_fiat_price(currency_type, crypto_currency)
+    qr_img = "papertipqr.png"
+    qr_link = "https://nanotipbot.com/tips/iaoi4fat-haa-32aaa"
+    num_tip = 6
+
+    return render_template('/templates/papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
+                           currency_amount=currency_amount, gen_date=gen_date, exp_date=exp_date, nano_price=nano_price,
+                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
+
+
+@app.route('/test/papertippdf')
+def paperpdf():
+
+    exp_length = 30
+
+    currency_amount = 5.00
+    currency_type = 'USD'
+    crypto_currency = 'NANO'
+    nano_amount = get_fiat_conversion(currency_type, crypto_currency, currency_amount)
+
+    if currency_type == 'USD':
+        currency_mark = '$'
+    elif currency_type == 'EUR':
+        currency_mark = u"\u20AC"
+    else:
+        currency_mark = u"\u00A3"
+
+    gen_date = datetime.now().strftime("%b %d, %y")
+    exp_date = (datetime.now() + timedelta(days=exp_length)).strftime("%b %d, %y")
+    nano_price = get_fiat_price(currency_type, crypto_currency)
+    qr_img = "papertipqr.png"
+    qr_link = "https://nanotipbot.com/tips/iaoi4fat-haa-32aaa"
+    num_tip = 12
+
+    html = render_template('/templates/papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
+                           currency_amount=currency_amount, gen_date=gen_date, exp_date=exp_date, nano_price=nano_price,
+                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
+
+    return render_pdf(HTML(string=html))
+
 
 @app.route('/tutorial')
 @app.route('/tutorial.html')
@@ -69,8 +183,10 @@ def tutorial():
 @app.route('/about.html')
 def about():
     btc_energy = 887000
-    nano_energy = 0.112
+    nano_energy = 0.032
     total_energy, checked_blocks = get_energy(nano_energy)
+
+    total_energy = round(total_energy, 3)
 
     btc_vs_nano = round((total_energy / btc_energy), 3)
 
@@ -151,7 +267,7 @@ def tip_list():
                      "AND user_name IS NOT NULL "
                      "AND processed = 2 "
                      "ORDER BY timestamp DESC "
-                     "LIMIT 50) AS t2 "
+                     "LIMIT 20) AS t2 "
                      "ON t1.timestamp = t2.timestamp")
     tip_list_table = get_db_data(tip_list_call)
     print(tip_list_table)
@@ -255,16 +371,21 @@ def telegram_event():
         #    receiver_account:       Nano account of receiver
         #    receiver_register:      Registration status with Tip Bot of reciever account
     ]
-
     message['system'] = 'telegram'
     request_json = request.get_json()
-    logging.info("request_json: {}".format(request_json))
     if 'message' in request_json.keys():
         if request_json['message']['chat']['type'] == 'private':
             logging.info("Direct message received in Telegram.  Processing.")
             message['sender_id'] = request_json['message']['from']['id']
-
-            # message['sender_screen_name'] = request_json['message']['from']['username']
+            logging.info("request_json: {}".format(request_json))
+            try:
+                message['sender_screen_name'] = request_json['message']['from']['username']
+            except KeyError:
+                if 'first_name' in request_json['message']['from'].keys():
+                    message['sender_screen_name'] = request_json['message']['from']['first_name']
+                if 'last_name' in request_json['message']['from'].keys():
+                    message['sender_screen_name'] = \
+                        message['sender_screen_name'] + ' ' + request_json['message']['from']['last_name']
             message['dm_id'] = request_json['update_id']
             message['text'] = request_json['message']['text']
             message['dm_array'] = message['text'].split(" ")
@@ -278,7 +399,14 @@ def telegram_event():
               request_json['message']['chat']['type'] == 'group'):
             if 'text' in request_json['message']:
                 message['sender_id'] = request_json['message']['from']['id']
-                message['sender_screen_name'] = request_json['message']['from']['username']
+                if 'username' in request_json['message']['from']:
+                    message['sender_screen_name'] = request_json['message']['from']['username']
+                else:
+                    if 'first_name' in request_json['message']['from'].keys():
+                        message['sender_screen_name'] = request_json['message']['from']['first_name']
+                    if 'last_name' in request_json['message']['from'].keys():
+                        message['sender_screen_name'] = \
+                            message['sender_screen_name'] + ' ' + request_json['message']['from']['last_name']
                 message['id'] = request_json['message']['message_id']
                 message['chat_id'] = request_json['message']['chat']['id']
                 message['chat_name'] = request_json['message']['chat']['title']
@@ -293,9 +421,9 @@ def telegram_event():
 
                 message = check_message_action(message)
                 if message['action'] is None:
-                    logging.info("{}: Mention of nano tip bot without a !tip command.".format(datetime.now()))
                     return '', HTTPStatus.OK
 
+                logging.info("{}: Request json for tips: {}".format(datetime.now(), request_json))
                 message = validate_tip_amount(message)
                 if message['tip_amount'] <= 0:
                     return '', HTTPStatus.OK
@@ -304,7 +432,7 @@ def telegram_event():
                     new_pid = os.fork()
                     if new_pid == 0:
                         try:
-                            tip_process(message, users_to_tip)
+                            tip_process(message, users_to_tip, request_json)
                         except Exception as e:
                             logging.info("Exception: {}".format(e))
                             raise e
@@ -317,24 +445,36 @@ def telegram_event():
                 chat_id = request_json['message']['chat']['id']
                 chat_name = request_json['message']['chat']['title']
                 member_id = request_json['message']['new_chat_member']['id']
-                member_name = request_json['message']['new_chat_member']['username']
+                if 'username' in request_json['message']['new_chat_member']:
+                    member_name = request_json['message']['new_chat_member']['username']
+                else:
+                    member_name = None
 
                 new_chat_member_call = (
-                    "INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
-                    "VALUES ({}, '{}', {}, '{}')".format(chat_id, chat_name, member_id, member_name))
-                set_db_data(new_chat_member_call)
+                    "INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
+                    "VALUES (%s, %s, %s, %s)")
+                new_member_values = [chat_id, chat_name, member_id, member_name]
+                err = set_db_data(new_chat_member_call, new_member_values)
+                if err is not None:
+                    return 'ok'
 
             elif 'left_chat_member' in request_json['message']:
                 chat_id = request_json['message']['chat']['id']
                 chat_name = request_json['message']['chat']['title']
                 member_id = request_json['message']['left_chat_member']['id']
-                member_name = request_json['message']['left_chat_member']['username']
+                if 'username' in request_json['message']['left_chat_member']:
+                    member_name = request_json['message']['left_chat_member']['username']
+                else:
+                    member_name = None
                 logging.info("member {}-{} left chat {}-{}, removing from DB.".format(member_id, member_name, chat_id,
                                                                                       chat_name))
 
                 remove_member_call = ("DELETE FROM telegram_chat_members "
-                                      "WHERE chat_id = {} AND member_id = {}".format(chat_id, member_id))
-                set_db_data(remove_member_call)
+                                      "WHERE chat_id = %s AND member_id = %s")
+                remove_member_values = [chat_id, member_id]
+                err = set_db_data(remove_member_call, remove_member_values)
+                if err is not None:
+                    return 'ok'
 
             elif 'group_chat_created' in request_json['message']:
                 chat_id = request_json['message']['chat']['id']
@@ -342,14 +482,15 @@ def telegram_event():
                 member_id = request_json['message']['from']['id']
                 member_name = request_json['message']['from']['username']
                 logging.info("member {} created chat {}, inserting creator into DB.".format(member_name, chat_name))
-
-                new_chat_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
-                                 "VALUES ({}, '{}', {}, '{}')".format(chat_id, chat_name, member_id, member_name))
-                set_db_data(new_chat_call)
+                new_chat_call = ("INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
+                                 "VALUES (%s, %s, %s, %s)")
+                new_chat_values = [chat_id, chat_name, member_id, member_name]
+                err = set_db_data(new_chat_call, new_chat_values)
+                if err is not None:
+                    return 'ok'
 
         else:
             logging.info("request: {}".format(request_json))
-
     return 'ok'
 
 
@@ -388,8 +529,11 @@ def twitter_event_received():
 
         # Update DB with new DM
         dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text) "
-                          "VALUES ({}, 0, {}, '{}')".format(message['dm_id'], message['sender_id'], message['text']))
-        set_db_data(dm_insert_call)
+                          "VALUES (%s, 0, %s, %s)")
+        dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
+        err = set_db_data(dm_insert_call, dm_insert_values)
+        if err is not None:
+            return 'ok'
 
         logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
         # Check for action on DM
@@ -426,7 +570,7 @@ def twitter_event_received():
             new_pid = os.fork()
             if new_pid == 0:
                 try:
-                    tip_process(message, users_to_tip)
+                    tip_process(message, users_to_tip, request_json)
                 except Exception as e:
                     logging.info("Exception: {}".format(e))
                     raise e

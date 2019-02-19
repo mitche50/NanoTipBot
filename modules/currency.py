@@ -4,6 +4,7 @@ import re
 import requests
 import json
 import configparser
+import telegram
 from datetime import datetime
 
 from modules.db import *
@@ -22,9 +23,42 @@ NODE_IP = config.get('webhooks', 'node_ip')
 WORK_SERVER = config.get('webhooks', 'work_server')
 WORK_KEY = config.get('webhooks', 'work_key')
 RE_EMOJI = re.compile('[\U00010000-\U0010ffff\U000026A1]', flags=re.UNICODE)
+TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
 
 # Connect to Nano node
 rpc = nano.rpc.Client(NODE_IP)
+
+# Connect to Telegram
+telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
+
+def send_dm(receiver, message, system):
+    """
+    Send the provided message to the provided receiver
+    """
+    if system == 'twitter':
+        data = {
+            'event': {
+                'type': 'message_create', 'message_create': {
+                    'target': {
+                        'recipient_id': '{}'.format(receiver)
+                    }, 'message_data': {
+                        'text': '{}'.format(message)
+                    }
+                }
+            }
+        }
+
+        r = twitterAPI.request('direct_messages/events/new', json.dumps(data))
+
+        if r.status_code != 200:
+            logging.info('Send DM - Twitter ERROR: {} : {}'.format(r.status_code, r.text))
+
+    elif system == 'telegram':
+        try:
+            telegram_bot.sendMessage(chat_id=receiver, text=message)
+        except Exception as e:
+            logging.info("{}: Send DM - Telegram ERROR: {}".format(datetime.now(), e))
+            pass
 
 
 def receive_pending(sender_account):
@@ -110,11 +144,11 @@ def send_tip(message, users_to_tip, tip_index):
     if not receiver_account_data:
         users_to_tip[tip_index]['receiver_account'] = rpc.account_create(wallet="{}".format(WALLET), work=True)
         create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
-                                   "VALUES({}, '{}', '{}', '{}',0)"
-                                   .format(users_to_tip[tip_index]['receiver_id'], message['system'],
+                                   "VALUES(%s, %s, %s, %s, 0)")
+        create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
                                            users_to_tip[tip_index]['receiver_screen_name'],
-                                           users_to_tip[tip_index]['receiver_account']))
-        set_db_data(create_receiver_account)
+                                           users_to_tip[tip_index]['receiver_account']]
+        err = set_db_data(create_receiver_account, create_receiver_account_values)
         logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
                      .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
 
@@ -132,11 +166,13 @@ def send_tip(message, users_to_tip, tip_index):
     logging.info("id: {}".format(message['tip_id']))
     logging.info("work: {}".format(work))
     if work == '':
+        logging.info("{}: processed without work".format(datetime.now()))
         message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
                                         destination="{}".format(users_to_tip[tip_index]['receiver_account']),
                                         amount="{}".format(int(message['tip_amount_raw'])),
                                         id="tip-{}".format(message['tip_id']))
     else:
+        logging.info("{}: processed with work: {}".format(datetime.now(), work))
         message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
                                         destination="{}".format(users_to_tip[tip_index]['receiver_account']),
                                         amount="{}".format(int(message['tip_amount_raw'])),

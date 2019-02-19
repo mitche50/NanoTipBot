@@ -24,7 +24,7 @@ def get_db_data(db_call):
     Retrieve data from DB
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
-                         charset="utf8")
+                         charset="utf8mb4")
     db_cursor = db.cursor()
     db_cursor.execute(db_call)
     db_data = db_cursor.fetchall()
@@ -33,24 +33,26 @@ def get_db_data(db_call):
     return db_data
 
 
-def set_db_data(db_call):
+def set_db_data(db_call, values):
     """
     Enter data into DB
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
-                         charset="utf8")
+                         charset="utf8mb4")
+    logging.info("db call: {}".format(db_call))
+    logging.info("values: {}".format(values))
     try:
         db_cursor = db.cursor()
-        db_cursor.execute(db_call)
+        db_cursor.execute(db_call, values)
         db.commit()
         db_cursor.close()
         db.close()
         logging.info("{}: record inserted into DB".format(datetime.now()))
+        return None
     except MySQLdb.ProgrammingError as e:
-        logging.info("{}: Exception entering data into database".format(datetime.now(TIMEZONE)))
-        logging.info("{}: {}".format(datetime.now(TIMEZONE), e))
-        raise e
-
+        logging.info("{}: Exception entering data into database".format(datetime.now()))
+        logging.info("{}: {}".format(datetime.now(), e))
+        return e
 
 def set_db_data_tip(message, users_to_tip, t_index):
     """
@@ -58,7 +60,7 @@ def set_db_data_tip(message, users_to_tip, t_index):
     """
     logging.info("{}: inserting tip into DB.".format(datetime.now()))
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
-                         charset="utf8")
+                         charset="utf8mb4")
     try:
         db_cursor = db.cursor()
         db_cursor.execute(

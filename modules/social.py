@@ -213,7 +213,7 @@ def validate_tip_amount(message):
     return message
 
 
-def set_tip_list(message, users_to_tip):
+def set_tip_list(message, users_to_tip, request_json):
     """
     Loop through the message starting after the tip amount and identify any users that were tagged for a tip.  Add the
     user object to the users_to_tip dict to process the tips.
@@ -253,10 +253,16 @@ def set_tip_list(message, users_to_tip):
                     if user_check_data:
                         receiver_id = user_check_data[0][0]
                         receiver_screen_name = user_check_data[0][1]
+                        duplicate_user = False
 
-                        user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
-                                     'receiver_account': None, 'receiver_register': None}
-                        users_to_tip.append(user_dict)
+                        for u_index in range(0, len(users_to_tip)):
+                            if users_to_tip[u_index]['receiver_id'] == receiver_id:
+                                duplicate_user = True
+
+                        if not duplicate_user:
+                            user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
+                                         'receiver_account': None, 'receiver_register': None}
+                            users_to_tip.append(user_dict)
                     else:
                         logging.info("User not found in DB: chat ID:{} - member name:{}".
                                      format(message['chat_id'], message['text'][t_index][1:]))
@@ -267,6 +273,60 @@ def set_tip_list(message, users_to_tip):
                         send_reply(message, missing_user_message)
                         users_to_tip.clear()
                         return message, users_to_tip
+        try:
+            text_mentions = request_json['message']['entities']
+            for mention in text_mentions:
+                if mention['type'] == 'text_mention':
+                    check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
+                                       "WHERE chat_id = {} and member_id = '{}'".format(message['chat_id'],
+                                                                                        mention['user']['id']))
+
+                    user_check_data = get_db_data(check_user_call)
+                    if user_check_data:
+                        receiver_id = user_check_data[0][0]
+                        receiver_screen_name = user_check_data[0][1]
+
+                        user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
+                                     'receiver_account': None, 'receiver_register': None}
+                        users_to_tip.append(user_dict)
+                    else:
+                        logging.info("User not found in DB: chat ID:{} - member name:{}".
+                                     format(message['chat_id'], mention['user']['first_name']))
+                        missing_user_message = ("{} not found in our records.  In order to tip them, they need to be a "
+                                                "member of the channel.  If they are in the channel, please have them "
+                                                "send a message in the chat so I can add them.".
+                                                format(mention['user']['first_name']))
+                        send_reply(message, missing_user_message)
+                        users_to_tip.clear()
+                        return message, users_to_tip
+        except:
+            pass
+        if 'reply_to_message' in request_json['message']:
+            if len(users_to_tip) == 0:
+                check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
+                                   "WHERE chat_id = {} and member_id = '{}'".format(message['chat_id'],
+                                                                                    request_json['message']
+                                                                                    ['reply_to_message']['from']['id']))
+
+                user_check_data = get_db_data(check_user_call)
+                if user_check_data:
+                    receiver_id = user_check_data[0][0]
+                    receiver_screen_name = user_check_data[0][1]
+
+                    user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
+                                 'receiver_account': None, 'receiver_register': None}
+                    users_to_tip.append(user_dict)
+                else:
+                    logging.info("User not found in DB: chat ID:{} - member name:{}".
+                                 format(message['chat_id'], request_json['message']['reply_to_message']['from']
+                                                                        ['first_name']))
+                    missing_user_message = ("{} not found in our records.  In order to tip them, they need to be a "
+                                            "member of the channel.  If they are in the channel, please have them "
+                                            "send a message in the chat so I can add them.".
+                                            format(request_json['message']['reply_to_message']['from']['first_name']))
+                    send_reply(message, missing_user_message)
+                    users_to_tip.clear()
+                    return message, users_to_tip
 
     logging.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
     message['total_tip_amount'] = message['tip_amount']
@@ -300,9 +360,9 @@ def validate_sender(message):
     message['sender_register'] = sender_account_info[0][1]
 
     if message['sender_register'] != 1:
-        db_call = "UPDATE users SET register = 1 WHERE user_id = {} AND system = '{}'".format(message['sender_id'],
-                                                                                              message['system'])
-        set_db_data(db_call)
+        db_call = "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s"
+        db_values = [message['sender_id'], message['system']]
+        err = set_db_data(db_call, db_values)
 
     receive_pending(message['sender_account'])
     message['sender_balance_raw'] = rpc.account_balance(account='{}'.format(message['sender_account']))
@@ -337,21 +397,32 @@ def send_reply(message, text):
             logging.info("{}: Send Reply Tweepy Error: {}".format(datetime.now(), e))
 
     elif message['system'] == 'telegram':
-        telegram_bot.sendMessage(chat_id=message['chat_id'], text=text)
+        telegram_bot.sendMessage(chat_id=message['chat_id'], reply_to_message_id=message['id'], text=text)
 
 
 def check_telegram_member(chat_id, chat_name, member_id, member_name):
     check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
-                       "WHERE chat_id = {} and member_name = '{}'".format(chat_id,
-                                                                          member_name))
+                       "WHERE chat_id = {} and member_id = {}".format(chat_id,
+                                                                      member_id))
     user_check_data = get_db_data(check_user_call)
 
     logging.info("checking if user exists")
     if not user_check_data:
         logging.info("{}: User {}-{} not found in DB, inserting".format(datetime.now(), chat_id, member_name))
         new_chat_member_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
-                                "VALUES ({}, '{}', {}, '{}')".format(chat_id, chat_name, member_id, member_name))
-        set_db_data(new_chat_member_call)
+                                "VALUES (%s, %s, %s, %s)")
+        new_chat_member_values = [chat_id, chat_name, member_id, member_name]
+        err = set_db_data(new_chat_member_call, new_chat_member_values)
+
+    elif user_check_data[0][1] != member_name:
+        logging.info("Member ID {} name incorrect in DB.  Stored value: {}  Updating to {}"
+                     .format(member_id, user_check_data[0][1], member_name))
+
+        update_name_call = ("UPDATE telegram_chat_members "
+                            "SET member_name = %s "
+                            "WHERE member_id = %s")
+        update_name_values = [member_name, member_id]
+        err = set_db_data(update_name_call, update_name_values)
 
     return
 
