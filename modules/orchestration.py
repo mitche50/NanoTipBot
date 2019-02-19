@@ -202,7 +202,6 @@ def balance_process(message):
             set_register_values = [message['sender_id'], message['system']]
             err = set_db_data(set_register_call, set_register_values)
 
-        receive_pending(message['sender_account'])
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']
         message['sender_pending_raw'] = balance_return['pending']
@@ -221,6 +220,7 @@ def balance_process(message):
                            "Pending: {} NANO".format(message['sender_balance'], message['sender_pending'])
         send_dm(message['sender_id'], balance_text, message['system'])
         logging.info("{}: Balance Message Sent!".format(datetime.now()))
+        receive_pending(message['sender_account'])
 
 
 def register_process(message):
