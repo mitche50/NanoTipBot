@@ -158,6 +158,12 @@ def check_message_action(message):
     Check to see if there are any key action values mentioned in the tweet.
     """
     logging.info("{}: in check_message_action.".format(datetime.now()))
+    if message['system'] == 'telegram':
+        try:
+            check_for_ntb = message['text'].index("@nanotipbot")
+        except ValueError:
+            message['action'] = None
+            return message
     try:
         message['action_index'] = message['text'].index("!tip")
     except ValueError:

@@ -397,6 +397,10 @@ def telegram_event():
 
         elif (request_json['message']['chat']['type'] == 'supergroup' or
               request_json['message']['chat']['type'] == 'group'):
+
+            if 'forward_from' in request_json['message']:
+                return '', HTTPStatus.OK
+
             if 'text' in request_json['message']:
                 message['sender_id'] = request_json['message']['from']['id']
                 if 'username' in request_json['message']['from']:
