@@ -35,12 +35,12 @@
           {% for row in tip_list_table %}
           <tr>
             {% if row[5] == "twitter"%}
-            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[3]}}"><u>@{{row[0]}}</u></a></td>
-            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[4]}}"><u>@{{row[1]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[3]}}"><u>@{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[4]}}"><u>@{{row[1]}}</u></a></td>
             {% endif %}
             {% if row[5] != "twitter" %}
-            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[3]}}"><u>{{row[0]}}</u></a></td>
-            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[4]}}"><u>{{row[1]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[3]}}"><u>{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[4]}}"><u>{{row[1]}}</u></a></td>
             {% endif %}
             <td style="text-align: center;">{{row[2]}}</td>
             {% if row[5] == "twitter" %}

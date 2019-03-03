@@ -74,12 +74,17 @@
           {% for row in tipper_table %}
           <tr>
             <td style="text-align: center;"><b>{{ loop.index}}</b></td>
-            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
             {% if row[3] == "twitter" %}
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
             <td style="text-align: center;"><span class="fab fa-twitter"></span></td>
             {% endif %}
             {% if row[3] == "facebook" %}
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
             <td style="text-align: center;"><span class="fab fa-facebook"></span></td>
+            {% endif %}
+            {% if row[3] == "telegram" %}
+            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><span class="fab fa-telegram"></span></span></td>
             {% endif %}
             <td style="text-align: center;">{{row[1]}}</td>
           </tr>
