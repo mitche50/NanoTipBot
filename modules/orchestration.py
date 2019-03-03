@@ -25,12 +25,79 @@ BOT_NAME = config.get('webhooks', 'bot_name')
 BOT_ACCOUNT = config.get('webhooks', 'bot_account')
 MIN_TIP = config.get('webhooks', 'min_tip')
 
+balance_commands = [
+    '!balance',
+    '!bal',
+    '!b',
+    '/balance',
+    '/bal',
+    '/b'
+]
+
+account_commands = [
+    '!account',
+    '!acc',
+    '!a',
+    '!deposit',
+    '!d',
+    '/account',
+    '/acc',
+    '/a',
+    '/deposit',
+    '/d'
+]
+
+help_commands = [
+    '!help',
+    '!h',
+    '/help',
+    '/h',
+    '/start'
+]
+
+register_commands = [
+    '!register',
+    '!reg',
+    '!r',
+    '/register',
+    '/reg',
+    '/r'
+]
+
+withdraw_commands = [
+    '!withdraw',
+    '!w',
+    '/withdraw',
+    '/w'
+]
+
+donate_commands = [
+    '!donate',
+    '/donate'
+]
+
+tip_commands = [
+    '!tip',
+    '!t',
+    '/tip',
+    '/t'
+]
+
+private_tip_commands = [
+    '!privatetip',
+    '!private',
+    '!pt',
+    '/privatetip',
+    '/private',
+    '/pt'
+]
+
 # Connect to global functions
 rpc = nano.rpc.Client(NODE_IP)
 
 
 def parse_action(message):
-    if message['dm_action'] == '!help' or message['dm_action'] == '/help' or message['dm_action'] == '/start':
+    if message['dm_action'] in help_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -42,11 +109,15 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!balance' or message['dm_action'] == '/balance':
+    elif message['dm_action'] in balance_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                balance_process(message)
+                bot_status = config.get('webhooks', 'bot_status')
+                if bot_status == 'maintenance':
+                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                else:
+                    balance_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -54,11 +125,15 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!register' or message['dm_action'] == '/register':
+    elif message['dm_action'] in register_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                register_process(message)
+                bot_status = config.get('webhooks', 'bot_status')
+                if bot_status == 'maintenance':
+                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                else:
+                    register_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -66,7 +141,7 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!tip' or message['dm_action'] == '/tip':
+    elif message['dm_action'] in tip_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -80,11 +155,15 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!withdraw' or message['dm_action'] == '/withdraw':
+    elif message['dm_action'] in withdraw_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                withdraw_process(message)
+                bot_status = config.get('webhooks', 'bot_status')
+                if bot_status == 'maintenance':
+                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                else:
+                    withdraw_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -92,11 +171,15 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!donate' or message['dm_action'] == '/donate':
+    elif message['dm_action'] in donate_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                donate_process(message)
+                bot_status = config.get('webhooks', 'bot_status')
+                if bot_status == 'maintenance':
+                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                else:
+                    donate_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -104,7 +187,7 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!account' or message['dm_action'] == '/account':
+    elif message['dm_action'] in account_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -116,7 +199,7 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] == '!privatetip' or message['dm_action'] == '/privatetip':
+    elif message['dm_action'] in private_tip_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -201,6 +284,8 @@ def balance_process(message):
             set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s AND register = 0"
             set_register_values = [message['sender_id'], message['system']]
             err = set_db_data(set_register_call, set_register_values)
+
+        receive_pending(message['sender_account'])
 
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']

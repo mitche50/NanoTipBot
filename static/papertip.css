@@ -1,0 +1,195 @@
+@page {
+    size: a4 portrait;
+    margin: 24mm 5mm 0 5mm;
+}
+
+body {
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .header-img {
+        position: fixed;
+        top: -22mm;
+        width: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .tip-container {
+      display: inline-block;
+      height: 63mm;
+      width: 46.3mm;
+      border: solid;
+      border-width: .26mm;
+      margin: 1mm;
+      overflow: hidden;
+    }
+
+    .tip-header {
+      display: inline-block;
+      background-color: #4A4A74;
+      height: 9.88mm;
+      width: 46.3mm;
+      position: relative;
+      display: inline-block;
+      border: solid;
+      border-width: .26mm;
+      left: -.26mm;
+      top: -.26mm;
+    }
+
+    .tip-header .logo {
+      display: inline-block;
+      position: absolute;
+      width: 12mm;
+      top: 2.4mm;
+      padding-left: 1.6mm;
+    }
+
+    .tip-header .title-text {
+      display: inline-block;
+      color: white;
+      padding-left: 15mm;
+      font-size: .8em;
+      top: -1mm;
+      position: relative;
+      font-family: 'Roboto', sans-serif;
+      letter-spacing: .4mm;
+    }
+
+    .tip-header .title-sub {
+      padding-left: 30mm;
+      margin-top: -4.9mm;
+      color: white;
+      font-size: .5em;
+      font-weight: light;
+    }
+
+    .tip-body .description {
+      text-align: center;
+      padding-left: 1mm;
+      padding-right: 1mm;
+      font-size: .45em;
+    }
+
+    .tip-body .tip-text {
+      text-align: center;
+      padding-left: 2mm;
+      padding-right: 2mm;
+      font-size: .8em;
+      position: relative;
+      z-index: 100;
+      top: -2mm;
+    }
+
+    .tip-body .contains-text {
+      padding-left: 2mm;
+      position: relative;
+      top: -5mm;
+      font-size: .6em;
+    }
+
+    .tip-body .amount-block {
+      display: inline-block;
+      position: relative;
+      top: -9.6mm;
+    }
+
+    .tip-body .nano-logo {
+      width: 5.5mm;
+      padding-left: 2mm;
+      display: inline-block;
+    }
+
+    .tip-body .nano-amount {
+      display: inline-block;
+      font-size: .8em;
+    }
+
+    .tip-body .dollar-amount {
+      display: inline-block;
+      font-size: .8em;
+      padding-left: 2mm;
+      position: relative;
+      top: -7mm;
+    }
+
+    .tip-body .creation-date {
+      display: inline-block;
+      font-size: .5em;
+      padding-left: 2mm;
+      position: relative;
+      top: -12mm;
+    }
+    .tip-body .nano-price {
+      display: inline-block;
+      font-size: .5em;
+      padding-left: 2mm;
+      position: relative;
+      top: -16.5mm;
+    }
+
+    .expiration-block {
+      background-color: #EC3737;
+      height: 8mm;
+      width: 46.3mm;
+      display: inline-block;
+      position: relative;
+      top: -33mm;
+      left: -.26mm;
+      border: solid;
+      border-width: .26mm;
+    }
+
+    .expiration-block .expiration-date {
+      text-align: center;
+      color: white;
+      font-size: .8em;
+      position: relative;
+      top: -3.175mm;
+    }
+
+    .expiration-block .disclaimer {
+      color: white;
+      display: inline-block;
+      font-size: 0.4em;
+      position: relative;
+      top: -9mm;
+      left: 4.8mm;
+    }
+
+    .qr {
+      position: relative;
+      display: inline;
+      top: -28mm;
+      width: 18mm;
+      left: 2.4mm;
+    }
+
+    .qr-link-div {
+      max-width: 19mm;
+    }
+
+    a.qr-link {
+      color: black;
+      text-decoration: none;
+    }
+
+    p.qr-link {
+      position: relative;
+      top: -32.5mm;
+      left: 26.2mm;
+      font-size: .3em;
+      word-wrap: break-word;
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      padding: 0;
+    }
+
+    .paper-tip-td {
+      padding:0;
+      margin:0;
+    }

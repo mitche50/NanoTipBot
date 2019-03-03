@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
+      <img src="/static/nano_tip_bot_logo.jpg" style="display:block;margin-left:auto;margin-right:auto;width:65%;height:auto;border-radius:20px">
+    </div>
+    <div class="container">
+      <h3 style="text-align:center">Top Tipper List</h3>
+      <br>
+      <p style="text-align:center">
+        A list of the top 15 tippers on the @NanoTipBot.<br>
+        Returned tips have been removed to provide a more accurate amount of tips sent.
+      </p>
+      <br>
+      <div class="container">
+        <div class="card text-center col-md-6 offset-md-3">
+          <div class="card-body" style="overflow: auto; max-width: 100%;">
+          <h5 class="card-title text-align:center">
+            Top Individual Tip
+          </h5>
+              <table class="table table-sm" style="overflow-wrap: break-word; max-width: 100%;">
+                <thead>
+                  <tr>
+                    <th scope="col" style="text-align:center;">
+                      User
+                    </th>
+                    <th scope="col" style="text-align:center;">
+                      System
+                    </th>
+                    <th>
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for row in top_tipper %}
+                    <tr>
+                      <td><a href="https://www.nanode.co/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
+                      {% if row[3] == "twitter" %}
+                      <td><span class="fab fa-twitter"></span></td>
+                      {% endif %}
+                      {% if row[3] == "facebook" %}
+                      <td><span class="fab fa-facebook"></span></td>
+                      {% endif %}
+                      {% if row[3] == "telegram" %}
+                      <td><span class="fab fa-telegram"></span></td>
+                      {% endif %}
+                      <td>{{row[1]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+      <br><br>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="text-align:center;">
+              Rank
+            </th>
+            <th scope="col" style="text-align:center;">
+              Account Name
+            </th>
+            <th scope="col" style="text-align:center;">
+              System
+            </th>
+            <th scope="col" style="text-align:center;">
+              Total Tips
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in tipper_table %}
+          <tr>
+            <td style="text-align: center;"><b>{{ loop.index}}</b></td>
+            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
+            {% if row[3] == "twitter" %}
+            <td style="text-align: center;"><span class="fab fa-twitter"></span></td>
+            {% endif %}
+            {% if row[3] == "facebook" %}
+            <td style="text-align: center;"><span class="fab fa-facebook"></span></td>
+            {% endif %}
+            <td style="text-align: center;">{{row[1]}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

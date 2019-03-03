@@ -13,7 +13,7 @@ from contextlib import closing
 from datetime import datetime
 from datetime import timedelta
 from decimal import *
-from flask import Flask, render_template, request, send_from_directory, make_response, url_for
+from flask import Flask, render_template, request, send_from_directory, make_response, url_for, Response
 from http import HTTPStatus
 from modules.db import *
 from modules.currency import *
@@ -25,12 +25,12 @@ from flask_weasyprint import HTML, CSS, render_pdf
 
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('/root/webhooks/webhooks.log', 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('webhooks.log', 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
-config.read('/root/webhooks/webhookconfig.ini')
+config.read('webhookconfig.ini')
 
 # Twitter API connection settings
 CONSUMER_KEY = config.get('webhooks', 'consumer_key')
@@ -48,8 +48,13 @@ BOT_ID_TELEGRAM = config.get('webhooks', 'bot_id_telegram')
 # Set key for webhook challenge from Twitter
 key = config.get('webhooks', 'consumer_secret')
 
+# Set route variables
+TWITTER_URI = config.get('routes', 'twitter_uri')
+TELEGRAM_URI = config.get('routes', 'telegram_uri')
+TELEGRAM_SET_URI = config.get('routes', 'telegram_set_uri')
+
 # Set up Flask routing
-app = Flask(__name__, template_folder='/var/www/html')
+app = Flask(__name__)
 
 # Connect to Twitter
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -306,7 +311,7 @@ def index():
                            price=price)
 
 
-@app.route('/webhooks/twitter', methods=["GET"])
+@app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
     # creates HMAC SHA-256 hash from incoming token and your consumer secret
 
@@ -328,16 +333,88 @@ def webhook_challenge():
     return json.dumps(response), 200
 
 
-@app.route('/webhooks/telegram/set_webhook')
+@app.route('/webhooks/twitter/getaccount/<screen_name>', methods=["GET"])
+def get_twitter_account(screen_name):
+    try:
+        user = api.get_user(screen_name)
+        logging.info("get_twitter_account request: {}".format(request))
+        logging.info(request.path)
+        logging.info(request.base_url)
+        if user is not None:
+            logging.info("{}: get_twitter_account: user_id = {}".format(datetime.now(), user.id_str))
+            account_call = ("SELECT account FROM users "
+                            "WHERE user_id = '{}' AND system = 'twitter';".format(user.id_str))
+            account_return = get_db_data(account_call)
+            receive_pending(account_return[0][0])
+            balance_return = rpc.account_balance(account="{}".format(account_return[0][0]))
+            logging.info("account = {}".format(account_return[0][0]))
+            account_dict = {
+                'user_id': user.id_str,
+                'account': account_return[0],
+                'balance': str(balance_return['balance'] / 1000000000000000000000000000000),
+                'pending': str(balance_return['pending'] / 1000000000000000000000000000000)
+            }
+            response = Response(json.dumps(account_dict))
+            response.headers['Access-Control-Allow-Credentials'] = True
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Content-Type'] = 'application/json'
+            return response, HTTPStatus.OK
+        else:
+            logging.info('{}: No user found.'.format(datetime.now()))
+            account_dict = {
+                'user_id': None,
+                'account': None,
+                'balance': None,
+                'pending': None
+            }
+            response = Response(json.dumps(account_dict))
+            response.headers['Access-Control-Allow-Credentials'] = True
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Content-Type'] = 'application/json'
+            return response, HTTPStatus.OK
+    except Exception as e:
+        logging.info('{}: ERROR in get_twitter_account(webhooks.py): {}'.format(datetime.now(), e))
+        account_dict = {
+            'user_id': None,
+            'account': None,
+            'balance': None,
+            'pending': None
+        }
+        response = Response(json.dumps(account_dict))
+        response.headers['Access-Control-Allow-Credentials'] = True
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Content-Type'] = 'application/json'
+        return response, HTTPStatus.OK
+
+@app.route('/webhooks/twitter/refreshbalance/<account>', methods=["GET"])
+def refresh_balance(account):
+    try:
+        balance_return = rpc.account_balance(account="{}".format(account))
+        balance_dict = {
+            'balance': balance_return[0],
+            'pending': balance_return[1]
+        }
+        response = Response(json.dumps(balance_dict))
+        response.headers['Access-Control-Allow-Credentials'] = True
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Content-Type'] = 'application/json'
+
+        return response, HTTPStatus.OK
+    except Exception as e:
+        logging.info("{}: ERROR in refresh_balance (webhooks.py): {}".format(datetime.now, e))
+        return e, HTTPStatus.BAD_REQUEST
+
+
+@app.route(TELEGRAM_SET_URI)
 def telegram_webhook():
-    response = telegram_bot.setWebhook('https://nanotipbot.com/webhooks/telegram')
+    response = telegram_bot.setWebhook('https://nanotipbot.com/webhooks/{}/telegram'.format(WEBHOOK_SECRET))
     if response:
         return "Webhook setup successfully"
     else:
         return "Error {}".format(response)
 
 
-@app.route('/webhooks/telegram', methods=["POST"])
+@app.route(TELEGRAM_URI, methods=["POST"])
 def telegram_event():
     message = {
         # id:                     ID of the received tweet - Error logged through None value
@@ -436,7 +513,13 @@ def telegram_event():
                     new_pid = os.fork()
                     if new_pid == 0:
                         try:
-                            tip_process(message, users_to_tip, request_json)
+                            bot_status = config.get('webhooks', 'bot_status')
+                            if bot_status == 'maintenance':
+                                send_dm(message['sender_id'],
+                                        "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.",
+                                        message['system'])
+                            else:
+                                tip_process(message, users_to_tip, request_json)
                         except Exception as e:
                             logging.info("Exception: {}".format(e))
                             raise e
@@ -498,13 +581,28 @@ def telegram_event():
     return 'ok'
 
 
-@app.route("/webhooks/twitter", methods=["POST"])
+@app.route(TWITTER_URI, methods=["POST"])
 def twitter_event_received():
     message = {}
     users_to_tip = []
 
     message['system'] = 'twitter'
     request_json = request.get_json()
+    auth_header = request.headers.get('X-Twitter-Webhooks-Signature')
+    logging.info("twitter auth header: {}".format(auth_header))
+    request_data = request.get_data()
+    validation = hmac.new(
+        key=bytes(key, 'utf-8'),
+        msg=bytes(str(request_data), 'utf-8'),
+        digestmod=hashlib.sha256
+    )
+
+    digested = base64.b64encode(validation.digest())
+    compare_auth = 'sha256=' + format(str(digested)[2:-1])
+    logging.info("created auth header: {}".format(compare_auth))
+    logging.info("twitter request data: {}".format(request_data))
+
+
 
     if 'direct_message_events' in request_json.keys():
         """
@@ -574,7 +672,13 @@ def twitter_event_received():
             new_pid = os.fork()
             if new_pid == 0:
                 try:
-                    tip_process(message, users_to_tip, request_json)
+                    bot_status = config.get('webhooks', 'bot_status')
+                    if bot_status == 'maintenance':
+                        send_dm(message['sender_id'],
+                                "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.",
+                                message['system'])
+                    else:
+                        tip_process(message, users_to_tip, request_json)
                 except Exception as e:
                     logging.info("Exception: {}".format(e))
                     raise e

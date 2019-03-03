@@ -6,6 +6,7 @@ import json
 import configparser
 import telegram
 from datetime import datetime
+from TwitterAPI import TwitterAPI
 
 from modules.db import *
 
@@ -25,11 +26,20 @@ WORK_KEY = config.get('webhooks', 'work_key')
 RE_EMOJI = re.compile('[\U00010000-\U0010ffff\U000026A1]', flags=re.UNICODE)
 TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
 
+# Twitter API connection settings
+CONSUMER_KEY = config.get('webhooks', 'consumer_key')
+CONSUMER_SECRET = config.get('webhooks', 'consumer_secret')
+ACCESS_TOKEN = config.get('webhooks', 'access_token')
+ACCESS_TOKEN_SECRET = config.get('webhooks', 'access_token_secret')
+
 # Connect to Nano node
 rpc = nano.rpc.Client(NODE_IP)
 
 # Connect to Telegram
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
+
+# Secondary API for non-tweepy supported requests
+twitterAPI = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 def send_dm(receiver, message, system):
     """
@@ -101,6 +111,7 @@ def get_pow(sender_account):
     try:
         account_frontiers = rpc.accounts_frontiers(accounts=["{}".format(sender_account)])
         hash = account_frontiers[sender_account]
+        logging.info("{}: account: {} - frontier: {}".format(datetime.now(), sender_account, hash))
     except Exception as e:
         logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
@@ -127,90 +138,97 @@ def send_tip(message, users_to_tip, tip_index):
     """
     Process tip for specified user
     """
-    logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
-    if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
-        self_tip_text = "Self tipping is not allowed.  Please use this bot to spread the $NANO to other Twitter users!"
-        send_reply(message, self_tip_text)
-
-        logging.info("{}: User tried to tip themself").format(datetime.now())
+    bot_status = config.get('webhooks', 'bot_status')
+    if bot_status == 'maintenance':
+        send_dm(message['sender_id'],
+                "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
         return
-
-    # Check if the receiver has an account
-    receiver_account_get = ("SELECT account FROM users where user_id = {} and system = '{}'"
-                            .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
-    receiver_account_data = get_db_data(receiver_account_get)
-
-    # If they don't, create an account for them
-    if not receiver_account_data:
-        users_to_tip[tip_index]['receiver_account'] = rpc.account_create(wallet="{}".format(WALLET), work=True)
-        create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
-                                   "VALUES(%s, %s, %s, %s, 0)")
-        create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
-                                           users_to_tip[tip_index]['receiver_screen_name'],
-                                           users_to_tip[tip_index]['receiver_account']]
-        err = set_db_data(create_receiver_account, create_receiver_account_values)
-        logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
-                     .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
-
     else:
-        users_to_tip[tip_index]['receiver_account'] = receiver_account_data[0][0]
+        logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
+        if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
+            self_tip_text = "Self tipping is not allowed.  Please use this bot to spread the $NANO to other Twitter users!"
+            send_reply(message, self_tip_text)
 
-    # Send the tip
-    message['tip_id'] = "{}{}".format(message['id'], tip_index)
+            logging.info("{}: User tried to tip themself").format(datetime.now())
+            return
 
-    work = get_pow(message['sender_account'])
-    logging.info("Sending Tip:")
-    logging.info("From: {}".format(message['sender_account']))
-    logging.info("To: {}".format(users_to_tip[tip_index]['receiver_account']))
-    logging.info("amount: {:f}".format(message['tip_amount_raw']))
-    logging.info("id: {}".format(message['tip_id']))
-    logging.info("work: {}".format(work))
-    if work == '':
-        logging.info("{}: processed without work".format(datetime.now()))
-        message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
-                                        destination="{}".format(users_to_tip[tip_index]['receiver_account']),
-                                        amount="{}".format(int(message['tip_amount_raw'])),
-                                        id="tip-{}".format(message['tip_id']))
-    else:
-        logging.info("{}: processed with work: {}".format(datetime.now(), work))
-        message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
-                                        destination="{}".format(users_to_tip[tip_index]['receiver_account']),
-                                        amount="{}".format(int(message['tip_amount_raw'])),
-                                        work=work,
-                                        id="tip-{}".format(message['tip_id']))
-    # Update the DB
-    message['text'] = strip_emoji(message['text'])
-    set_db_data_tip(message, users_to_tip, tip_index)
+        # Check if the receiver has an account
+        receiver_account_get = ("SELECT account FROM users where user_id = {} and system = '{}'"
+                                .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
+        receiver_account_data = get_db_data(receiver_account_get)
 
-    # Get receiver's new balance
-    try:
-        logging.info("{}: Checking to receive new tip")
-        receive_pending(users_to_tip[tip_index]['receiver_account'])
-        balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
-        users_to_tip[tip_index]['balance'] = balance_return['balance'] / 1000000000000000000000000000000
+        # If they don't, create an account for them
+        if not receiver_account_data:
+            users_to_tip[tip_index]['receiver_account'] = rpc.account_create(wallet="{}".format(WALLET), work=True)
+            create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
+                                       "VALUES(%s, %s, %s, %s, 0)")
+            create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
+                                               users_to_tip[tip_index]['receiver_screen_name'],
+                                               users_to_tip[tip_index]['receiver_account']]
+            err = set_db_data(create_receiver_account, create_receiver_account_values)
+            logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
+                         .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
 
-        # create a string to remove scientific notation from small decimal tips
-        if str(users_to_tip[tip_index]['balance'])[0] == ".":
-            users_to_tip[tip_index]['balance'] = "0{}".format(str(users_to_tip[tip_index]['balance']))
         else:
-            users_to_tip[tip_index]['balance'] = str(users_to_tip[tip_index]['balance'])
+            users_to_tip[tip_index]['receiver_account'] = receiver_account_data[0][0]
 
-        # Send a DM to the receiver
-        receiver_tip_text = (
-            "@{} just sent you a {} NANO tip! Reply to this DM with !balance to see your new balance.  If you have not "
-            "registered an account, send a reply with !register to get started, or !help to see a list of "
-            "commands!  Learn more about NANO at https://nano.org/".format(message['sender_screen_name'],
-                                                                           message['tip_amount_text'],
-                                                                           users_to_tip[tip_index]['balance']))
-        send_dm(users_to_tip[tip_index]['receiver_id'], receiver_tip_text, message['system'])
+        # Send the tip
+        message['tip_id'] = "{}{}".format(message['id'], tip_index)
 
-    except Exception as e:
-        logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
-                     .format(datetime.now(), e))
+        work = get_pow(message['sender_account'])
+        logging.info("Sending Tip:")
+        logging.info("From: {}".format(message['sender_account']))
+        logging.info("To: {}".format(users_to_tip[tip_index]['receiver_account']))
+        logging.info("amount: {:f}".format(message['tip_amount_raw']))
+        logging.info("id: {}".format(message['tip_id']))
+        logging.info("work: {}".format(work))
+        if work == '':
+            logging.info("{}: processed without work".format(datetime.now()))
+            message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
+                                            destination="{}".format(users_to_tip[tip_index]['receiver_account']),
+                                            amount="{}".format(int(message['tip_amount_raw'])),
+                                            id="tip-{}".format(message['tip_id']))
+        else:
+            logging.info("{}: processed with work: {}".format(datetime.now(), work))
+            message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
+                                            destination="{}".format(users_to_tip[tip_index]['receiver_account']),
+                                            amount="{}".format(int(message['tip_amount_raw'])),
+                                            work=work,
+                                            id="tip-{}".format(message['tip_id']))
+        # Update the DB
+        message['text'] = strip_emoji(message['text'])
+        set_db_data_tip(message, users_to_tip, tip_index)
 
-    logging.info(
-        "{}: tip sent to {} via hash {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name'],
-                                                message['send_hash']))
+        # Get receiver's new balance
+        try:
+            logging.info("{}: Checking to receive new tip")
+
+            receive_pending(users_to_tip[tip_index]['receiver_account'])
+            balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
+            users_to_tip[tip_index]['balance'] = balance_return['balance'] / 1000000000000000000000000000000
+
+            # create a string to remove scientific notation from small decimal tips
+            if str(users_to_tip[tip_index]['balance'])[0] == ".":
+                users_to_tip[tip_index]['balance'] = "0{}".format(str(users_to_tip[tip_index]['balance']))
+            else:
+                users_to_tip[tip_index]['balance'] = str(users_to_tip[tip_index]['balance'])
+
+            # Send a DM to the receiver
+            receiver_tip_text = (
+                "@{} just sent you a {} NANO tip! Reply to this DM with !balance to see your new balance.  If you have not "
+                "registered an account, send a reply with !register to get started, or !help to see a list of "
+                "commands!  Learn more about NANO at https://nano.org/".format(message['sender_screen_name'],
+                                                                               message['tip_amount_text'],
+                                                                               users_to_tip[tip_index]['balance']))
+            send_dm(users_to_tip[tip_index]['receiver_id'], receiver_tip_text, message['system'])
+
+        except Exception as e:
+            logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
+                         .format(datetime.now(), e))
+
+        logging.info(
+            "{}: tip sent to {} via hash {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name'],
+                                                    message['send_hash']))
 
 
 def get_energy(nano_energy):

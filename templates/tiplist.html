@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
+      <img src="/static/nano_tip_bot_logo.jpg" style="display:block;margin-left:auto;margin-right:auto;width:65%;height:auto;border-radius:20px">
+    </div>
+    <div class="container">
+      <h3 style="text-align:center">Most Recent Tips</h3>
+      <br>
+      <p style="text-align:center">
+        A list of the most recent tips on the @NanoTipBot.<br>
+        Returned tips have been removed to provide a more accurate amount of tips sent.
+      </p>
+      <br>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="text-align:center;">
+              Sender
+            </th>
+            <th scope="col" style="text-align:center;">
+              Receiver
+            </th>
+            <th scope="col" style="text-align:center;">
+              Tip Amount
+            </th>
+            <th scope="col" style="text-align:center;">
+              System
+            </th>
+            <th scope="col" style="text-align:center;">
+              Time Sent (UTC)
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in tip_list_table %}
+          <tr>
+            {% if row[5] == "twitter"%}
+            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[3]}}"><u>@{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[4]}}"><u>@{{row[1]}}</u></a></td>
+            {% endif %}
+            {% if row[5] != "twitter" %}
+            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[3]}}"><u>{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="https://www.nanode.co/account/{{row[4]}}"><u>{{row[1]}}</u></a></td>
+            {% endif %}
+            <td style="text-align: center;">{{row[2]}}</td>
+            {% if row[5] == "twitter" %}
+            <td style="text-align: center;"><span class="fab fa-twitter"></span></td>
+            {% endif %}
+            {% if row[5] == "facebook" %}
+            <td style="text-align: center;"><span class="fab fa-facebook"></span></td>
+            {% endif %}
+            {% if row[5] == "telegram" %}
+            <td style="text-align: center;"><span class="fab fa-telegram"></span></td>
+            {% endif %}
+            <td style="text-align: center;">{{row[6]}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

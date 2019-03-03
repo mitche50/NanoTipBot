@@ -18,6 +18,47 @@ DB_USER = config.get('webhooks', 'user')
 DB_PW = config.get('webhooks', 'password')
 DB_SCHEMA = config.get('webhooks', 'schema')
 
+class NanoDB:
+
+    def __init__(self, host, user, pw, schema):
+        """Initialize new DB object"""
+        self.host = host
+        self.user = user
+        self.pw = pw
+        self.schema = schema
+        self.port = 3306
+
+    def get_db_data(self, db_call):
+        """
+        Return data from DB
+        """
+        db = MySQLdb.connect(host=self.host, port=self.port, user=self.user, passwd=self.pw, db=self.schema,
+                             use_unicode=True, charset="utf8mb4")
+        db_cursor = db.cursor()
+        db_cursor.execute(db_call)
+        db_data = db_cursor.fetchall()
+        db_cursor.close()
+        db.close()
+        return db_data
+
+    def set_db_data(self, db_call, values):
+        """
+        Enter data in DB with value sanitation
+        """
+        db = MySQLdb.connect(host=self.host, port=self.port, user=self.user, passwd=self.pw, db=self.schema,
+                             use_unicode=True, charset="utf8mb4")
+        try:
+            db_cursor = db.cursor()
+            db_cursor.execute(db_call, values)
+            db.commit()
+            db_cursor.close()
+            db.close()
+            logging.info("{}: record inserted into DB".format(datetime.now()))
+            return None
+        except MySQLdb.ProgrammingError as e:
+            logging.info("{}: Exception entering data into database".format(datetime.now()))
+            logging.info("{}: {}".format(datetime.now(), e))
+            return e
 
 def get_db_data(db_call):
     """
