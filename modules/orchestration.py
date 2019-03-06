@@ -5,16 +5,17 @@ from modules.social import *
 import logging
 import nano
 import configparser
+import os
 from datetime import datetime
 from decimal import Decimal
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('/root/webhooks/webhooks.log', 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
-config.read('/root/webhooks/webhookconfig.ini')
+config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
 # Set constants
 BULLET = u"\u2022"
@@ -269,7 +270,7 @@ def balance_process(message):
     """
     logging.info("{}: In balance process".format(datetime.now()))
     balance_call = ("SELECT account, register FROM users WHERE user_id = {} "
-                    "AND system = '{}'".format(message['sender_id'], message['system']))
+                    "AND users.system = '{}'".format(message['sender_id'], message['system']))
     data = get_db_data(balance_call)
     if not data:
         logging.info("{}: User tried to check balance without an account".format(datetime.now()))
@@ -281,7 +282,7 @@ def balance_process(message):
         sender_register = data[0][1]
 
         if sender_register == 0:
-            set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s AND register = 0"
+            set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0"
             set_register_values = [message['sender_id'], message['system']]
             err = set_db_data(set_register_call, set_register_values)
 
@@ -314,7 +315,7 @@ def register_process(message):
     reply with their account number.
     """
     logging.info("{}: In register process.".format(datetime.now()))
-    register_call = ("SELECT account, register FROM users WHERE user_id = {} AND system = '{}'"
+    register_call = ("SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'"
                      .format(message['sender_id'], message['system']))
     data = get_db_data(register_call)
 
@@ -359,8 +360,8 @@ def account_process(message):
     """
     logging.info("{}: In account process.".format(datetime.now()))
     sender_account_call = (
-        "SELECT account, register FROM users WHERE user_id = {} AND system = '{}'".format(message['sender_id'],
-                                                                                          message['system']))
+        "SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'".format(message['sender_id'],
+                                                                                                message['system']))
     account_data = get_db_data(sender_account_call)
     if not account_data:
         logging.info("Creating account using wallet: {}".format(WALLET))
@@ -381,7 +382,7 @@ def account_process(message):
 
         if sender_register == 0:
             set_register_call = (
-                "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s AND register = 0")
+                "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0")
             set_register_values = [message['sender_id'], message['system']]
             err = set_db_data(set_register_call, set_register_values)
 
@@ -400,7 +401,7 @@ def withdraw_process(message):
     # check if there is a 2nd argument
     if 3 >= len(message['dm_array']) >= 2:
         # if there is, retrieve the sender's account and wallet
-        withdraw_account_call = ("SELECT account FROM users WHERE user_id = {} AND system = '{}'"
+        withdraw_account_call = ("SELECT account FROM users WHERE user_id = {} AND users.system = '{}'"
                                  .format(message['sender_id'], message['system']))
         withdraw_data = get_db_data(withdraw_account_call)
 
@@ -487,8 +488,8 @@ def donate_process(message):
 
     if len(message['dm_array']) >= 2:
         sender_account_call = (
-            "SELECT account FROM users where user_id = {} and system = '{}'".format(message['sender_id'],
-                                                                                    message['system']))
+            "SELECT account FROM users where user_id = {} and users.system = '{}'".format(message['sender_id'],
+                                                                                          message['system']))
         donate_data = get_db_data(sender_account_call)
         sender_account = donate_data[0][0]
         send_amount = message['dm_array'][1]

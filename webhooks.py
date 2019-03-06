@@ -52,6 +52,7 @@ key = config.get('webhooks', 'consumer_secret')
 TWITTER_URI = config.get('routes', 'twitter_uri')
 TELEGRAM_URI = config.get('routes', 'telegram_uri')
 TELEGRAM_SET_URI = config.get('routes', 'telegram_set_uri')
+BASE_URL = config.get('routes', 'base_url')
 
 # Set up Flask routing
 app = Flask(__name__)
@@ -65,6 +66,14 @@ api = tweepy.API(auth)
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 
+def telegram_set_webhook():
+    response = telegram_bot.setWebhook('{}/{}'.format(BASE_URL, TELEGRAM_URI))
+    if response:
+        return "Webhook setup successfully"
+    else:
+        return "Error {}".format(response)
+
+
 def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
     """
     Get the current fiat price conversion for the provided fiat:crypto pair
@@ -76,7 +85,6 @@ def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
         # Retrieve price conversion from API
         response = requests.get(post_url)
         response_json = json.loads(response.text)
-        logging.info("response: {}".format(response_json))
         price = Decimal(response_json['{}'.format(fiat)])
         # Find value of 0.01 in the retrieved crypto
         penny_value = Decimal(0.01) / price
@@ -171,7 +179,7 @@ def paperpdf():
     qr_link = "https://nanotipbot.com/tips/iaoi4fat-haa-32aaa"
     num_tip = 12
 
-    html = render_template('/templates/papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
+    html = render_template('papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
                            currency_amount=currency_amount, gen_date=gen_date, exp_date=exp_date, nano_price=nano_price,
                            qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
 
@@ -287,25 +295,22 @@ def index():
     rx = r.json()
     price = round(rx['data']['quotes']['USD']['price'], 2)
 
-    total_tipped_nano = ("SELECT system, sum(amount) AS total "
+    total_tipped_nano = ("SELECT tip_list.system, sum(amount) AS total "
                          "FROM tip_bot.tip_list "
                          "WHERE receiver_id IN (SELECT user_id FROM tip_bot.users) "
                          "GROUP BY system "
                          "ORDER BY total DESC")
 
-    total_tipped_number = ("SELECT system, count(system) AS notips "
+    total_tipped_number = ("SELECT tip_list.system, count(system) AS notips "
                            "FROM tip_bot.tip_list "
                            "WHERE receiver_id IN (SELECT user_id FROM tip_bot.users)"
-                           "GROUP BY system "
+                           "GROUP BY tip_list.system "
                            "ORDER BY notips DESC")
 
     total_tipped_nano_table = get_db_data(total_tipped_nano)
     total_tipped_number_table = get_db_data(total_tipped_number)
     total_value_usd = round(total_tipped_number_table[0][1] * price, 2)
 
-    logging.info("total_value_usd: {}".format(total_value_usd))
-    logging.info("total_tipped_nano_table = {}".format(total_tipped_nano_table))
-    logging.info("total_tipped_number_table = {}".format(total_tipped_number_table))
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
                            total_tipped_number_table=total_tipped_number_table, total_value_usd=total_value_usd,
                            price=price)
@@ -337,17 +342,13 @@ def webhook_challenge():
 def get_twitter_account(screen_name):
     try:
         user = api.get_user(screen_name)
-        logging.info("get_twitter_account request: {}".format(request))
-        logging.info(request.path)
-        logging.info(request.base_url)
+
         if user is not None:
-            logging.info("{}: get_twitter_account: user_id = {}".format(datetime.now(), user.id_str))
             account_call = ("SELECT account FROM users "
-                            "WHERE user_id = '{}' AND system = 'twitter';".format(user.id_str))
+                            "WHERE user_id = '{}' AND tip_list.system = 'twitter';".format(user.id_str))
             account_return = get_db_data(account_call)
             receive_pending(account_return[0][0])
             balance_return = rpc.account_balance(account="{}".format(account_return[0][0]))
-            logging.info("account = {}".format(account_return[0][0]))
             account_dict = {
                 'user_id': user.id_str,
                 'account': account_return[0],
@@ -386,6 +387,7 @@ def get_twitter_account(screen_name):
         response.headers['Content-Type'] = 'application/json'
         return response, HTTPStatus.OK
 
+
 @app.route('/webhooks/twitter/refreshbalance/<account>', methods=["GET"])
 def refresh_balance(account):
     try:
@@ -403,15 +405,6 @@ def refresh_balance(account):
     except Exception as e:
         logging.info("{}: ERROR in refresh_balance (webhooks.py): {}".format(datetime.now, e))
         return e, HTTPStatus.BAD_REQUEST
-
-
-@app.route(TELEGRAM_SET_URI)
-def telegram_webhook():
-    response = telegram_bot.setWebhook('https://nanotipbot.com/webhooks/{}/telegram'.format(WEBHOOK_SECRET))
-    if response:
-        return "Webhook setup successfully"
-    else:
-        return "Error {}".format(response)
 
 
 @app.route(TELEGRAM_URI, methods=["POST"])
@@ -454,7 +447,6 @@ def telegram_event():
         if request_json['message']['chat']['type'] == 'private':
             logging.info("Direct message received in Telegram.  Processing.")
             message['sender_id'] = request_json['message']['from']['id']
-            logging.info("request_json: {}".format(request_json))
             try:
                 message['sender_screen_name'] = request_json['message']['from']['username']
             except KeyError:
@@ -504,7 +496,6 @@ def telegram_event():
                 if message['action'] is None:
                     return '', HTTPStatus.OK
 
-                logging.info("{}: Request json for tips: {}".format(datetime.now(), request_json))
                 message = validate_tip_amount(message)
                 if message['tip_amount'] <= 0:
                     return '', HTTPStatus.OK
@@ -589,7 +580,6 @@ def twitter_event_received():
     message['system'] = 'twitter'
     request_json = request.get_json()
     auth_header = request.headers.get('X-Twitter-Webhooks-Signature')
-    logging.info("twitter auth header: {}".format(auth_header))
     request_data = request.get_data()
     validation = hmac.new(
         key=bytes(key, 'utf-8'),
@@ -600,9 +590,6 @@ def twitter_event_received():
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
     logging.info("created auth header: {}".format(compare_auth))
-    logging.info("twitter request data: {}".format(request_data))
-
-
 
     if 'direct_message_events' in request_json.keys():
         """
@@ -665,9 +652,6 @@ def twitter_event_received():
         if message['tip_amount'] <= 0:
             return '', HTTPStatus.OK
 
-        logging.info("{}: User Screen Name: {}".format(datetime.now(), message['sender_screen_name']))
-        logging.info(u'{}: Text of dm: {}'.format(datetime.now(), message['text']))
-
         if message['action'] != -1 and str(message['sender_id']) != str(BOT_ID_TWITTER):
             new_pid = os.fork()
             if new_pid == 0:
@@ -712,4 +696,6 @@ def twitter_event_received():
 
 
 if __name__ == "__main__":
-    app.run()
+    db_init()
+    telegram_set_webhook()
+    app.run(host='0.0.0.0')

@@ -2,21 +2,23 @@ import nano
 import logging
 import re
 import requests
+import os
 import json
 import configparser
 import telegram
+import tweepy
 from datetime import datetime
 from TwitterAPI import TwitterAPI
 
 from modules.db import *
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('/root/webhooks/webhooks.log', 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
-config.read('/root/webhooks/webhookconfig.ini')
+config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
 # Constants
 WALLET = config.get('webhooks', 'wallet')
@@ -38,8 +40,26 @@ rpc = nano.rpc.Client(NODE_IP)
 # Connect to Telegram
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
+# Connect to Twitter
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+api = tweepy.API(auth)
+
 # Secondary API for non-tweepy supported requests
 twitterAPI = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+
+def send_reply(message, text):
+    if message['system'] == 'twitter':
+        text = '@{} '.format(message['sender_screen_name']) + text
+        try:
+            api.update_status(text, message['id'])
+        except tweepy.TweepError as e:
+            logging.info("{}: Send Reply Tweepy Error: {}".format(datetime.now(), e))
+
+    elif message['system'] == 'telegram':
+        telegram_bot.sendMessage(chat_id=message['chat_id'], reply_to_message_id=message['id'], text=text)
+
 
 def send_dm(receiver, message, system):
     """
@@ -115,10 +135,8 @@ def get_pow(sender_account):
     except Exception as e:
         logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
-    logging.info("account_frontiers: {}".format(account_frontiers))
 
     work = ''
-    logging.info("{}: hash: {}".format(datetime.now(), hash))
     while work == '':
         try:
             work_data = {'hash': hash, 'key': WORK_KEY}
@@ -153,7 +171,7 @@ def send_tip(message, users_to_tip, tip_index):
             return
 
         # Check if the receiver has an account
-        receiver_account_get = ("SELECT account FROM users where user_id = {} and system = '{}'"
+        receiver_account_get = ("SELECT account FROM users where user_id = {} and users.system = '{}'"
                                 .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
         receiver_account_data = get_db_data(receiver_account_get)
 

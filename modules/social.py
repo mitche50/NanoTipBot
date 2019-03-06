@@ -17,12 +17,12 @@ from modules.db import get_db_data, set_db_data
 from modules.currency import receive_pending
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('/root/webhooks/webhooks.log', 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
-config.read('/root/webhooks/webhookconfig.ini')
+config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
 # Twitter API connection settings
 CONSUMER_KEY = config.get('webhooks', 'consumer_key')
@@ -368,8 +368,8 @@ def validate_sender(message):
     logging.info("{}: validating sender".format(datetime.now()))
     logging.info("sender id: {}".format(message['sender_id']))
     logging.info("system: {}".format(message['system']))
-    db_call = "SELECT account, register FROM users where user_id = {} AND system = '{}'".format(message['sender_id'],
-                                                                                                message['system'])
+    db_call = "SELECT account, register FROM users where user_id = {} AND users.system = '{}'".format(message['sender_id'],
+                                                                                                      message['system'])
     sender_account_info = get_db_data(db_call)
 
     if not sender_account_info:
@@ -385,7 +385,7 @@ def validate_sender(message):
     message['sender_register'] = sender_account_info[0][1]
 
     if message['sender_register'] != 1:
-        db_call = "UPDATE users SET register = 1 WHERE user_id = %s AND system = %s"
+        db_call = "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s"
         db_values = [message['sender_id'], message['system']]
         err = set_db_data(db_call, db_values)
 
@@ -456,12 +456,12 @@ def get_qr_code(sender_id, sender_account, sm_system):
     """
     Check to see if a QR code has been generated for the sender_id / system combination.  If not, generate one.
     """
-    qr_exists = os.path.isfile('/root/webhooks/qr/{}-{}.png'.format(sender_id, sm_system))
+    qr_exists = os.path.isfile('{}/qr/{}-{}.png'.format(os.getcwd(), sender_id, sm_system))
 
     if not qr_exists:
         print("No QR exists, generating a QR for account {}".format(sender_account))
         account_qr = pyqrcode.create('{}'.format(sender_account))
-        account_qr.png('/root/webhooks/qr/{}-{}.png'.format(sender_id, sm_system), scale=4)
+        account_qr.png('{}/qr/{}-{}.png'.format(os.getcwd(), sender_id, sm_system), scale=4)
 
 
 def send_account_message(account_text, message, account):
@@ -471,7 +471,7 @@ def send_account_message(account_text, message, account):
 
     if message['system'] == 'twitter':
         get_qr_code(message['sender_id'], account, message['system'])
-        path = ('/root/webhooks/qr/{}-{}.png'.format(message['sender_id'], message['system']))
+        path = ('{}/qr/{}-{}.png'.format(os.getcwd(), message['sender_id'], message['system']))
         send_img(message['sender_id'], path, account_text)
     elif message['system'] != 'twitter':
         send_dm(message['sender_id'], account_text, message['system'])
