@@ -159,12 +159,6 @@ def contact():
     return render_template('contact.html')
 
 
-@app.route('/contact-form-handler')
-@app.route('/contact-form-handler.php')
-def contacthandler():
-    return render_template('contact-form-handler.php')
-
-
 @app.route('/contact-form-thank-you')
 @app.route('/contact-form-thank-you.html')
 def thanks():

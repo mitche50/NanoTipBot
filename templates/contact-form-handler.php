@@ -1,6 +1,10 @@
 <?php
-	require_once('/usr/share/php/libphp-phpmailer/PHPMailerAutoload.php');
-	include('config.php');
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    require 'PHPMailer/src/Exception.php';
+    require 'PHPMailer/src/PHPMailer.php';
+    require 'PHPMailer/src/SMTP.php';
+	$configs = include('config.php');
 	
 	$email_address = $_POST['email']; 
 	$errors = '';
@@ -24,8 +28,8 @@
 		$mail->Host = "smtp.gmail.com";
 		$mail->Port = 587; 
 		
-		$mail->Username = $mail_address;
-		$mail->Password = $mail_pw;
+		$mail->Username = $configs['mail_address'];
+		$mail->Password = $configs['mail_pw'];
 		
 		$mail->CharSet = 'windows-1250';
 		$mail->SetFrom ('noreply@nanotipbot.com', 'Nano Tip Bot');
@@ -48,7 +52,7 @@
 		$email_body .= "</body></html>";
 		
 		$mail->Body = $email_body;
-		$mail->AddAddress ($destination, 'Andrew Mitchell');
+		$mail->AddAddress ($configs['destination'], 'Andrew Mitchell');
 		
 		if(!$mail->Send()) 
 		{
