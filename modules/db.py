@@ -1,9 +1,10 @@
 import configparser
 import logging
 import os
-import MySQLdb
 from datetime import datetime
 from decimal import *
+
+import MySQLdb
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],

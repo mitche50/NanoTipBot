@@ -1,20 +1,18 @@
-import requests
+import configparser
 import json
 import logging
-import nano
-import configparser
-import tweepy
-import telegram
-import pyqrcode
 import os
-
 from datetime import datetime
-from TwitterAPI import TwitterAPI
 from decimal import Decimal
-from http import HTTPStatus
 
-from modules.db import get_db_data, set_db_data
-from modules.currency import receive_pending
+import nano
+import pyqrcode
+import telegram
+import tweepy
+from TwitterAPI import TwitterAPI
+
+import modules.currency
+import modules.db
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
@@ -43,6 +41,8 @@ NODE_IP = config.get('webhooks', 'node_ip')
 # IDs
 BOT_ID_TWITTER = config.get('webhooks', 'bot_id_twitter')
 BOT_ID_TELEGRAM = config.get('webhooks', 'bot_id_telegram')
+BASE_URL = config.get('routes', 'base_url')
+TELEGRAM_URI = config.get('routes', 'telegram_uri')
 
 # Connect to Twitter
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -264,7 +264,7 @@ def set_tip_list(message, users_to_tip, request_json):
                                                                                     request_json['message']
                                                                                     ['reply_to_message']['from']['id']))
 
-                user_check_data = get_db_data(check_user_call)
+                user_check_data = modules.db.get_db_data(check_user_call)
                 if user_check_data:
                     receiver_id = user_check_data[0][0]
                     receiver_screen_name = user_check_data[0][1]
@@ -295,7 +295,7 @@ def set_tip_list(message, users_to_tip, request_json):
                                            "WHERE chat_id = {} and member_name = '{}'".format(message['chat_id'],
                                                                                               message['text'][t_index][1:]))
 
-                        user_check_data = get_db_data(check_user_call)
+                        user_check_data = modules.db.get_db_data(check_user_call)
                         if user_check_data:
                             receiver_id = user_check_data[0][0]
                             receiver_screen_name = user_check_data[0][1]
@@ -330,7 +330,7 @@ def set_tip_list(message, users_to_tip, request_json):
                                            "WHERE chat_id = {} and member_id = '{}'".format(message['chat_id'],
                                                                                             mention['user']['id']))
 
-                        user_check_data = get_db_data(check_user_call)
+                        user_check_data = modules.db.get_db_data(check_user_call)
                         if user_check_data:
                             receiver_id = user_check_data[0][0]
                             receiver_screen_name = user_check_data[0][1]
@@ -370,7 +370,7 @@ def validate_sender(message):
     logging.info("system: {}".format(message['system']))
     db_call = "SELECT account, register FROM users where user_id = {} AND users.system = '{}'".format(message['sender_id'],
                                                                                                       message['system'])
-    sender_account_info = get_db_data(db_call)
+    sender_account_info = modules.db.get_db_data(db_call)
 
     if not sender_account_info:
         no_account_text = ("You do not have an account with the bot.  Please send a DM to me with !register to set up "
@@ -387,9 +387,9 @@ def validate_sender(message):
     if message['sender_register'] != 1:
         db_call = "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s"
         db_values = [message['sender_id'], message['system']]
-        err = set_db_data(db_call, db_values)
+        modules.db.set_db_data(db_call, db_values)
 
-    receive_pending(message['sender_account'])
+    modules.currency.receive_pending(message['sender_account'])
     message['sender_balance_raw'] = rpc.account_balance(account='{}'.format(message['sender_account']))
     message['sender_balance'] = message['sender_balance_raw']['balance'] / 1000000000000000000000000000000
 
@@ -429,7 +429,7 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
     check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
                        "WHERE chat_id = {} and member_id = {}".format(chat_id,
                                                                       member_id))
-    user_check_data = get_db_data(check_user_call)
+    user_check_data = modules.db.get_db_data(check_user_call)
 
     logging.info("checking if user exists")
     if not user_check_data:
@@ -437,7 +437,7 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
         new_chat_member_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
                                 "VALUES (%s, %s, %s, %s)")
         new_chat_member_values = [chat_id, chat_name, member_id, member_name]
-        err = set_db_data(new_chat_member_call, new_chat_member_values)
+        modules.db.set_db_data(new_chat_member_call, new_chat_member_values)
 
     elif user_check_data[0][1] != member_name:
         logging.info("Member ID {} name incorrect in DB.  Stored value: {}  Updating to {}"
@@ -447,7 +447,7 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
                             "SET member_name = %s "
                             "WHERE member_id = %s")
         update_name_values = [member_name, member_id]
-        err = set_db_data(update_name_call, update_name_values)
+        modules.db.set_db_data(update_name_call, update_name_values)
 
     return
 
@@ -477,3 +477,11 @@ def send_account_message(account_text, message, account):
         send_dm(message['sender_id'], account_text, message['system'])
 
     send_dm(message['sender_id'], account, message['system'])
+
+
+def telegram_set_webhook():
+    response = telegram_bot.setWebhook('{}/{}'.format(BASE_URL, TELEGRAM_URI))
+    if response:
+        return "Webhook setup successfully"
+    else:
+        return "Error {}".format(response)

@@ -1,16 +1,19 @@
-import nano
-import logging
-import re
-import requests
-import os
-import json
 import configparser
+import json
+import logging
+import os
+import re
+from datetime import datetime
+from decimal import Decimal
+
+import nano
+import requests
 import telegram
 import tweepy
-from datetime import datetime
 from TwitterAPI import TwitterAPI
 
-from modules.db import *
+import modules.db
+import modules.social
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
@@ -49,48 +52,6 @@ api = tweepy.API(auth)
 twitterAPI = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 
-def send_reply(message, text):
-    if message['system'] == 'twitter':
-        text = '@{} '.format(message['sender_screen_name']) + text
-        try:
-            api.update_status(text, message['id'])
-        except tweepy.TweepError as e:
-            logging.info("{}: Send Reply Tweepy Error: {}".format(datetime.now(), e))
-
-    elif message['system'] == 'telegram':
-        telegram_bot.sendMessage(chat_id=message['chat_id'], reply_to_message_id=message['id'], text=text)
-
-
-def send_dm(receiver, message, system):
-    """
-    Send the provided message to the provided receiver
-    """
-    if system == 'twitter':
-        data = {
-            'event': {
-                'type': 'message_create', 'message_create': {
-                    'target': {
-                        'recipient_id': '{}'.format(receiver)
-                    }, 'message_data': {
-                        'text': '{}'.format(message)
-                    }
-                }
-            }
-        }
-
-        r = twitterAPI.request('direct_messages/events/new', json.dumps(data))
-
-        if r.status_code != 200:
-            logging.info('Send DM - Twitter ERROR: {} : {}'.format(r.status_code, r.text))
-
-    elif system == 'telegram':
-        try:
-            telegram_bot.sendMessage(chat_id=receiver, text=message)
-        except Exception as e:
-            logging.info("{}: Send DM - Telegram ERROR: {}".format(datetime.now(), e))
-            pass
-
-
 def receive_pending(sender_account):
     """
     Check to see if the account has any pending blocks and process them
@@ -100,22 +61,26 @@ def receive_pending(sender_account):
         pending_blocks = rpc.pending(account='{}'.format(sender_account))
         logging.info("pending blocks: {}".format(pending_blocks))
         if len(pending_blocks) > 0:
-            for block in pending_blocks:
-                work = get_pow(sender_account)
-                if work == '':
-                    logging.info("{}: processing without pow".format(datetime.now()))
-                    receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account, 'block': block}
-                else:
-                    logging.info("{}: processing with pow".format(datetime.now()))
-                    receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
-                                    'block': block, 'work': work}
-                receive_json = json.dumps(receive_data)
-                requests.post('{}'.format(NODE_IP), data=receive_json)
-                logging.info("{}: block {} received".format(datetime.now(), block))
-
-        else:
-            logging.info('{}: No blocks to receive.'.format(datetime.now()))
-
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    for block in pending_blocks:
+                        work = get_pow(sender_account)
+                        if work == '':
+                            logging.info("{}: processing without pow".format(datetime.now()))
+                            receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                            'block': block}
+                        else:
+                            logging.info("{}: processing with pow".format(datetime.now()))
+                            receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                            'block': block, 'work': work}
+                        receive_json = json.dumps(receive_data)
+                        requests.post('{}'.format(NODE_IP), data=receive_json)
+                        logging.info("{}: block {} received".format(datetime.now(), block))
+                except Exception as e:
+                    logging.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
     except Exception as e:
         logging.info("Receive Pending Error: {}".format(e))
         raise e
@@ -158,14 +123,14 @@ def send_tip(message, users_to_tip, tip_index):
     """
     bot_status = config.get('webhooks', 'bot_status')
     if bot_status == 'maintenance':
-        send_dm(message['sender_id'],
+        modules.social.send_dm(message['sender_id'],
                 "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
         return
     else:
         logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
         if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
             self_tip_text = "Self tipping is not allowed.  Please use this bot to spread the $NANO to other Twitter users!"
-            send_reply(message, self_tip_text)
+            modules.social.send_reply(message, self_tip_text)
 
             logging.info("{}: User tried to tip themself").format(datetime.now())
             return
@@ -173,7 +138,7 @@ def send_tip(message, users_to_tip, tip_index):
         # Check if the receiver has an account
         receiver_account_get = ("SELECT account FROM users where user_id = {} and users.system = '{}'"
                                 .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
-        receiver_account_data = get_db_data(receiver_account_get)
+        receiver_account_data = modules.db.get_db_data(receiver_account_get)
 
         # If they don't, create an account for them
         if not receiver_account_data:
@@ -183,7 +148,7 @@ def send_tip(message, users_to_tip, tip_index):
             create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
                                                users_to_tip[tip_index]['receiver_screen_name'],
                                                users_to_tip[tip_index]['receiver_account']]
-            err = set_db_data(create_receiver_account, create_receiver_account_values)
+            modules.db.set_db_data(create_receiver_account, create_receiver_account_values)
             logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
                          .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
 
@@ -215,7 +180,7 @@ def send_tip(message, users_to_tip, tip_index):
                                             id="tip-{}".format(message['tip_id']))
         # Update the DB
         message['text'] = strip_emoji(message['text'])
-        set_db_data_tip(message, users_to_tip, tip_index)
+        modules.db.set_db_data_tip(message, users_to_tip, tip_index)
 
         # Get receiver's new balance
         try:
@@ -238,7 +203,7 @@ def send_tip(message, users_to_tip, tip_index):
                 "commands!  Learn more about NANO at https://nano.org/".format(message['sender_screen_name'],
                                                                                message['tip_amount_text'],
                                                                                users_to_tip[tip_index]['balance']))
-            send_dm(users_to_tip[tip_index]['receiver_id'], receiver_tip_text, message['system'])
+            modules.social.send_dm(users_to_tip[tip_index]['receiver_id'], receiver_tip_text, message['system'])
 
         except Exception as e:
             logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
@@ -268,3 +233,54 @@ def strip_emoji(text):
     logging.info('{}: removing emojis'.format(datetime.now()))
     text = str(text)
     return RE_EMOJI.sub(r'', text)
+
+
+def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
+    """
+    Get the current fiat price conversion for the provided fiat:crypto pair
+    """
+    fiat = fiat.upper()
+    crypto_currency = crypto_currency.upper()
+    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
+    try:
+        # Retrieve price conversion from API
+        response = requests.get(post_url)
+        response_json = json.loads(response.text)
+        price = Decimal(response_json['{}'.format(fiat)])
+        # Find value of 0.01 in the retrieved crypto
+        penny_value = Decimal(0.01) / price
+        # Find precise amount of the fiat amount in crypto
+        precision = 1
+        crypto_value = Decimal(fiat_amount) / price
+        # Find the precision of 0.01 in crypto
+        crypto_convert = precision * penny_value
+        while Decimal(crypto_convert) < 1:
+            precision *= 10
+            crypto_convert = precision * penny_value
+        # Round the expected amount to the nearest 0.01
+        temp_convert = crypto_value * precision
+        temp_convert = str(round(temp_convert))
+        final_convert = Decimal(temp_convert) / Decimal(str(precision))
+
+        return final_convert
+    except Exception as e:
+        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logging.info("{}: {}".format(datetime.now(), e))
+        raise e
+
+
+def get_fiat_price(fiat, crypto_currency):
+    fiat = fiat.upper()
+    crypto_currency = crypto_currency.upper()
+    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
+    try:
+        # Retrieve price conversion from API
+        response = requests.get(post_url)
+        response_json = json.loads(response.text)
+        price = response_json['{}'.format(fiat)]
+
+        return price
+    except Exception as e:
+        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logging.info("{}: {}".format(datetime.now(), e))
+        raise e

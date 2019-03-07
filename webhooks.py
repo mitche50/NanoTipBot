@@ -5,24 +5,20 @@ import hmac
 import json
 import logging
 import os
+from datetime import timedelta, datetime
+from http import HTTPStatus
+
+import nano
 import requests
 import telegram
-import time
 import tweepy
-from contextlib import closing
-from datetime import datetime
-from datetime import timedelta
-from decimal import *
-from flask import Flask, render_template, request, send_from_directory, make_response, url_for, Response
-from http import HTTPStatus
-from modules.db import *
-from modules.currency import *
-from modules.social import *
-from modules.orchestration import *
-from modules.pdfs import create_pdf
-from sys import getsizeof
-from flask_weasyprint import HTML, CSS, render_pdf
+from flask import Flask, render_template, request, Response
+from flask_weasyprint import HTML, render_pdf
 
+import modules.currency
+import modules.db
+import modules.orchestration
+import modules.social
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('webhooks.log', 'a', 'utf-8')],
@@ -65,64 +61,9 @@ api = tweepy.API(auth)
 # Connect to Telegram
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
-
-def telegram_set_webhook():
-    response = telegram_bot.setWebhook('{}/{}'.format(BASE_URL, TELEGRAM_URI))
-    if response:
-        return "Webhook setup successfully"
-    else:
-        return "Error {}".format(response)
-
-
-def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
-    """
-    Get the current fiat price conversion for the provided fiat:crypto pair
-    """
-    fiat = fiat.upper()
-    crypto_currency = crypto_currency.upper()
-    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
-    try:
-        # Retrieve price conversion from API
-        response = requests.get(post_url)
-        response_json = json.loads(response.text)
-        price = Decimal(response_json['{}'.format(fiat)])
-        # Find value of 0.01 in the retrieved crypto
-        penny_value = Decimal(0.01) / price
-        # Find precise amount of the fiat amount in crypto
-        precision = 1
-        crypto_value = Decimal(fiat_amount) / price
-        # Find the precision of 0.01 in crypto
-        crypto_convert = precision * penny_value
-        while Decimal(crypto_convert) < 1:
-            precision *= 10
-            crypto_convert = precision * penny_value
-        # Round the expected amount to the nearest 0.01
-        temp_convert = crypto_value * precision
-        temp_convert = str(round(temp_convert))
-        final_convert = Decimal(temp_convert) / Decimal(str(precision))
-
-        return final_convert
-    except Exception as e:
-        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
-        raise e
-
-
-def get_fiat_price(fiat, crypto_currency):
-    fiat = fiat.upper()
-    crypto_currency = crypto_currency.upper()
-    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
-    try:
-        # Retrieve price conversion from API
-        response = requests.get(post_url)
-        response_json = json.loads(response.text)
-        price = response_json['{}'.format(fiat)]
-
-        return price
-    except Exception as e:
-        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
-        raise e
+# Connect to Nano Node
+NODE_IP = config.get('webhooks', 'node_ip')
+rpc = nano.rpc.Client(NODE_IP)
 
 
 # Flask routing
@@ -134,7 +75,7 @@ def papertiptest():
     currency_amount = 5.00
     currency_type = 'EUR'
     crypto_currency = 'NANO'
-    nano_amount = get_fiat_conversion(currency_type, crypto_currency, currency_amount)
+    nano_amount = modules.currency.get_fiat_conversion(currency_type, crypto_currency, currency_amount)
 
     if currency_type == 'USD':
         currency_mark = '$'
@@ -145,7 +86,7 @@ def papertiptest():
 
     gen_date = datetime.now().strftime("%b %d, %y")
     exp_date = (datetime.now() + timedelta(days=exp_length)).strftime("%b %d, %y")
-    nano_price = get_fiat_price(currency_type, crypto_currency)
+    nano_price = modules.currency.get_fiat_price(currency_type, crypto_currency)
     qr_img = "papertipqr.png"
     qr_link = "https://nanotipbot.com/tips/iaoi4fat-haa-32aaa"
     num_tip = 6
@@ -163,7 +104,7 @@ def paperpdf():
     currency_amount = 5.00
     currency_type = 'USD'
     crypto_currency = 'NANO'
-    nano_amount = get_fiat_conversion(currency_type, crypto_currency, currency_amount)
+    nano_amount = modules.currency.get_fiat_conversion(currency_type, crypto_currency, currency_amount)
 
     if currency_type == 'USD':
         currency_mark = '$'
@@ -174,7 +115,7 @@ def paperpdf():
 
     gen_date = datetime.now().strftime("%b %d, %y")
     exp_date = (datetime.now() + timedelta(days=exp_length)).strftime("%b %d, %y")
-    nano_price = get_fiat_price(currency_type, crypto_currency)
+    nano_price = modules.currency.get_fiat_price(currency_type, crypto_currency)
     qr_img = "papertipqr.png"
     qr_link = "https://nanotipbot.com/tips/iaoi4fat-haa-32aaa"
     num_tip = 12
@@ -197,7 +138,7 @@ def tutorial():
 def about():
     btc_energy = 887000
     nano_energy = 0.032
-    total_energy, checked_blocks = get_energy(nano_energy)
+    total_energy, checked_blocks = modules.currency.get_energy(nano_energy)
 
     total_energy = round(total_energy, 3)
 
@@ -253,8 +194,8 @@ def tippers():
                     "ORDER BY sum(amount) DESC "
                     "LIMIT 15")
 
-    tipper_table = get_db_data(tippers_call)
-    top_tipper = get_db_data(largest_tip)
+    tipper_table = modules.db.get_db_data(tippers_call)
+    top_tipper = modules.db.get_db_data(largest_tip)
     top_tipper_date = top_tipper[0][4].date()
     return render_template('tippers.html', tipper_table=tipper_table, top_tipper=top_tipper,
                            top_tipper_date=top_tipper_date)
@@ -282,7 +223,7 @@ def tip_list():
                      "ORDER BY timestamp DESC "
                      "LIMIT 20) AS t2 "
                      "ON t1.timestamp = t2.timestamp")
-    tip_list_table = get_db_data(tip_list_call)
+    tip_list_table = modules.db.get_db_data(tip_list_call)
     print(tip_list_table)
     return render_template('tiplist.html', tip_list_table=tip_list_table)
 
@@ -307,8 +248,8 @@ def index():
                            "GROUP BY tip_list.system "
                            "ORDER BY notips DESC")
 
-    total_tipped_nano_table = get_db_data(total_tipped_nano)
-    total_tipped_number_table = get_db_data(total_tipped_number)
+    total_tipped_nano_table = modules.db.get_db_data(total_tipped_nano)
+    total_tipped_number_table = modules.db.get_db_data(total_tipped_number)
     total_value_usd = round(total_tipped_number_table[0][1] * price, 2)
 
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
@@ -346,8 +287,8 @@ def get_twitter_account(screen_name):
         if user is not None:
             account_call = ("SELECT account FROM users "
                             "WHERE user_id = '{}' AND tip_list.system = 'twitter';".format(user.id_str))
-            account_return = get_db_data(account_call)
-            receive_pending(account_return[0][0])
+            account_return = modules.db.get_db_data(account_call)
+            modules.currency.receive_pending(account_return[0][0])
             balance_return = rpc.account_balance(account="{}".format(account_return[0][0]))
             account_dict = {
                 'user_id': user.id_str,
@@ -462,7 +403,7 @@ def telegram_event():
 
             logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
 
-            parse_action(message)
+            modules.orchestration.parse_action(message)
 
         elif (request_json['message']['chat']['type'] == 'supergroup' or
               request_json['message']['chat']['type'] == 'group'):
@@ -484,19 +425,19 @@ def telegram_event():
                 message['chat_id'] = request_json['message']['chat']['id']
                 message['chat_name'] = request_json['message']['chat']['title']
 
-                check_telegram_member(message['chat_id'], message['chat_name'], message['sender_id'],
-                                      message['sender_screen_name'])
+                modules.social.check_telegram_member(message['chat_id'], message['chat_name'], message['sender_id'],
+                                                     message['sender_screen_name'])
 
                 message['text'] = request_json['message']['text']
                 message['text'] = message['text'].replace('\n', ' ')
                 message['text'] = message['text'].lower()
                 message['text'] = message['text'].split(' ')
 
-                message = check_message_action(message)
+                message = modules.social.check_message_action(message)
                 if message['action'] is None:
                     return '', HTTPStatus.OK
 
-                message = validate_tip_amount(message)
+                message = modules.social.validate_tip_amount(message)
                 if message['tip_amount'] <= 0:
                     return '', HTTPStatus.OK
 
@@ -506,11 +447,12 @@ def telegram_event():
                         try:
                             bot_status = config.get('webhooks', 'bot_status')
                             if bot_status == 'maintenance':
-                                send_dm(message['sender_id'],
-                                        "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.",
-                                        message['system'])
+                                modules.social.send_dm(message['sender_id'],
+                                                       "The tip bot is in maintenance.  Check @NanoTipBot on Twitter "
+                                                       "for more information.",
+                                                       message['system'])
                             else:
-                                tip_process(message, users_to_tip, request_json)
+                                modules.orchestration.tip_process(message, users_to_tip, request_json)
                         except Exception as e:
                             logging.info("Exception: {}".format(e))
                             raise e
@@ -532,7 +474,7 @@ def telegram_event():
                     "INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
                     "VALUES (%s, %s, %s, %s)")
                 new_member_values = [chat_id, chat_name, member_id, member_name]
-                err = set_db_data(new_chat_member_call, new_member_values)
+                err = modules.db.set_db_data(new_chat_member_call, new_member_values)
                 if err is not None:
                     return 'ok'
 
@@ -550,7 +492,7 @@ def telegram_event():
                 remove_member_call = ("DELETE FROM telegram_chat_members "
                                       "WHERE chat_id = %s AND member_id = %s")
                 remove_member_values = [chat_id, member_id]
-                err = set_db_data(remove_member_call, remove_member_values)
+                err = modules.db.set_db_data(remove_member_call, remove_member_values)
                 if err is not None:
                     return 'ok'
 
@@ -563,7 +505,7 @@ def telegram_event():
                 new_chat_call = ("INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
                                  "VALUES (%s, %s, %s, %s)")
                 new_chat_values = [chat_id, chat_name, member_id, member_name]
-                err = set_db_data(new_chat_call, new_chat_values)
+                err = modules.db.set_db_data(new_chat_call, new_chat_values)
                 if err is not None:
                     return 'ok'
 
@@ -583,13 +525,29 @@ def twitter_event_received():
     request_data = request.get_data()
     validation = hmac.new(
         key=bytes(key, 'utf-8'),
-        msg=bytes(str(request_data), 'utf-8'),
+        msg=request_data,
         digestmod=hashlib.sha256
     )
 
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
-    logging.info("created auth header: {}".format(compare_auth))
+    try:
+        logging.info("hash comparison: {}".format(hmac.compare_digest(auth_header, compare_auth)))
+    except Exception as e:
+        if request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            ip = request.remote_addr
+        logging.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
+        return 'You are not allowed to access this webhook.', HTTPStatus.BAD_REQUEST
+
+    if not hmac.compare_digest(auth_header, compare_auth):
+        if request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            ip = request.remote_addr
+        logging.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
+        return 'You are not allowed to access this webhook.', HTTPStatus.BAD_REQUEST
 
     if 'direct_message_events' in request_json.keys():
         """
@@ -620,13 +578,13 @@ def twitter_event_received():
         dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text) "
                           "VALUES (%s, 0, %s, %s)")
         dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
-        err = set_db_data(dm_insert_call, dm_insert_values)
+        err = modules.db.set_db_data(dm_insert_call, dm_insert_values)
         if err is not None:
             return 'ok'
 
         logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
         # Check for action on DM
-        parse_action(message)
+        modules.orchestration.parse_action(message)
 
         return '', HTTPStatus.OK
 
@@ -639,16 +597,16 @@ def twitter_event_received():
 
         tweet_object = request_json['tweet_create_events'][0]
 
-        message = set_message_info(tweet_object, message)
+        message = modules.social.set_message_info(tweet_object, message)
         if message['id'] is None:
             return '', HTTPStatus.OK
 
-        message = check_message_action(message)
+        message = modules.social.check_message_action(message)
         if message['action'] is None:
             logging.info("{}: Mention of nano tip bot without a !tip command.".format(datetime.now()))
             return '', HTTPStatus.OK
 
-        message = validate_tip_amount(message)
+        message = modules.social.validate_tip_amount(message)
         if message['tip_amount'] <= 0:
             return '', HTTPStatus.OK
 
@@ -658,11 +616,12 @@ def twitter_event_received():
                 try:
                     bot_status = config.get('webhooks', 'bot_status')
                     if bot_status == 'maintenance':
-                        send_dm(message['sender_id'],
-                                "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.",
-                                message['system'])
+                        modules.social.send_dm(message['sender_id'],
+                                               "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more "
+                                               "information.",
+                                               message['system'])
                     else:
-                        tip_process(message, users_to_tip, request_json)
+                        modules.orchestration.tip_process(message, users_to_tip, request_json)
                 except Exception as e:
                     logging.info("Exception: {}".format(e))
                     raise e
@@ -686,7 +645,7 @@ def twitter_event_received():
         follow_source = follow_object.get('source', {})
         message['sender_id'] = follow_source.get('id')
 
-        help_process(message)
+        modules.orchestration.help_process(message)
 
         return '', HTTPStatus.OK
 
@@ -696,6 +655,6 @@ def twitter_event_received():
 
 
 if __name__ == "__main__":
-    db_init()
-    telegram_set_webhook()
+    modules.db.db_init()
+    modules.social.telegram_set_webhook()
     app.run(host='0.0.0.0')

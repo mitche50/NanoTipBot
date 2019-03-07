@@ -1,13 +1,15 @@
-from modules.db import *
-from modules.currency import *
-from modules.social import *
-
-import logging
-import nano
 import configparser
+import logging
 import os
 from datetime import datetime
 from decimal import Decimal
+from http import HTTPStatus
+
+import nano
+
+import modules.currency
+import modules.db
+import modules.social
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
@@ -116,7 +118,9 @@ def parse_action(message):
             try:
                 bot_status = config.get('webhooks', 'bot_status')
                 if bot_status == 'maintenance':
-                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                    modules.social.send_dm(message['sender_id'],
+                                           "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more "
+                                           "information.", message['system'])
                 else:
                     balance_process(message)
             except Exception as e:
@@ -132,7 +136,9 @@ def parse_action(message):
             try:
                 bot_status = config.get('webhooks', 'bot_status')
                 if bot_status == 'maintenance':
-                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                    modules.social.send_dm(message['sender_id'],
+                                           "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more "
+                                           "information.", message['system'])
                 else:
                     register_process(message)
             except Exception as e:
@@ -148,7 +154,7 @@ def parse_action(message):
             try:
                 redirect_tip_text = ("Tips are processed through public messages now.  Please send in the format "
                                      "@NanoTipBot !tip .0001 @user1.")
-                send_dm(message['sender_id'], redirect_tip_text, message['system'])
+                modules.social.send_dm(message['sender_id'], redirect_tip_text, message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -162,7 +168,9 @@ def parse_action(message):
             try:
                 bot_status = config.get('webhooks', 'bot_status')
                 if bot_status == 'maintenance':
-                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                    modules.social.send_dm(message['sender_id'],
+                                           "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more "
+                                           "information.", message['system'])
                 else:
                     withdraw_process(message)
             except Exception as e:
@@ -178,7 +186,8 @@ def parse_action(message):
             try:
                 bot_status = config.get('webhooks', 'bot_status')
                 if bot_status == 'maintenance':
-                    send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+                    modules.social.send_dm(message['sender_id'], "The tip bot is in maintenance.  Check @NanoTipBot on "
+                                                                 "Twitter for more information.", message['system'])
                 else:
                     donate_process(message)
             except Exception as e:
@@ -206,7 +215,7 @@ def parse_action(message):
             try:
                 redirect_tip_text = ("Private Tip is under maintenance.  To send your tip, use the !tip function in a "
                                      "tweet or reply!")
-                send_dm(message['sender_id'], redirect_tip_text, message['system'])
+                modules.social.send_dm(message['sender_id'], redirect_tip_text, message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -220,7 +229,7 @@ def parse_action(message):
             try:
                 wrong_format_text = ("The command or syntax you sent is not recognized.  Please send !help for a list "
                                      "of commands and what they do.")
-                send_dm(message['sender_id'], wrong_format_text, message['system'])
+                modules.social.send_dm(message['sender_id'], wrong_format_text, message['system'])
                 logging.info('unrecognized syntax')
             except Exception as e:
                 logging.info("Exception: {}".format(e))
@@ -260,7 +269,7 @@ def help_process(message):
             + BULLET + " !donate: Proper usage is !donate 1234.  This will send the requested donation to the Nano Tip "
                        "Bot donation account to help fund development efforts."
     )
-    send_dm(message['sender_id'], help_message, message['system'])
+    modules.social.send_dm(message['sender_id'], help_message, message['system'])
     logging.info("{}: Help message sent!".format(datetime.now()))
 
 
@@ -271,12 +280,12 @@ def balance_process(message):
     logging.info("{}: In balance process".format(datetime.now()))
     balance_call = ("SELECT account, register FROM users WHERE user_id = {} "
                     "AND users.system = '{}'".format(message['sender_id'], message['system']))
-    data = get_db_data(balance_call)
+    data = modules.db.get_db_data(balance_call)
     if not data:
         logging.info("{}: User tried to check balance without an account".format(datetime.now()))
         balance_message = ("There is no account linked to your username.  Please respond with !register to "
                            "create an account.")
-        send_dm(message['sender_id'], balance_message, message['system'])
+        modules.social.send_dm(message['sender_id'], balance_message, message['system'])
     else:
         message['sender_account'] = data[0][0]
         sender_register = data[0][1]
@@ -284,9 +293,9 @@ def balance_process(message):
         if sender_register == 0:
             set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0"
             set_register_values = [message['sender_id'], message['system']]
-            err = set_db_data(set_register_call, set_register_values)
+            modules.db.set_db_data(set_register_call, set_register_values)
 
-        receive_pending(message['sender_account'])
+        modules.currency.receive_pending(message['sender_account'])
 
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']
@@ -304,9 +313,9 @@ def balance_process(message):
         else:
             balance_text = "Available: {} NANO\n" \
                            "Pending: {} NANO".format(message['sender_balance'], message['sender_pending'])
-        send_dm(message['sender_id'], balance_text, message['system'])
+        modules.social.send_dm(message['sender_id'], balance_text, message['system'])
         logging.info("{}: Balance Message Sent!".format(datetime.now()))
-        receive_pending(message['sender_account'])
+        modules.currency.receive_pending(message['sender_account'])
 
 
 def register_process(message):
@@ -317,7 +326,7 @@ def register_process(message):
     logging.info("{}: In register process.".format(datetime.now()))
     register_call = ("SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'"
                      .format(message['sender_id'], message['system']))
-    data = get_db_data(register_call)
+    data = modules.db.get_db_data(register_call)
 
     if not data:
         # Create an account for the user
@@ -325,10 +334,10 @@ def register_process(message):
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                "VALUES(%s, %s, %s, %s, 1)")
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
-        err = set_db_data(account_create_call, account_create_values)
+        modules.db.set_db_data(account_create_call, account_create_values)
 
         account_text = "You have successfully registered for an account.  Your account number is:"
-        send_account_message(account_text, message, sender_account)
+        modules.social.send_account_message(account_text, message, sender_account)
 
         logging.info("{}: Register successful!".format(datetime.now()))
 
@@ -337,10 +346,10 @@ def register_process(message):
         sender_account = data[0][0]
         account_registration_update = "UPDATE users SET register = 1 WHERE user_id = %s AND register = 0"
         account_registration_values = [message['sender_id'],]
-        err = set_db_data(account_registration_update, account_registration_values)
+        modules.db.set_db_data(account_registration_update, account_registration_values)
 
         account_registration_text = "You have successfully registered for an account.  Your account number is:"
-        send_account_message(account_registration_text, message, sender_account)
+        modules.social.send_account_message(account_registration_text, message, sender_account)
 
         logging.info("{}: User has an account, but needed to register.  Message sent".format(datetime.now()))
 
@@ -348,7 +357,7 @@ def register_process(message):
         # The user had an account and already registered, so let them know their account.
         sender_account = data[0][0]
         account_already_registered = "You already have registered your account.  Your account number is:"
-        send_account_message(account_already_registered, message, sender_account)
+        modules.social.send_account_message(account_already_registered, message, sender_account)
 
         logging.info("{}: User has a registered account.  Message sent.".format(datetime.now()))
 
@@ -362,17 +371,17 @@ def account_process(message):
     sender_account_call = (
         "SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'".format(message['sender_id'],
                                                                                                 message['system']))
-    account_data = get_db_data(sender_account_call)
+    account_data = modules.db.get_db_data(sender_account_call)
     if not account_data:
         logging.info("Creating account using wallet: {}".format(WALLET))
         sender_account = rpc.account_create(wallet="{}".format(WALLET), work=True)
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                "VALUES(%s, %s, %s, %s, 1)")
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
-        err = set_db_data(account_create_call, account_create_values)
+        modules.db.set_db_data(account_create_call, account_create_values)
 
         account_text = "You didn't have an account set up, so I set one up for you.  Your account number is:"
-        send_account_message(account_text, message, sender_account)
+        modules.social.send_account_message(account_text, message, sender_account)
 
         logging.info("{}: Created an account for the user!".format(datetime.now()))
 
@@ -384,10 +393,10 @@ def account_process(message):
             set_register_call = (
                 "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0")
             set_register_values = [message['sender_id'], message['system']]
-            err = set_db_data(set_register_call, set_register_values)
+            modules.db.set_db_data(set_register_call, set_register_values)
 
         account_text = "Your account number is:"
-        send_account_message(account_text, message, sender_account)
+        modules.social.send_account_message(account_text, message, sender_account)
 
         logging.info("{}: Sent the user their account number.".format(datetime.now()))
 
@@ -401,18 +410,26 @@ def withdraw_process(message):
     # check if there is a 2nd argument
     if 3 >= len(message['dm_array']) >= 2:
         # if there is, retrieve the sender's account and wallet
-        withdraw_account_call = ("SELECT account FROM users WHERE user_id = {} AND users.system = '{}'"
+        withdraw_account_call = ("SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'"
                                  .format(message['sender_id'], message['system']))
-        withdraw_data = get_db_data(withdraw_account_call)
+        withdraw_data = modules.db.get_db_data(withdraw_account_call)
 
         if not withdraw_data:
             withdraw_no_account_text = "You do not have an account.  Respond with !register to set one up."
-            send_dm(message['sender_id'], withdraw_no_account_text, message['system'])
+            modules.social.send_dm(message['sender_id'], withdraw_no_account_text, message['system'])
             logging.info("{}: User tried to withdraw with no account".format(datetime.now()))
 
         else:
             sender_account = withdraw_data[0][0]
-            receive_pending(sender_account)
+            sender_register = withdraw_data[0][1]
+
+            if sender_register == 0:
+                set_register_call = (
+                    "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0")
+                set_register_values = [message['sender_id'], message['system']]
+                modules.db.set_db_data(set_register_call, set_register_values)
+
+            modules.currency.receive_pending(sender_account)
             balance_return = rpc.account_balance(account='{}'.format(sender_account))
 
             if len(message['dm_array']) == 2:
@@ -423,13 +440,13 @@ def withdraw_process(message):
             if rpc.validate_account_number(receiver_account) == 0:
                 invalid_account_text = ("The account number you provided is invalid.  Please double check and "
                                         "resend your request.")
-                send_dm(message['sender_id'], invalid_account_text, message['system'])
+                modules.social.send_dm(message['sender_id'], invalid_account_text, message['system'])
                 logging.info("{}: The xrb account number is invalid: {}".format(datetime.now(), receiver_account))
 
             elif balance_return['balance'] == 0:
                 no_balance_text = ("You have 0 balance in your account.  Please deposit to your address {} to "
                                    "send more tips!".format(sender_account))
-                send_dm(message['sender_id'], no_balance_text, message['system'])
+                modules.social.send_dm(message['sender_id'], no_balance_text, message['system'])
                 logging.info("{}: The user tried to withdraw with 0 balance".format(datetime.now()))
 
             else:
@@ -440,19 +457,19 @@ def withdraw_process(message):
                         logging.info("{}: withdraw no number ERROR: {}".format(datetime.now(), e))
                         invalid_amount_text = ("You did not send a number to withdraw.  Please resend with the format"
                                                "!withdraw <account> or !withdraw <amount> <account>")
-                        send_dm(message['sender_id'], invalid_amount_text, message['system'])
+                        modules.social.send_dm(message['sender_id'], invalid_amount_text, message['system'])
                         return
                     withdraw_amount_raw = int(withdraw_amount * 1000000000000000000000000000000)
                     if Decimal(withdraw_amount_raw) > Decimal(balance_return['balance']):
                         not_enough_balance_text = ("You do not have that much NANO in your account.  To withdraw your "
                                                    "full amount, send !withdraw <account>")
-                        send_dm(message['sender_id'], not_enough_balance_text, message['system'])
+                        modules.social.send_dm(message['sender_id'], not_enough_balance_text, message['system'])
                         return
                 else:
                     withdraw_amount_raw = balance_return['balance']
                     withdraw_amount = balance_return['balance'] / 1000000000000000000000000000000
                 # send the total balance to the provided account
-                work = get_pow(sender_account)
+                work = modules.currency.get_pow(sender_account)
                 if work == '':
                     logging.info("{}: processed without work".format(datetime.now()))
                     send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
@@ -467,7 +484,7 @@ def withdraw_process(message):
                 withdraw_text = ("You have successfully withdrawn {} NANO!  You can check the "
                                  "transaction at https://nanocrawler.cc/explorer/block/{}"
                                  .format(withdraw_amount, send_hash))
-                send_dm(message['sender_id'], withdraw_text, message['system'])
+                modules.social.send_dm(message['sender_id'], withdraw_text, message['system'])
                 logging.info("{}: Withdraw processed.  Hash: {}".format(datetime.now(), send_hash))
     else:
         incorrect_withdraw_text = ("I didn't understand your withdraw request.  Please resend with !withdraw "
@@ -475,7 +492,7 @@ def withdraw_process(message):
                                    "withdraw 1 NANO to account xrb_aigakjkfa343tm3h1kj.  Also, !withdraw "
                                    "xrb_aigakjkfa343tm3h1kj would withdraw your entire balance to account "
                                    "xrb_aigakjkfa343tm3h1kj.")
-        send_dm(message['sender_id'], incorrect_withdraw_text, message['system'])
+        modules.social.send_dm(message['sender_id'], incorrect_withdraw_text, message['system'])
         logging.info("{}: User sent a withdraw with invalid syntax.".format(datetime.now()))
 
 
@@ -490,11 +507,11 @@ def donate_process(message):
         sender_account_call = (
             "SELECT account FROM users where user_id = {} and users.system = '{}'".format(message['sender_id'],
                                                                                           message['system']))
-        donate_data = get_db_data(sender_account_call)
+        donate_data = modules.db.get_db_data(sender_account_call)
         sender_account = donate_data[0][0]
         send_amount = message['dm_array'][1]
 
-        receive_pending(sender_account)
+        modules.currency.receive_pending(sender_account)
 
         balance_return = rpc.account_balance(account='{}'.format(sender_account))
         balance = balance_return['balance'] / 1000000000000000000000000000000
@@ -505,25 +522,25 @@ def donate_process(message):
         except Exception as e:
             logging.info("{}: ERROR IN CONVERTING DONATION AMOUNT: {}".format(datetime.now(), e))
             wrong_donate_text = "Only number amounts are accepted.  Please resend as !donate 1234"
-            send_dm(message['sender_id'], wrong_donate_text, message['system'])
+            modules.social.send_dm(message['sender_id'], wrong_donate_text, message['system'])
             return ''
         logging.info("balance: {} - send_amount: {}".format(Decimal(balance), Decimal(send_amount)))
         if Decimal(balance) < Decimal(send_amount):
             large_donate_text = ("Your balance is only {} NANO and you tried to send {}.  Please add more NANO"
                                  " to your account, or lower your donation amount.".format(balance,
                                                                                            Decimal(send_amount)))
-            send_dm(message['sender_id'], large_donate_text, message['system'])
+            modules.social.send_dm(message['sender_id'], large_donate_text, message['system'])
             logging.info("{}: User tried to donate more than their balance.".format(datetime.now()))
 
         elif Decimal(send_amount) < Decimal(MIN_TIP):
             small_donate_text = ("The minimum donation amount is {}.  Please update your donation amount "
                                  "and resend.".format(MIN_TIP))
-            send_dm(message['sender_id'], small_donate_text, message['system'])
+            modules.social.send_dm(message['sender_id'], small_donate_text, message['system'])
             logging.info("{}: User tried to donate less than 0.000001".format(datetime.now()))
 
         else:
             send_amount_raw = Decimal(send_amount) * 1000000000000000000000000000000
-            work = get_pow(sender_account)
+            work = modules.currency.get_pow(sender_account)
             if work == '':
                 logging.info("{}: Processing donation without work.".format(datetime.now()))
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
@@ -538,13 +555,13 @@ def donate_process(message):
 
             donate_text = ("Thank you for your generosity!  You have successfully donated {} NANO!  You can check the "
                            "transaction at https://nanocrawler.cc/explorer/block/{}".format(send_amount, send_hash))
-            send_dm(message['sender_id'], donate_text, message['system'])
+            modules.social.send_dm(message['sender_id'], donate_text, message['system'])
             logging.info("{}: {} NANO donation processed.  Hash: {}".format(datetime.now(), Decimal(send_amount),
                                                                             send_hash))
 
     else:
         incorrect_donate_text = "Incorrect syntax.  Please use the format !donate 1234"
-        send_dm(message['sender_id'], incorrect_donate_text, message['system'])
+        modules.social.send_dm(message['sender_id'], incorrect_donate_text, message['system'])
         logging.info("{}: User sent a donation with invalid syntax".format(datetime.now()))
 
 
@@ -558,33 +575,33 @@ def tip_process(message, users_to_tip, request_json):
     # send_dm(message['sender_id'], tips_suspended_text, message['system'])
     # return
 
-    message, users_to_tip = set_tip_list(message, users_to_tip, request_json)
+    message, users_to_tip = modules.social.set_tip_list(message, users_to_tip, request_json)
     if len(users_to_tip) < 1 and message['system'] != 'telegram':
         no_users_text = ("Looks like you didn't enter in anyone to tip, or you mistyped someone's handle.  You can try "
                          "to tip again using the format !tip 1234 @username")
-        send_reply(message, no_users_text)
+        modules.social.send_reply(message, no_users_text)
         return
 
-    message = validate_sender(message)
+    message = modules.social.validate_sender(message)
     if message['sender_account'] is None or message['tip_amount'] <= 0:
         return
 
-    message = validate_total_tip_amount(message)
+    message = modules.social.validate_total_tip_amount(message)
     if message['tip_amount'] <= 0:
         return
 
     for t_index in range(0, len(users_to_tip)):
-        send_tip(message, users_to_tip, t_index)
+        modules.currency.send_tip(message, users_to_tip, t_index)
 
     # Inform the user that all tips were sent.
     if len(users_to_tip) >= 2:
         multi_tip_success = ("You have successfully sent your {} $NANO tips.  Check your account at "
                              "https://nanocrawler.cc/explorer/account/{}".format(message['tip_amount_text'],
                                                                                  message['sender_account']))
-        send_reply(message, multi_tip_success)
+        modules.social.send_reply(message, multi_tip_success)
 
     elif len(users_to_tip) == 1:
         tip_success = ("You have successfully sent your {} $NANO tip.  Check your account at "
                        "https://nanocrawler.cc/explorer/account/{}".format(message['tip_amount_text'],
                                                                            message['sender_account']))
-        send_reply(message, tip_success)
+        modules.social.send_reply(message, tip_success)
