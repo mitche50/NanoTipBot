@@ -42,12 +42,10 @@ account_commands = [
     '!acc',
     '!a',
     '!deposit',
-    '!d',
     '/account',
     '/acc',
     '/a',
-    '/deposit',
-    '/d'
+    '/deposit'
 ]
 
 help_commands = [
@@ -76,7 +74,9 @@ withdraw_commands = [
 
 donate_commands = [
     '!donate',
-    '/donate'
+    '!d',
+    '/donate',
+    '/d'
 ]
 
 tip_commands = [
@@ -213,9 +213,9 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                redirect_tip_text = ("Private Tip is under maintenance.  To send your tip, use the !tip function in a "
+                private_tip_text = ("Private Tip is under maintenance.  To send your tip, use the !tip function in a "
                                      "tweet or reply!")
-                modules.social.send_dm(message['sender_id'], redirect_tip_text, message['system'])
+                modules.social.send_dm(message['sender_id'], private_tip_text, message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -571,10 +571,6 @@ def tip_process(message, users_to_tip, request_json):
     """
     logging.info("{}: in tip_process".format(datetime.now()))
 
-    # tips_suspended_text = "Tips have been temporarily suspended.  Please follow @NanoTipBot on Twitter for any updates."
-    # send_dm(message['sender_id'], tips_suspended_text, message['system'])
-    # return
-
     message, users_to_tip = modules.social.set_tip_list(message, users_to_tip, request_json)
     if len(users_to_tip) < 1 and message['system'] != 'telegram':
         no_users_text = ("Looks like you didn't enter in anyone to tip, or you mistyped someone's handle.  You can try "
@@ -603,5 +599,5 @@ def tip_process(message, users_to_tip, request_json):
     elif len(users_to_tip) == 1:
         tip_success = ("You have successfully sent your {} $NANO tip.  Check your account at "
                        "https://nanocrawler.cc/explorer/account/{}".format(message['tip_amount_text'],
-                                                                           message['sender_account']))
+                                                                           message['send_hash']))
         modules.social.send_reply(message, tip_success)

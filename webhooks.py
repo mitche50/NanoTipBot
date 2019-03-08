@@ -280,7 +280,7 @@ def get_twitter_account(screen_name):
 
         if user is not None:
             account_call = ("SELECT account FROM users "
-                            "WHERE user_id = '{}' AND tip_list.system = 'twitter';".format(user.id_str))
+                            "WHERE user_id = '{}' AND users.system = 'twitter';".format(user.id_str))
             account_return = modules.db.get_db_data(account_call)
             modules.currency.receive_pending(account_return[0][0])
             balance_return = rpc.account_balance(account="{}".format(account_return[0][0]))
@@ -615,6 +615,7 @@ def twitter_event_received():
                                                "information.",
                                                message['system'])
                     else:
+                        api.create_favorite(message['id'])
                         modules.orchestration.tip_process(message, users_to_tip, request_json)
                 except Exception as e:
                     logging.info("Exception: {}".format(e))
