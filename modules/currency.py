@@ -61,26 +61,23 @@ def receive_pending(sender_account):
         pending_blocks = rpc.pending(account='{}'.format(sender_account))
         logging.info("pending blocks: {}".format(pending_blocks))
         if len(pending_blocks) > 0:
-            new_pid = os.fork()
-            if new_pid == 0:
-                try:
-                    for block in pending_blocks:
-                        work = get_pow(sender_account)
-                        if work == '':
-                            logging.info("{}: processing without pow".format(datetime.now()))
-                            receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
-                                            'block': block}
-                        else:
-                            logging.info("{}: processing with pow".format(datetime.now()))
-                            receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
-                                            'block': block, 'work': work}
-                        receive_json = json.dumps(receive_data)
-                        requests.post('{}'.format(NODE_IP), data=receive_json)
-                        logging.info("{}: block {} received".format(datetime.now(), block))
-                except Exception as e:
-                    logging.info("Exception: {}".format(e))
-                    raise e
-                os._exit(0)
+            try:
+                for block in pending_blocks:
+                    work = get_pow(sender_account)
+                    if work == '':
+                        logging.info("{}: processing without pow".format(datetime.now()))
+                        receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                        'block': block}
+                    else:
+                        logging.info("{}: processing with pow".format(datetime.now()))
+                        receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                        'block': block, 'work': work}
+                    receive_json = json.dumps(receive_data)
+                    requests.post('{}'.format(NODE_IP), data=receive_json)
+                    logging.info("{}: block {} received".format(datetime.now(), block))
+            except Exception as e:
+                logging.info("Exception: {}".format(e))
+                raise e
     except Exception as e:
         logging.info("Receive Pending Error: {}".format(e))
         raise e

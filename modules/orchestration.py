@@ -294,8 +294,10 @@ def balance_process(message):
             set_register_call = "UPDATE users SET register = 1 WHERE user_id = %s AND users.system = %s AND register = 0"
             set_register_values = [message['sender_id'], message['system']]
             modules.db.set_db_data(set_register_call, set_register_values)
-
-        modules.currency.receive_pending(message['sender_account'])
+        new_pid = os.fork()
+        if new_pid == 0:
+            modules.currency.receive_pending(message['sender_account'])
+            os._exit(0)
 
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']
