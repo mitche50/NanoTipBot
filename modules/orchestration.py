@@ -283,9 +283,9 @@ def balance_process(message):
     data = modules.db.get_db_data(balance_call)
     if not data:
         logging.info("{}: User tried to check balance without an account".format(datetime.now()))
-        balance_message = ("There is no account linked to your username.  Please respond with !register to "
+        no_account_text = ("There is no account linked to your username.  Please respond with !register to "
                            "create an account.")
-        modules.social.send_dm(message['sender_id'], balance_message, message['system'])
+        modules.social.send_dm(message['sender_id'], no_account_text, message['system'])
     else:
         message['sender_account'] = data[0][0]
         sender_register = data[0][1]
@@ -338,8 +338,8 @@ def register_process(message):
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
         modules.db.set_db_data(account_create_call, account_create_values)
 
-        account_text = "You have successfully registered for an account.  Your account number is:"
-        modules.social.send_account_message(account_text, message, sender_account)
+        account_register_text = "You have successfully registered for an account.  Your account number is:"
+        modules.social.send_account_message(account_register_text, message, sender_account)
 
         logging.info("{}: Register successful!".format(datetime.now()))
 
@@ -347,11 +347,11 @@ def register_process(message):
         # The user has an account, but needed to register, so send a message to the user with their account
         sender_account = data[0][0]
         account_registration_update = "UPDATE users SET register = 1 WHERE user_id = %s AND register = 0"
-        account_registration_values = [message['sender_id'],]
+        account_registration_values = [message['sender_id'], ]
         modules.db.set_db_data(account_registration_update, account_registration_values)
 
-        account_registration_text = "You have successfully registered for an account.  Your account number is:"
-        modules.social.send_account_message(account_registration_text, message, sender_account)
+        account_register_text = "You have successfully registered for an account.  Your account number is:"
+        modules.social.send_account_message(account_register_text, message, sender_account)
 
         logging.info("{}: User has an account, but needed to register.  Message sent".format(datetime.now()))
 
@@ -382,8 +382,8 @@ def account_process(message):
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
         modules.db.set_db_data(account_create_call, account_create_values)
 
-        account_text = "You didn't have an account set up, so I set one up for you.  Your account number is:"
-        modules.social.send_account_message(account_text, message, sender_account)
+        account_create_text = "You didn't have an account set up, so I set one up for you.  Your account number is:"
+        modules.social.send_account_message(account_create_text, message, sender_account)
 
         logging.info("{}: Created an account for the user!".format(datetime.now()))
 
@@ -599,7 +599,7 @@ def tip_process(message, users_to_tip, request_json):
         modules.social.send_reply(message, multi_tip_success)
 
     elif len(users_to_tip) == 1:
-        tip_success = ("You have successfully sent your {} $NANO tip.  Check your account at "
-                       "https://nanocrawler.cc/explorer/account/{}".format(message['tip_amount_text'],
-                                                                           message['send_hash']))
+        tip_success = ("You have successfully sent your {} $NANO tip.  Check this transaction at "
+                       "https://nanocrawler.cc/explorer/block/{}".format(message['tip_amount_text'],
+                                                                         message['send_hash']))
         modules.social.send_reply(message, tip_success)
