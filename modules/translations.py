@@ -9,7 +9,8 @@ maintenance_text = {
     'ge': '',
     'ru': 'Совет бот находится в обслуживании. Проверьте @NanoTipBot на Twitter для получения дополнительной '
           'информации.',
-    'sv': ''
+    'sv': '',
+    'it': 'Il tip bot è in manutenzione. Controlla @NanoTipBot su Twitter per ulteriori informazioni.'
 }
 redirect_tip_text = {
     'en': 'Tips are processed through public messages now.  Please send in the format @NanoTipBot !tip 1 @user1.',
@@ -20,7 +21,9 @@ redirect_tip_text = {
     'ge': '',
     'ru': 'Советы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате @NanoTipBot '
           '!tip 1 @имя пользователя1.',
-    'sv': ''
+    'sv': '',
+    'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato @NanoTipBot '
+          '!tip 1 @utente1.'
 }
 
 self_tip_text = {
@@ -32,7 +35,8 @@ self_tip_text = {
     'ge': '',
     'ru': 'Самостоятельные чаевые не допускаются. Пожалуйста, используйте этот бот, чтобы распространять '
           '$NANO другим пользователям Twitter!',
-    'sv': ''
+    'sv': '',
+    'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare $NANO agli altri utenti Twitter!'
 }
 
 receiver_tip_text = {
@@ -47,7 +51,10 @@ receiver_tip_text = {
     'ru': '@{} только что отправил вам {} NANO чаевые! Ответьте на этот DM с помощью  !balance , чтобы увидеть '
           'ваш новый баланс. Если вы еще не зарегистрировали учетную запись, отправьте ответ с помощью  !register '
           'для начала или  !help, чтобы увидеть список команд! Узнайте больше о NANO на https://nano.org/',
-    'sv': ''
+    'sv': '',
+    'it': '@{} ti ha inviato una mancia di {} NANO! Rispondi a questo DM con !balance per vedere il tuo saldo. '
+          'Se non hai registrato un account, invia una risposta con !register per cominciare, o !help per vedere una '
+          'lista dei comandi! Per saperne di più su NANO visita https://nano.org/'
 }
 
 private_tip_text = {
@@ -59,7 +66,9 @@ private_tip_text = {
     'ge': '',
     'ru': 'Частный совет находится на обслуживании. Чтобы отправить свой совет, используйте функцию '
           '!tip в твите или ответе!',
-    'sv': ''
+    'sv': '',
+    'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione !tip in un tweet o '
+          'in una risposta!'
 }
 
 wrong_format_text = {
@@ -72,12 +81,14 @@ wrong_format_text = {
     'ge': '',
     'ru': 'Отправленная вами команда или синтаксис не распознаются. Пожалуйста, пришлите !help для получения '
           'списка команд и того, что они делают.',
-    'sv': ''
+    'sv': '',
+    'it': 'Il comando da te inviato non è stato riconosciuto. Invia !help per una lista dei comandi e per '
+          'sapere cosa fanno.'
 }
 
 no_users_text = {
-    'en': "Looks like you didn't enter in anyone to tip, or you mistyped someone's handle.  You can try "
-          "to tip again using the format !tip 1234 @username",
+    'en': 'Looks like you didn\'t enter in anyone to tip, or you mistyped someone\'s handle.  You can try '
+          'to tip again using the format !tip 1234 @username',
     'es': '',
     'ja': '',
     'cn': '',
@@ -85,7 +96,9 @@ no_users_text = {
     'ge': '',
     'ru': 'Похоже, ты не отметил никого, чтобы давать чаевые, или набрал неверно. Вы можете попробовать дать '
           'чаевые снова, используя формат !tip 1234 @имя пользователя',
-    'sv': ''
+    'sv': '',
+    'it': 'Sembra che tu non abbia inserito nessuno cui dare la mancia, oppure abbia sbagliato a scrivere il suo nome '
+          'utente. Puoi riprovare usando il formato !tip 1234 @nomeutente'
 }
 
 multi_tip_success = {
@@ -96,9 +109,11 @@ multi_tip_success = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': 'Вы успешно отправили свой совет {} $NANO. Проверьте эту транзакцию на '
-          'https://nanocrawler.cc/explorer/block/{}',
-    'sv': ''
+    'ru': 'Вы успешно отправили свои советы {} $NANO. Проверьте свою учетную запись на '
+          'https://nanocrawler.cc/explorer/account/{} ',
+    'sv': '',
+    'it': 'Hai inviato con successo le tue mance di {} $NANO. Controlla il tuo account su '
+          'https://nanocrawler.cc/explorer/account/{}'
 }
 
 tip_success = {
@@ -109,8 +124,11 @@ tip_success = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Вы успешно отправили свой совет {} $NANO. Проверьте эту транзакцию на '
+          'https://nanocrawler.cc/explorer/block/{}',
+    'sv': '',
+    'it': 'Hai inviato con successo le tue mance di {} $NANO. Controlla questa transazione su '
+          'https://nanocrawler.cc/explorer/block/{}'
 }
 
 not_a_number_text = {
@@ -121,8 +139,11 @@ not_a_number_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Похоже, значение, которое вы ввели для чаевых, не было числом. Вы можете попробовать дать чаевые '
+          'снова, используя формат !tip 1234 @имя пользователя',
+    'sv': '',
+    'it': 'Sembra che il valore della mancia inserito non sia un numero. Puoi riprovare usando il formato '
+          '!tip 1234 @nomeutente'
 }
 
 min_tip_text = {
@@ -132,8 +153,9 @@ min_tip_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Минимальная сумма чаевых составляет {} NANO. Пожалуйста, обновите сумму чаевых и попробуйте снова.',
+    'sv': '',
+    'it': 'La mancia minima è di {} NANO. Aggiorna l\'importo della e riprova.'
 }
 
 missing_user_message = {
@@ -144,8 +166,11 @@ missing_user_message = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': '{} не найдено в наших записях. Чтобы дать им чаевые, им нужно быть участником канала. Если они '
+          'находятся на канале, попросите их отправить сообщение в чат, чтобы я мог добавить их.',
+    'sv': '',
+    'it': '{} non trovato. Per dare loro una mancia, devono essere membri del gruppo. Se sono nel gruppo, dì '
+          'loro di inviare un messaggio nella chat così potrò aggiungerli.'
 }
 
 no_account_text = {
@@ -155,8 +180,9 @@ no_account_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'У вас нет аккаунта с ботом. Пожалуйста, пришлите мне DM с !register, чтобы создать учетную запись.',
+    'sv': '',
+    'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.'
 }
 
 not_enough_text = {
@@ -167,8 +193,11 @@ not_enough_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'У вас недостаточно NANO, чтобы покрыть этот совет {} NANO. Пожалуйста, проверьте свой баланс, '
+          'отправив мне DM с !balance и повторите попытку.',
+    'sv': '',
+    'it': 'Non hai abbastanza NANO per coprire questa mancia di {} NANO. Controlla il tuo saldo inviandomi un '
+          'DM con !balance e riprova.'
 }
 
 help_message = {
@@ -180,7 +209,7 @@ help_message = {
                      'long term storage device for Nano.\n\n'
           + BULLET + '!balance: This returns the balance of the account linked with your user ID.\n\n'
           + BULLET + '!tip: Tips are sent through public tweets or in Telegram groups.\n'
-                     ' On Twitter: Tag @NanoTipBot in a tweet and mention !tip <amount> <@username>.  '
+                     ' On Twitter: Tag @NanoTipBot in a tweet and mention !tip <amount> <@username>.\n'
                      ' Example: @NanoTipBot !tip 1 @mitche50 would send a 1 Nano tip to user @mitche50.\n'
                      ' On Telegram send !tip <amount> <@username> to tip in the group.\n\n'
           + BULLET + ' !privatetip: Currently disabled.  This will send a tip to another user through DM.  If you '
@@ -199,10 +228,55 @@ help_message = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Спасибо за использование Nano Tip Bot! Ниже приведен список команд и описание того, что они делают:\n\n'
+          + BULLET + ' !help: Совет бот ответит на ваш DM со списком команд и их функций. Если вы что-то забыли, '
+                     'используйте это, чтобы получить подсказку, как это сделать!\n\n'
+          + BULLET + ' !register: Регистрирует ваш идентификатор пользователя для учетной записи, которая связана с '
+                     'ним. Это используется для хранения ваших советов. Обязательно выходите в частный кошелек, '
+                     'так как совет бот не предназначен для длительного хранения Nano.\n\n'
+          + BULLET + ' !balance: показывает баланс учетной записи, связанной с вашим идентификатором пользователя.\n\n'
+          + BULLET + ' !tip: Советы отправляются через публичные твиты или в группах Telegram.\n'
+                     'В Твиттере: Отметьте @NanoTipBot в твиттере и упомяните !tip <сумма> <@имя пользователя>. '
+                     'Пример: @NanoTipBot !tip 1 @mitche50 будет отправлено 1 Nano совет пользователю @mitche50.\n'
+                     'На Telegram отправьте !tip <сумма> <@имя пользователя> , чтобы дать чаевые в группе.\n\n'
+          + BULLET + ' !privatetip: В настоящее время отключен. Это отправит совет другому пользователю через DM. '
+                     'Если вы хотите, чтобы сумма чаевых была конфиденциальной, используйте эту функцию! '
+                     'Правильное использование  !privatetip @имя пользователя 1234\n\n'
+          + BULLET + ' !account: Возвращает счёт учетной записи, связанный с вашим идентификатором пользователя '
+                     '(в настоящее время уникальным для платформы). Вы можете использовать это, чтобы пополнить '
+                     'счет Nano для получения чаевых с вашего личного кошелька.\n\n'
+          + BULLET + ' !withdraw: Правильное использование  !withdraw xrb_12345. Это отправит полный баланс вашего '
+                     'счета на предоставленную учетную запись Nano. Необязательно: Вы можете указать сумму для вывода, '
+                     'отправив! !withdraw <сумма> <адрес>. Пример: !withdraw 1 xrb_iaoia83if221lodoepq  выведет 1 '
+                     'NANO на счет xrb_iaoia83if221lodoepq.\n\n'
+          + BULLET + ' !donate: Правильное использование  !donate 1234. Это отправит запрошенное пожертвование '
+                     'на счет пожертвования Nano Tip Bot, чтобы помочь финансировать усилия по развитию.',
+    'sv': '',
+    'it': 'Grazie di utilizzare Nano Tip Bot! Qui sotto trovi una lista di comandi, e una '
+          'descrizione di cosa fanno:\n\n'
+          + BULLET + ' !help: Il tip bot risponderà al tuo DM con una lista di comandi e delle loro funzioni. Se ne '
+                     'dimentichi qualcuno, usa questo per ottenere un suggerimento su come utilizzarlo!\n\n'
+          + BULLET + ' !register: Registra il tuo ID utente per un account collegato ad esso. Viene utilizzato per '
+                     'conservare le tue mance. Assicurati di prelevarle nel tuo portafoglio privato, in quanto il tip '
+                     'bot non è destinato ad essere un mezzo per conservare i tuoi Nano nel lungo termine.\n\n'
+          + BULLET + ' !balance: Mostra il saldo dell\'account collegato al tuo ID utente.\n\n'
+          + BULLET + ' !tip: Le mance vengono inviate attraverso tweets pubblici o nei gruppi Telegram.\n'
+                     'Su Twitter: Menziona @NanoTipBot in un tweet e usa !tip <importo> <@nomeutente>.\n'
+                     'Esempio: @NanoTipBot !tip 1 @mitche50 invierà una mancia di 1 Nano all\'utente @mitche50.\n'
+                     'Su Telegram invia !tip <importo> <@nomeutente> per dare una mancia nel gruppo.\n\n'
+          + BULLET + ' !privatetip: Attualmente disabilitata. Questo invierà una mancia ad un altro utente tramite '
+                     'DM. Se vuoi che l\'importo della tua mancia rimanga privato, usa questa funzione! L\'uso '
+                     'corretto è !privatetip @nomeutente 1234\n\n'
+          + BULLET + ' !account: Mostra il numero dell\'account collegato al tuo ID utente (unico sulla piattaforma). '
+                     'Puoi utilizzarlo per depositare altri Nano dal tuo portafoglio personale.\n\n'
+          + BULLET + ' !withdraw: L\'uso corretto è !withdraw xrb_12345. Questo invierà l\'intero saldo del tuo '
+                     'account delle mance all\'indirizzo Nano fornito.Opzionale: Puoi includere l\'importo da '
+                     'prelevare inviando !withdraw <importo> <indirizzo>. '
+                     'Esemmpio: !withdraw 1 xrb_iaoia83if221lodoepq preleverà 1 NANO inviandolo '
+                     'all\'indirizzo xrb_iaoia83if221lodoepq\n\n'
+          + BULLET + ' !donate: L\'uso corretto è !donate 1234. Questo invierà la donazione richiesta all\'account '
+                     'donazioni di Nano Tip Bot per finanziarne lo sviluppo.'
 }
-
 account_register_text = {
     'en': 'You have successfully registered for an account.  Your account number is:',
     'es': '',
@@ -210,8 +284,9 @@ account_register_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Вы успешно зарегистрировались для учетной записи. Ваш номер счета:',
+    'sv': '',
+    'it': 'Hai registrato un account con successo. Il numero del tuo account è:'
 }
 
 account_already_registered = {
@@ -222,18 +297,20 @@ account_already_registered = {
     'fr': '',
     'ge': '',
     'ru': '',
-    'sv': ''
+    'sv': '',
+    'it': 'Hai già registrato un account. Il numero del tuo account è:'
 }
 
 account_create_text = {
-    'en': "You didn't have an account set up, so I set one up for you.  Your account number is:",
+    'en': 'You didn\'t have an account set up, so I set one up for you.  Your account number is:',
     'es': '',
     'ja': '',
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'У вас не было учетной записи, поэтому я создал ее для вас. Ваш номер счета:',
+    'sv': '',
+    'it': 'Non hai ancora configurato un account, quindi ne ho fatto uno per te. Il numero del tuo account è:'
 }
 
 account_text = {
@@ -243,8 +320,9 @@ account_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Ваш номер счета:',
+    'sv': '',
+    'it': 'Il numero del tuo account è:'
 }
 
 withdraw_no_account_text = {
@@ -255,7 +333,8 @@ withdraw_no_account_text = {
     'fr': '',
     'ge': '',
     'ru': '',
-    'sv': ''
+    'sv': '',
+    'it': ''
 }
 
 invalid_account_text = {
@@ -265,8 +344,9 @@ invalid_account_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Указанный вами номер счета недействителен. Пожалуйста, проверьте еще раз и отправьте запрос.',
+    'sv': '',
+    'it': 'Il numero dell\'account da te fornito non è valido. Controllalo di nuovo e rinvia la tua richiesta.'
 }
 
 
@@ -277,8 +357,10 @@ no_balance_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'У вас 0 баланса на вашем счету. Пожалуйста, внесите депозит на ваш адрес {}, '
+          'чтобы отправить больше советов!',
+    'sv': '',
+    'it': 'Hai un saldo di 0 nel tuo account. Deposita nel tuo indirizzo {} per inviare altre mance!'
 }
 
 invalid_amount_text = {
@@ -289,8 +371,11 @@ invalid_amount_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Вы не отправили номер счёта для вывода. Пожалуйста, повторите отправку в формате  '
+          '!withdraw <адрес> или !withdraw <сумма> <адрес>;',
+    'sv': '',
+    'it': 'Non hai inviato un numero da prelevare. Rinvia con il formato !withdraw <account> o '
+          '!withdraw <importo> <account>'
 }
 
 not_enough_balance_text = {
@@ -300,8 +385,9 @@ not_enough_balance_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'У вас не так много NANO в вашем аккаунте. Чтобы вывести всю сумму, отправьте !withdraw <адрес>',
+    'sv': '',
+    'it': 'Non hai così tanti NANO nel tuo account. Per prelevarne l\'intero importo, invia !withdraw <account>'
 }
 
 withdraw_text = {
@@ -312,22 +398,32 @@ withdraw_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Вы успешно отправили {} NANO! Вы можете проверить транзакцию по адресу '
+          'https://nanocrawler.cc/explorer/block/{}',
+    'sv': '',
+    'it': 'Hai prelevato con successo {} NANO! Puoi controllare la transazione su '
+          'https://nanocrawler.cc/explorer/block/{}'
 }
 
 incorrect_withdraw_text = {
-    'en': "I didn't understand your withdraw request.  Please resend with !withdraw <optional:amount> <account>.  "
-          "Example, !withdraw 1 xrb_aigakjkfa343tm3h1kj would withdraw 1 NANO to account xrb_aigakjkfa343tm3h1kj.  "
-          "Also, !withdraw xrb_aigakjkfa343tm3h1kj would withdraw your entire balance to account "
-          "xrb_aigakjkfa343tm3h1kj.",
+    'en': 'I didn\'t understand your withdraw request.  Please resend with !withdraw <optional:amount> <account>.  '
+          'Example, !withdraw 1 xrb_aigakjkfa343tm3h1kj would withdraw 1 NANO to account xrb_aigakjkfa343tm3h1kj.  '
+          'Also, !withdraw xrb_aigakjkfa343tm3h1kj would withdraw your entire balance to account '
+          'xrb_aigakjkfa343tm3h1kj.',
     'es': '',
     'ja': '',
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Я не понял ваш запрос на снятие средств. Пожалуйста, повторно отправьте с помощью !withdraw '
+          '<необязательно: сумма> <адрес>. Например,  !withdraw 1 xrb_aigakjkfa343tm3h1kj выведет 1 NANO на '
+          'счет xrb_aigakjkfa343tm3h1kj. Также, !withdraw xrb_aigakjkfa343tm3h1kj выведет весь ваш баланс на '
+          'счет xrb_aigakjkfa343tm3h1kj.',
+    'sv': '',
+    'it': 'Non ho capito la tua richiesta di prelievo. Rinvia con !withdraw <opzionale:importo> <account>. '
+          'Esempio, !withdraw 1 xrb_aigakjkfa343tm3h1kj preleverà 1 NANO inviandolo all\'account '
+          'xrb_aigakjkfa343tm3h1kj. Inoltre, !withdraw xrb_aigakjkfa343tm3h1kj preleverà l\'intero saldo '
+          'inviandolo all\'account xrb_aigakjkfa343tm3h1kj.'
 }
 
 wrong_donate_text = {
@@ -337,8 +433,9 @@ wrong_donate_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Принимаются только цифровые суммы. Пожалуйста, отправьте как !donate 1234',
+    'sv': '',
+    'it': 'Sono accettati solo importi numerici. Rinvia tramite !donate 1234'
 }
 
 large_donate_text = {
@@ -349,8 +446,11 @@ large_donate_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Ваш баланс только {} NANO, и вы пытались отправить {}. Пожалуйста, добавьте больше NANO в свой аккаунт '
+          'или уменьшите сумму пожертвования.',
+    'sv': '',
+    'it': 'Il tuo saldo è di soli {} NANO e hai provato a inviare {}. Aggiungi altri NANO al tuo '
+          'account, o diminuisci l\'importo della donazione.'
 }
 
 small_donate_text = {
@@ -360,8 +460,10 @@ small_donate_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Минимальная сумма пожертвования составляет {}. Пожалуйста, обновите сумму пожертвования и '
+          'отправьте повторно.',
+    'sv': '',
+    'it': 'L\'importo minimo per la donazione è {}. Aggiorna l\'importo della donazione e rinvia.'
 }
 
 donate_text = {
@@ -372,8 +474,11 @@ donate_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Благодарим вас за щедрость! Вы успешно пожертвовали {} NANO! Вы можете проверить '
+          'транзакцию по адресу https://nanocrawler.cc/explorer/block/{}',
+    'sv': '',
+    'it': 'Grazie della tua generosità! Hai inviato con successo {} NANO! Puoi controllare la transazione su '
+          'https://nanocrawler.cc/explorer/block/{}'
 }
 
 incorrect_donate_text = {
@@ -383,6 +488,22 @@ incorrect_donate_text = {
     'cn': '',
     'fr': '',
     'ge': '',
-    'ru': '',
-    'sv': ''
+    'ru': 'Неверный синтаксис. Пожалуйста, используйте формат !donate 1234',
+    'sv': '',
+    'it': 'Sintassi incorretta. Usa il formato !donate 1234'
+}
+
+balance_text = {
+    'en': 'Available: {} NANO\n'
+          'Pending: {} NANO',
+    'es': '',
+    'ja': '',
+    'cn': '',
+    'fr': '',
+    'ge': '',
+    'ru': 'Имеется в наличии: {} NANO\n'
+          'В ожидании: {} NANO',
+    'sv': '',
+    'it': 'Disponibile: {} NANO\n'
+          'In sospeso: {} NANO'
 }
