@@ -1,5 +1,6 @@
 import base64
 import configparser
+from decimal import Decimal
 import hashlib
 import hmac
 import json
@@ -244,7 +245,7 @@ def index():
 
     total_tipped_nano_table = modules.db.get_db_data(total_tipped_nano)
     total_tipped_number_table = modules.db.get_db_data(total_tipped_number)
-    total_value_usd = round(total_tipped_number_table[0][1] * price, 2)
+    total_value_usd = round(Decimal(total_tipped_nano_table[0][1] + total_tipped_nano_table[1][1]) * Decimal(price), 2)
 
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
                            total_tipped_number_table=total_tipped_number_table, total_value_usd=total_value_usd,
