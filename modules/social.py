@@ -13,6 +13,7 @@ from TwitterAPI import TwitterAPI
 
 import modules.currency
 import modules.db
+import modules.translations as translations
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
@@ -54,6 +55,39 @@ telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Connect to Nano node
 rpc = nano.rpc.Client(NODE_IP)
+
+
+def get_language(message):
+    """
+    Set the language for messaging the user
+    """
+    get_language_call = "SELECT language_code FROM tip_bot.languages WHERE user_id = %s AND languages.system = %s"
+    language_values = [message['sender_id'], message['system']]
+    language_return = modules.db.get_db_data_new(get_language_call, language_values)
+    # If there is no record, create a new one with default EN language
+    try:
+        message['language'] = language_return[0][0]
+    except Exception as e:
+        logging.info("{}: There was no language entry, setting default".format(datetime.now()))
+        # set_language_call = "INSERT INTO tip_bot.languages (user_id, language_code, system) VALUES (%s, 'en', %s)"
+        # set_language_values = [message['sender_id'], message['system']]
+        # modules.db.set_db_data(set_language_call, set_language_values)
+        message['language'] = 'en'
+
+
+def get_receiver_language(user_id, system):
+    """
+    Set the language for the receiver of the tip
+    """
+    get_language_call = ("SELECT language_code FROM tip_bot.languages WHERE user_id = %s "
+                         "AND languages.system = %s")
+    language_values = [user_id, system]
+    language_return = modules.db.get_db_data_new(get_language_call, language_values)
+    try:
+        return language_return[0][0]
+    except Exception as e:
+        logging.info("{}: There was no language entry for the receiver, setting default".format(datetime.now()))
+        return 'en'
 
 
 def send_dm(receiver, message, system):
@@ -149,6 +183,7 @@ def set_message_info(status, message):
         dm_text = dm_text.lower()
 
         message['text'] = dm_text.split(" ")
+        modules.social.get_language(message)
 
     return message
 
@@ -186,17 +221,13 @@ def validate_tip_amount(message):
     except Exception:
         logging.info("{}: Tip amount was not a number: {}".format(datetime.now(),
                                                                   message['text'][message['starting_point']]))
-        not_a_number_text = 'Looks like the value you entered to tip was not a number.  You can try to tip ' \
-                            'again using the format !tip 1234 @username'
-        send_reply(message, not_a_number_text)
+        send_reply(message, translations.not_a_number_text[message['language']])
 
         message['tip_amount'] = -1
         return message
 
     if Decimal(message['tip_amount']) < Decimal(MIN_TIP):
-        min_tip_text = ("The minimum tip amount is {} NANO.  Please update your tip amount and try again."
-                        .format(MIN_TIP))
-        send_reply(message, min_tip_text)
+        send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP))
 
         message['tip_amount'] = -1
         logging.info("{}: User tipped less than {} NANO.".format(datetime.now(), MIN_TIP))
@@ -249,8 +280,11 @@ def set_tip_list(message, users_to_tip, request_json):
                     users_to_tip.clear()
                     return message, users_to_tip
 
+                receiver_language = get_receiver_language(user_info.id, message['system'])
+
                 user_dict = {'receiver_id': user_info.id, 'receiver_screen_name': user_info.screen_name,
-                             'receiver_account': None, 'receiver_register': None}
+                             'receiver_account': None, 'receiver_register': None,
+                             'receiver_language': receiver_language}
                 users_to_tip.append(user_dict)
                 logging.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
 
@@ -276,11 +310,8 @@ def set_tip_list(message, users_to_tip, request_json):
                     logging.info("User not found in DB: chat ID:{} - member name:{}".
                                  format(message['chat_id'], request_json['message']['reply_to_message']['from']
                                                                         ['first_name']))
-                    missing_user_message = ("{} not found in our records.  In order to tip them, they need to be a "
-                                            "member of the channel.  If they are in the channel, please have them "
-                                            "send a message in the chat so I can add them.".
-                                            format(request_json['message']['reply_to_message']['from']['first_name']))
-                    send_reply(message, missing_user_message)
+                    send_reply(message, translations.missing_user_message[message['language']]
+                               .format(request_json['message']['reply_to_message']['from']['first_name']))
                     users_to_tip.clear()
                     return message, users_to_tip
         else:
@@ -315,11 +346,8 @@ def set_tip_list(message, users_to_tip, request_json):
                         else:
                             logging.info("User not found in DB: chat ID:{} - member name:{}".
                                          format(message['chat_id'], message['text'][t_index][1:]))
-                            missing_user_message = ("{} not found in our records.  In order to tip them, they need to be a "
-                                                    "member of the channel.  If they are in the channel, please have them "
-                                                    "send a message in the chat so I can add them.".
-                                                    format(message['text'][t_index]))
-                            send_reply(message, missing_user_message)
+                            send_reply(message, translations.missing_user_message[message['language']]
+                                       .format(message['text'][t_index]))
                             users_to_tip.clear()
                             return message, users_to_tip
             try:
@@ -343,11 +371,8 @@ def set_tip_list(message, users_to_tip, request_json):
                         else:
                             logging.info("User not found in DB: chat ID:{} - member name:{}".
                                          format(message['chat_id'], mention['user']['first_name']))
-                            missing_user_message = ("{} not found in our records.  In order to tip them, they need to be a "
-                                                    "member of the channel.  If they are in the channel, please have them "
-                                                    "send a message in the chat so I can add them.".
-                                                    format(mention['user']['first_name']))
-                            send_reply(message, missing_user_message)
+                            send_reply(message, translations.missing_user_message[message['language']]
+                                       .format(mention['user']['first_name']))
                             users_to_tip.clear()
                             return message, users_to_tip
             except:
@@ -373,9 +398,7 @@ def validate_sender(message):
     sender_account_info = modules.db.get_db_data(db_call)
 
     if not sender_account_info:
-        no_account_text = ("You do not have an account with the bot.  Please send a DM to me with !register to set up "
-                           "an account.")
-        send_reply(message, no_account_text)
+        send_reply(message, translations.no_account_text[message['language']])
 
         logging.info("{}: User tried to send a tip without an account.".format(datetime.now()))
         message['sender_account'] = None
@@ -402,9 +425,7 @@ def validate_total_tip_amount(message):
     """
     logging.info("{}: validating total tip amount".format(datetime.now()))
     if message['sender_balance_raw']['balance'] < (message['total_tip_amount'] * 1000000000000000000000000000000):
-        not_enough_text = ("You do not have enough NANO to cover this {} NANO tip.  Please check your balance by "
-                           "sending a DM to me with !balance and retry.".format(message['total_tip_amount']))
-        send_reply(message, not_enough_text)
+        send_reply(message, translations.not_enough_text[message['language']].format(message['total_tip_amount']))
 
         logging.info("{}: User tried to send more than in their account.".format(datetime.now()))
         message['tip_amount'] = -1

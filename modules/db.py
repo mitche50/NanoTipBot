@@ -149,6 +149,23 @@ def create_tables():
             logging.info("Checking if tip_list table was created: {}".format(
                 check_table_exists('tip_list')))
 
+        check_exists = check_table_exists('languages')
+        if not check_exists:
+            # create languages table
+            sql = """
+            CREATE TABLE `languages` (
+              `user_id` bigint(255) NOT NULL,
+              `language_code` varchar(2) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'en',
+              `system` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
+              PRIMARY KEY (`user_id`),
+              UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+              CONSTRAINT `user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            """
+            db_cursor.execute(sql)
+            logging.info("Checking if languages table was created: {}".format(
+                check_table_exists('languages')))
+
         db.commit()
         db_cursor.close()
         db.close()
@@ -170,14 +187,26 @@ def get_db_data(db_call):
     return db_data
 
 
+def get_db_data_new(db_call, values):
+    """
+    Retrieve data from DB
+    """
+    db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
+                         charset="utf8mb4")
+    db_cursor = db.cursor()
+    db_cursor.execute(db_call, values)
+    db_data = db_cursor.fetchall()
+    db_cursor.close()
+    db.close()
+    return db_data
+
+
 def set_db_data(db_call, values):
     """
     Enter data into DB
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8mb4")
-    logging.info("db call: {}".format(db_call))
-    logging.info("values: {}".format(values))
     try:
         db_cursor = db.cursor()
         db_cursor.execute(db_call, values)

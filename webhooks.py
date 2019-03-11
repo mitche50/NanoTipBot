@@ -20,6 +20,7 @@ import modules.currency
 import modules.db
 import modules.orchestration
 import modules.social
+import modules.translations as translations
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('webhooks.log', 'a', 'utf-8')],
@@ -395,6 +396,7 @@ def telegram_event():
             message['text'] = request_json['message']['text']
             message['dm_array'] = message['text'].split(" ")
             message['dm_action'] = message['dm_array'][0].lower()
+            modules.social.get_language(message)
 
             logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
 
@@ -443,8 +445,7 @@ def telegram_event():
                             bot_status = config.get('webhooks', 'bot_status')
                             if bot_status == 'maintenance':
                                 modules.social.send_dm(message['sender_id'],
-                                                       "The tip bot is in maintenance.  Check @NanoTipBot on Twitter "
-                                                       "for more information.",
+                                                       translations.maintenance_text[message['language']],
                                                        message['system'])
                             else:
                                 modules.orchestration.tip_process(message, users_to_tip, request_json)
@@ -566,6 +567,7 @@ def twitter_event_received():
         message['text'] = message_object.get('message_data', {}).get('text')
         message['dm_array'] = message['text'].split(" ")
         message['dm_action'] = message['dm_array'][0].lower()
+        modules.social.get_language(message)
 
         logging.info("Processing direct message.")
 
@@ -612,8 +614,7 @@ def twitter_event_received():
                     bot_status = config.get('webhooks', 'bot_status')
                     if bot_status == 'maintenance':
                         modules.social.send_dm(message['sender_id'],
-                                               "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more "
-                                               "information.",
+                                               translations.maintenance_text[message['language']],
                                                message['system'])
                     else:
                         api.create_favorite(message['id'])

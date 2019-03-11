@@ -14,6 +14,7 @@ from TwitterAPI import TwitterAPI
 
 import modules.db
 import modules.social
+import modules.translations as translations
 
 # Set Log File
 logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
@@ -120,14 +121,13 @@ def send_tip(message, users_to_tip, tip_index):
     """
     bot_status = config.get('webhooks', 'bot_status')
     if bot_status == 'maintenance':
-        modules.social.send_dm(message['sender_id'],
-                "The tip bot is in maintenance.  Check @NanoTipBot on Twitter for more information.", message['system'])
+        modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                               message['system'])
         return
     else:
         logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
         if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
-            self_tip_text = "Self tipping is not allowed.  Please use this bot to spread the $NANO to other Twitter users!"
-            modules.social.send_reply(message, self_tip_text)
+            modules.social.send_reply(message, translations.self_tip_text[message['language']])
 
             logging.info("{}: User tried to tip themself").format(datetime.now())
             return
@@ -194,13 +194,10 @@ def send_tip(message, users_to_tip, tip_index):
                 users_to_tip[tip_index]['balance'] = str(users_to_tip[tip_index]['balance'])
 
             # Send a DM to the receiver
-            receiver_tip_text = (
-                "@{} just sent you a {} NANO tip! Reply to this DM with !balance to see your new balance.  If you have not "
-                "registered an account, send a reply with !register to get started, or !help to see a list of "
-                "commands!  Learn more about NANO at https://nano.org/".format(message['sender_screen_name'],
-                                                                               message['tip_amount_text'],
-                                                                               users_to_tip[tip_index]['balance']))
-            modules.social.send_dm(users_to_tip[tip_index]['receiver_id'], receiver_tip_text, message['system'])
+            modules.social.send_dm(users_to_tip[tip_index]['receiver_id'],
+                                   translations.receiver_tip_text[users_to_tip[tip_index]['receiver_language']]
+                                   .format(message['sender_screen_name'], message['tip_amount_text'],
+                                           users_to_tip[tip_index]['balance']), message['system'])
 
         except Exception as e:
             logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
