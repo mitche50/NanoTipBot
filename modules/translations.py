@@ -39,7 +39,7 @@ redirect_tip_text = {
     'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato @NanoTipBot '
           '!tip 1 @utente1.'
 }
-
+# TODO: Make Twitter into a dynamic system
 self_tip_text = {
     'en': 'Self tipping is not allowed.  Please use this bot to spread the $NANO to other Twitter users!',
     'es': '',
@@ -329,7 +329,11 @@ help_message = {
                      'sending !withdraw <amount> <address>.  Example: !withdraw 1 xrb_iaoia83if221lodoepq would '
                      'withdraw 1 NANO to account xrb_iaoia83if221lodoepq.\n\n'
           + BULLET + ' !donate: Proper usage is !donate 1234.  This will send the requested donation to the Nano Tip '
-                     'Bot donation account to help fund development efforts.',
+                     'Bot donation account to help fund development efforts.\n\n'
+          + BULLET + ' !setlanguage: Used to change the default language of the bot.  A list of available languages '
+                     'is provided in the !languages command.  Proper use is "!setlanguage Russian" to change '
+                     'your language to Russian.\n\n'
+          + BULLET + ' !languages: Returns a list of languages available for translation.',
     'es': '',
     'nl': 'Bedankt voor het gebruik van de Nano Tip Bot! Hieronder staat een lijst met opdrachten en een '
           'beschrijving van wat ze doen:\n\n'
@@ -356,22 +360,40 @@ help_message = {
                      '!withdraw <bedrag> <adres>. Voorbeeld: !withdraw 1 xrb_iaoia83if221lodoepq zou 1 NANO '
                      'opnemen en versturen naar rekening xrb_iaoia83if221lodoepq.\n\n'
           + BULLET + ' !donate: correct gebruik is !donate 1234. Hiermee wordt de gevraagde donatie naar de '
-                     'Nano Tip Bot-donatierekening verzonden om goede initiatieven te helpen financieren.',
+                     'Nano Tip Bot-donatierekening verzonden om goede initiatieven te helpen financieren.\n\n'
+          + BULLET + ' !setlanguage: wordt gebruikt om de standaardtaal van de bot te wijzigen. Een lijst met '
+                     'beschikbare talen is beschikbaar in de! Talen-opdracht. Correct gebruik is '
+                     '"!setlanguage Russian" om uw taal in het Russisch te veranderen.\n\n'
+          + BULLET + ' !languages: retourneert een lijst met beschikbare talen voor vertaling.',
     'ja': '',
     'zh-t': '',
     'zh-s': '',
     'fr': '',
     'pt': 'Obrigado por utilizar o Nano Tip Bot! Os comandos disponíveis são:\n\n'
-          + BULLET + ' !help: O tip bot irá responder a uma mensagem direta com esta lista de comandos e descrição de utilização.\n\n'
-          + BULLET + ' !register: Regista um utilizador com o tip bot. O bot passará a guardar o seu saldo. Por favor faça levantamento das tips para uma carteira privada quando o objetivo for guardar Nano por longos períodos de tempo. O tip bot não deve ser usado para guardar Nano.\n\n'
+          + BULLET + ' !help: O tip bot irá responder a uma mensagem direta com esta lista de comandos e descrição de '
+                     'utilização.\n\n'
+          + BULLET + ' !register: Regista um utilizador com o tip bot. O bot passará a guardar o seu saldo. Por favor '
+                     'faça levantamento das tips para uma carteira privada quando o objetivo for guardar Nano por '
+                     'longos períodos de tempo. O tip bot não deve ser usado para guardar Nano.\n\n'
           + BULLET + ' !balance: Mostra o saldo do utilizador.\n\n'
           + BULLET + ' !tip: As tips são gorjetas enviadas através de tweets públicos ou em grupos do Telegram.\n'
-                     'No Twitter, faz tag do @NanoTipBot num tweet e utiliza o comando !tip <valor> <@utilizador>. Por exemplo: @NanoTipBot !tip 1 @mitche50.\n'
+                     'No Twitter, faz tag do @NanoTipBot num tweet e utiliza o comando !tip <valor> <@utilizador>. '
+                     'Por exemplo: @NanoTipBot !tip 1 @mitche50.\n'
                      'No Telegram, envia !tip <valor> <@utilizador> no grupo.\n\n'
-          + BULLET + ' !privatetip: De momento encontra-se desativado. Permite enviar uma tip a outro utilizador através de mensagens privadas. Para utilizar, o formato é !privatetip <@utilizador> <valor>\n\n'
-          + BULLET + ' !account: Devolve a conta associada ao teu utilizador. Envia Nano de uma carteira privada para esta conta para poderes enviar mais tips.\n\n'
-          + BULLET + ' !withdraw: Este comando serve para retirar o saldo do tip bot para outra conta à tua escolha. !withdraw xrb_12345 envia todo o teu saldo para essa conta. Opcionalmente podes incluir um montante para não enviar o saldo todo, da seguinte forma: !withdraw <valor> <conta>, por exemplo, !withdraw 1 xrb_12345.\n\n'
-          + BULLET + ' !donate: Este comando envia o valor pretendido para a conta de doações do Nano Tip Bot para ajudar com os custos de desenvolvimento e manutenção. Para doar, !donate <valor>',
+          + BULLET + ' !privatetip: De momento encontra-se desativado. Permite enviar uma tip a outro utilizador '
+                     'através de mensagens privadas. Para utilizar, o formato é !privatetip <@utilizador> <valor>\n\n'
+          + BULLET + ' !account: Devolve a conta associada ao teu utilizador. Envia Nano de uma carteira privada para '
+                     'esta conta para poderes enviar mais tips.\n\n'
+          + BULLET + ' !withdraw: Este comando serve para retirar o saldo do tip bot para outra conta à tua '
+                     'escolha. !withdraw xrb_12345 envia todo o teu saldo para essa conta. Opcionalmente podes incluir '
+                     'um montante para não enviar o saldo todo, da seguinte forma: !withdraw <valor> <conta>, '
+                     'por exemplo, !withdraw 1 xrb_12345.\n\n'
+          + BULLET + ' !donate: Este comando envia o valor pretendido para a conta de doações do Nano Tip Bot para '
+                     'ajudar com os custos de desenvolvimento e manutenção. Para doar, !donate <valor>\n\n'
+          + BULLET + ' !setlanguage: Usado para alterar o idioma padrão do bot. Uma lista de idiomas disponíveis é '
+                     'fornecida no comando! Languages. O uso adequado é "!setlanguage Russian" para mudar seu '
+                     'idioma para o russo.\n\n'
+          + BULLET + ' !languages: retorna uma lista de idiomas disponíveis para tradução.',
     'th': '',
     'de': '',
     'id': '',
@@ -398,7 +420,11 @@ help_message = {
                      'отправив !withdraw <сумма> <адрес>. Пример: !withdraw 1 xrb_iaoia83if221lodoepq  выведет 1 '
                      'NANO на адрес xrb_iaoia83if221lodoepq.\n\n'
           + BULLET + ' !donate: Правильное использование  !donate 1234. Это отправит пожертвование '
-                     'на адрес бота Nano Tip Bot, чтобы помочь в развитию его.',
+                     'на адрес бота Nano Tip Bot, чтобы помочь в развитию его.\n\n'
+          + BULLET + ' !setlanguage: Используется для изменения языка бота по умолчанию. Список доступных языков '
+                     'представлен в команде! Languages. Правильное использование "!setlanguage Russian" для '
+                     'изменения вашего языка на русский.\n\n'
+          + BULLET + ' !languages: возвращает список языков, доступных для перевода.',
     'sv': '',
     'it': 'Grazie di utilizzare Nano Tip Bot! Qui sotto trovi una lista di comandi, e una '
           'descrizione di cosa fanno:\n\n'
@@ -423,7 +449,11 @@ help_message = {
                      'Esemmpio: !withdraw 1 xrb_iaoia83if221lodoepq preleverà 1 NANO inviandolo '
                      'all\'indirizzo xrb_iaoia83if221lodoepq\n\n'
           + BULLET + ' !donate: L\'uso corretto è !donate 1234. Questo invierà la donazione richiesta all\'account '
-                     'donazioni di Nano Tip Bot per finanziarne lo sviluppo.'
+                     'donazioni di Nano Tip Bot per finanziarne lo sviluppo.\n\n'
+          + BULLET + ' !setlanguage: usato per cambiare la lingua predefinita del bot. Un elenco di lingue '
+                     'disponibili è fornito nel comando! Languages. L\'uso corretto è "!setlanguage Russian" per '
+                     'cambiare la lingua in russo.\n\n'
+          + BULLET + ' !languages: restituisce un elenco di lingue disponibili per la traduzione.'
 }
 account_register_text = {
     'en': 'You have successfully registered for an account.  Your account number is:',
