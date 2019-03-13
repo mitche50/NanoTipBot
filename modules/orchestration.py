@@ -29,149 +29,13 @@ BOT_NAME = config.get('webhooks', 'bot_name')
 BOT_ACCOUNT = config.get('webhooks', 'bot_account')
 MIN_TIP = config.get('webhooks', 'min_tip')
 
-balance_commands = [
-    '!balance',
-    '!bal',
-    '!b',
-    '/balance',
-    '/bal',
-    '/b'
-]
-
-account_commands = [
-    '!account',
-    '!acc',
-    '!a',
-    '!deposit',
-    '/account',
-    '/acc',
-    '/a',
-    '/deposit'
-]
-
-help_commands = [
-    '!help',
-    '!h',
-    '/help',
-    '/h',
-    '/start'
-]
-
-register_commands = [
-    '!register',
-    '!reg',
-    '!r',
-    '/register',
-    '/reg',
-    '/r'
-]
-
-withdraw_commands = [
-    '!withdraw',
-    '!w',
-    '/withdraw',
-    '/w'
-]
-
-donate_commands = [
-    '!donate',
-    '!d',
-    '/donate',
-    '/d'
-]
-
-tip_commands = [
-    '!tip',
-    '!t',
-    '/tip',
-    '/t'
-]
-
-private_tip_commands = [
-    '!privatetip',
-    '!private',
-    '!pt',
-    '/privatetip',
-    '/private',
-    '/pt'
-]
-
-language_commands = [
-    '!setlanguage',
-    '!setlang',
-    '!sl',
-    '/setlanguage',
-    '/setlang',
-    '/sl'
-]
-
-language_list_commands = [
-    '!languages',
-    '!langs',
-    '!languagelist',
-    '!l',
-    '/languages',
-    '/langs',
-    '/languagelist',
-    '/l'
-]
-
-languages = [
-    'English',
-    'Dutch',
-    'Japanese',
-    'Chinese Traditional',
-    'Chinese Simplified',
-    'French',
-    'Thai',
-    'German',
-    'Indonesian',
-    'Vietnamese',
-    'Russian',
-    'Swedish',
-    'Italian',
-    'Portuguese'
-]
-
-language_dict = {
-    'english': 'en',
-    'en': 'en',
-    'dutch': 'nl',
-    'nl': 'nl',
-    'japanese': 'ja',
-    'ja': 'ja',
-    'chinese traditional': 'zh-t',
-    'zh-t': 'zh-t',
-    'zh-hant': 'zh-t',
-    'chinese simplified': 'zh-s',
-    'zh-s': 'zh-s',
-    'zh-hans': 'zh-s',
-    'fr': 'fr',
-    'french': 'fr',
-    'th': 'th',
-    'thai': 'th',
-    'de': 'de',
-    'german': 'de',
-    'id': 'id',
-    'indonesian': 'id',
-    'vt': 'vt',
-    'vietnamese': 'vt',
-    'ru': 'ru',
-    'russian': 'ru',
-    'sv': 'sv',
-    'swedish': 'sv',
-    'it': 'it',
-    'italian': 'it',
-    'pt': 'pt',
-    'portuguese': 'pt'
-}
-
 # Connect to global functions
 rpc = nano.rpc.Client(NODE_IP)
 
 
 def parse_action(message):
-    if message['dm_action'] in help_commands:
+    if message['dm_action'] in translations.help_commands['en'] or \
+            message['dm_action'] in translations.help_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -183,7 +47,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in balance_commands:
+    elif message['dm_action'] in translations.balance_commands['en'] or \
+            message['dm_action'] in translations.balance_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -200,7 +65,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in register_commands:
+    elif message['dm_action'] in translations.register_commands['en'] or \
+            message['dm_action'] in translations.register_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -217,7 +83,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in tip_commands:
+    elif message['dm_action'] in translations.tip_commands['en'] or \
+            message['dm_action'] in translations.tip_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -230,7 +97,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in withdraw_commands:
+    elif message['dm_action'] in translations.withdraw_commands['en'] or \
+            message['dm_action'] in translations.withdraw_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -247,7 +115,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in donate_commands:
+    elif message['dm_action'] in translations.donate_commands['en'] or \
+            message['dm_action'] in translations.donate_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -264,7 +133,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in account_commands:
+    elif message['dm_action'] in translations.account_commands['en'] or \
+            message['dm_action'] in translations.account_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -276,7 +146,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in private_tip_commands:
+    elif message['dm_action'] in translations.private_tip_commands['en'] or \
+            message['dm_action'] in translations.private_tip_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -289,7 +160,7 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in language_commands:
+    elif message['dm_action'] in translations.language_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -315,7 +186,7 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in language_list_commands:
+    elif message['dm_action'] in translations.language_list_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -677,16 +548,16 @@ def language_process(message, new_language):
     """
     logging.info("In language process.  new_language = {}".format(new_language))
     logging.info("message text: {}".format(message['text']))
-    if new_language.lower() not in language_dict.keys():
+    if new_language.lower() not in translations.language_dict.keys():
         modules.social.send_dm(message['sender_id'],
                                translations.missing_language[message['language']],
                                message['system'])
     else:
         set_language_call = "UPDATE tip_bot.languages SET language_code = %s WHERE user_id = %s AND system = %s"
-        set_language_values = [language_dict[new_language], message['sender_id'], message['system']]
+        set_language_values = [translations.language_dict[new_language], message['sender_id'], message['system']]
         modules.db.set_db_data(set_language_call, set_language_values)
         modules.social.send_dm(message['sender_id'],
-                               translations.language_change_success[language_dict[new_language]],
+                               translations.language_change_success[translations.language_dict[new_language]],
                                message['system'])
 
 
