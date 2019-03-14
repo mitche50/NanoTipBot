@@ -78,7 +78,7 @@ def get_language(message):
 
         if not data:
             # Create an account for the user
-            sender_account = rpc.account_create(wallet="{}".format(WALLET), work=False)
+            sender_account = modules.db.get_spare_account()
             account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                    "VALUES(%s, %s, %s, %s, 1)")
             account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'],

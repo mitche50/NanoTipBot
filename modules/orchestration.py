@@ -285,7 +285,7 @@ def register_process(message):
 
     if not data:
         # Create an account for the user
-        sender_account = rpc.account_create(wallet="{}".format(WALLET), work=False)
+        sender_account = modules.db.get_spare_account()
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                "VALUES(%s, %s, %s, %s, 1)")
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
@@ -332,8 +332,7 @@ def account_process(message):
                                                                                                 message['system']))
     account_data = modules.db.get_db_data(sender_account_call)
     if not account_data:
-        logging.info("Creating account using wallet: {}".format(WALLET))
-        sender_account = rpc.account_create(wallet="{}".format(WALLET), work=True)
+        sender_account = modules.db.get_spare_account()
         account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                "VALUES(%s, %s, %s, %s, 1)")
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]

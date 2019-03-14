@@ -102,7 +102,7 @@ def get_pow(sender_account):
     work = ''
     while work == '':
         try:
-            work_data = {'hash': hash, 'key': WORK_KEY}
+            work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
             json_request = json.dumps(work_data)
             r = requests.post('{}'.format(WORK_SERVER), data=json_request)
             rx = r.json()
@@ -137,9 +137,9 @@ def send_tip(message, users_to_tip, tip_index):
                                 .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
         receiver_account_data = modules.db.get_db_data(receiver_account_get)
 
-        # If they don't, create an account for them
+        # If they don't, check reserve accounts and assign one.
         if not receiver_account_data:
-            users_to_tip[tip_index]['receiver_account'] = rpc.account_create(wallet="{}".format(WALLET), work=True)
+            users_to_tip[tip_index]['receiver_account'] = modules.db.get_spare_account()
             create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                        "VALUES(%s, %s, %s, %s, 0)")
             create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
@@ -277,3 +277,16 @@ def get_fiat_price(fiat, crypto_currency):
         logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
         logging.info("{}: {}".format(datetime.now(), e))
         raise e
+
+
+def generate_accounts():
+    accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
+
+    logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
+    work_data = {'accounts': accounts, 'key': WORK_KEY}
+    json_request = json.dumps(work_data)
+    r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+    rx = r.json()
+    logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
+
+    return accounts

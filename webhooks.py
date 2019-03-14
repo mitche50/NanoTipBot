@@ -393,7 +393,11 @@ def telegram_event():
                     message['sender_screen_name'] = \
                         message['sender_screen_name'] + ' ' + request_json['message']['from']['last_name']
             message['dm_id'] = request_json['update_id']
-            message['text'] = request_json['message']['text']
+            try:
+                message['text'] = request_json['message']['text']
+            except KeyError:
+                logging.info("error in DM processing: {}".format(request_json))
+                return ''
             message['dm_array'] = message['text'].split(" ")
             message['dm_action'] = message['dm_array'][0].lower()
             modules.social.get_language(message)

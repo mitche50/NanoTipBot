@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 from decimal import *
 
+import modules.currency
+
 import MySQLdb
 
 # Set Log File
@@ -166,6 +168,16 @@ def create_tables():
             logging.info("Checking if languages table was created: {}".format(
                 check_table_exists('languages')))
 
+        check_exists = check_table_exists('spare_accounts')
+        if not check_exists:
+            # create spare_accounts table
+            sql= """
+            CREATE TABLE `spare_accounts` (
+             `account` varchar(100) NOT NULL,
+             PRIMARY KEY (`account`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            """
+
         db.commit()
         db_cursor.close()
         db.close()
@@ -243,3 +255,44 @@ def set_db_data_tip(message, users_to_tip, t_index):
         logging.info("{}: Exception in set_db_data_tip".format(datetime.now()))
         logging.info("{}: {}".format(datetime.now(), e))
         raise e
+
+
+def set_spare_accounts(accounts):
+    """
+    Set DB with spare accounts.
+    """
+    insert_accounts_call = "INSERT INTO tip_bot.spare_accounts (account) VALUES "
+
+    try:
+        for index, account in enumerate(accounts):
+            if index == 0:
+                insert_accounts_call += "(%s)"
+            else:
+                insert_accounts_call += ", (%s)"
+        insert_accounts_call += ';'
+        logging.info("insert accounts call: {}".format(insert_accounts_call))
+        set_db_data(insert_accounts_call, accounts)
+
+    except Exception as e:
+        logging.info("Error inserting spare accounts: {}".format(e))
+
+    logging.info("New accounts set in DB.")
+
+
+def get_spare_account():
+    """
+    Retrieve an account from the database.
+    """
+    check_accounts_call = "SELECT count(account) FROM tip_bot.spare_accounts;"
+    check_accounts_return = get_db_data(check_accounts_call)
+    if int(check_accounts_return[0][0]) <= 5:
+        accounts = modules.currency.generate_accounts()
+        set_spare_accounts(accounts)
+
+    get_account_call = "SELECT account FROM tip_bot.spare_accounts LIMIT 1;"
+    spare_account_return = get_db_data(get_account_call)
+
+    remove_account_call = "DELETE FROM tip_bot.spare_accounts WHERE account = %s"
+    set_db_data(remove_account_call, spare_account_return[0])
+
+    return spare_account_return[0][0]
