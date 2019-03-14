@@ -303,8 +303,10 @@ def set_tip_list(message, users_to_tip, request_json):
                     receiver_id = user_check_data[0][0]
                     receiver_screen_name = user_check_data[0][1]
 
+                    receiver_language = get_receiver_language(receiver_id, message['system'])
                     user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
-                                 'receiver_account': None, 'receiver_register': None}
+                                 'receiver_account': None, 'receiver_register': None,
+                                 'receiver_language': receiver_language}
                     users_to_tip.append(user_dict)
                 else:
                     logging.info("User not found in DB: chat ID:{} - member name:{}".
@@ -340,8 +342,10 @@ def set_tip_list(message, users_to_tip, request_json):
                                 if not first_user_flag:
                                     first_user_flag = True
                                 logging.info("User tipped via searching the string for mentions")
+                                receiver_language = get_receiver_language(receiver_id, message['system'])
                                 user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
-                                             'receiver_account': None, 'receiver_register': None}
+                                             'receiver_account': None, 'receiver_register': None,
+                                             'receiver_language': receiver_language}
                                 users_to_tip.append(user_dict)
                         else:
                             logging.info("User not found in DB: chat ID:{} - member name:{}".
@@ -364,9 +368,11 @@ def set_tip_list(message, users_to_tip, request_json):
                             receiver_screen_name = user_check_data[0][1]
                             logging.info("telegram user added via mention list.")
                             logging.info("mention: {}".format(mention))
+                            receiver_language = get_receiver_language(receiver_id, message['system'])
 
                             user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
-                                         'receiver_account': None, 'receiver_register': None}
+                                         'receiver_account': None, 'receiver_register': None,
+                                         'receiver_language': receiver_language}
                             users_to_tip.append(user_dict)
                         else:
                             logging.info("User not found in DB: chat ID:{} - member name:{}".

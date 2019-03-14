@@ -429,6 +429,7 @@ def telegram_event():
                 message['text'] = message['text'].replace('\n', ' ')
                 message['text'] = message['text'].lower()
                 message['text'] = message['text'].split(' ')
+                modules.social.get_language(message)
 
                 message = modules.social.check_message_action(message)
                 if message['action'] is None:

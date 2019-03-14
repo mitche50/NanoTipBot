@@ -174,10 +174,7 @@ def parse_action(message):
                         language_process(message, new_language)
                     except Exception as f:
                         logging.info("{}: Error in language process: {}".format(datetime.now(), f))
-                        modules.social.send_dm(message['sender_id'],
-                                               "You did not format your language request properly.  Check !languages "
-                                               "for a list of available translations and codes and send a "
-                                               "dm with !setlanguage <language_code> to set your translations.",
+                        modules.social.send_dm(message['sender_id'], translations.missing_language[message['language']],
                                                message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
@@ -534,12 +531,20 @@ def tip_process(message, users_to_tip, request_json):
 
     # Inform the user that all tips were sent.
     if len(users_to_tip) >= 2:
-        modules.social.send_reply(message, translations.multi_tip_success[message['language']]
-                                  .format(message['tip_amount_text'], message['sender_account']))
+        try:
+            modules.social.send_reply(message, translations.multi_tip_success[message['language']]
+                                      .format(message['tip_amount_text'], message['sender_account']))
+        except KeyError:
+            modules.social.send_reply(message, translations.multi_tip_success['en']
+                                      .format(message['tip_amount_text'], message['sender_account']))
 
     elif len(users_to_tip) == 1:
-        modules.social.send_reply(message, translations.tip_success[message['language']]
-                                  .format(message['tip_amount_text'], message['send_hash']))
+        try:
+            modules.social.send_reply(message, translations.tip_success[message['language']]
+                                      .format(message['tip_amount_text'], message['send_hash']))
+        except KeyError:
+            modules.social.send_reply(message, translations.tip_success['en']
+                                      .format(message['tip_amount_text'], message['send_hash']))
 
 
 def language_process(message, new_language):

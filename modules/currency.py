@@ -143,8 +143,8 @@ def send_tip(message, users_to_tip, tip_index):
             create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                        "VALUES(%s, %s, %s, %s, 0)")
             create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
-                                               users_to_tip[tip_index]['receiver_screen_name'],
-                                               users_to_tip[tip_index]['receiver_account']]
+                                              users_to_tip[tip_index]['receiver_screen_name'],
+                                              users_to_tip[tip_index]['receiver_account']]
             modules.db.set_db_data(create_receiver_account, create_receiver_account_values)
             logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
                          .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
@@ -186,7 +186,6 @@ def send_tip(message, users_to_tip, tip_index):
             receive_pending(users_to_tip[tip_index]['receiver_account'])
             balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
             users_to_tip[tip_index]['balance'] = balance_return['balance'] / 1000000000000000000000000000000
-
             # create a string to remove scientific notation from small decimal tips
             if str(users_to_tip[tip_index]['balance'])[0] == ".":
                 users_to_tip[tip_index]['balance'] = "0{}".format(str(users_to_tip[tip_index]['balance']))
