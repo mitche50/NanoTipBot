@@ -120,38 +120,47 @@ def send_dm(receiver, message, system):
             pass
 
 
-def send_img(receiver, path, message):
-    file = open(path, 'rb')
-    qr_data = file.read()
-    r = twitterAPI.request('media/upload', None, {'media': qr_data})
+def send_img(receiver, path, message, system):
 
-    if r.status_code == 200:
-        media_id = r.json()['media_id']
-        logging.info('media_id: {}'.format(media_id))
-        msg_data = {
-            'event': {
-                'type': 'message_create',
-                'message_create': {
-                    'target': {
-                        'recipient_id': '{}'.format(receiver)
-                    },
-                    'message_data': {
-                        'text': '{}'.format(message),
-                        'attachment': {
-                            'type': 'media',
-                            'media': {
-                                'id': '{}'.format(media_id)
+    if system == 'twitter':
+        file = open(path, 'rb')
+        qr_data = file.read()
+        r = twitterAPI.request('media/upload', None, {'media': qr_data})
+
+        if r.status_code == 200:
+            media_id = r.json()['media_id']
+            logging.info('media_id: {}'.format(media_id))
+            msg_data = {
+                'event': {
+                    'type': 'message_create',
+                    'message_create': {
+                        'target': {
+                            'recipient_id': '{}'.format(receiver)
+                        },
+                        'message_data': {
+                            'text': '{}'.format(message),
+                            'attachment': {
+                                'type': 'media',
+                                'media': {
+                                    'id': '{}'.format(media_id)
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        r = twitterAPI.request('direct_messages/events/new', json.dumps(msg_data))
+            r = twitterAPI.request('direct_messages/events/new', json.dumps(msg_data))
 
-        if r.status_code != 200:
-            logging.info('Send image ERROR: {} : {}'.format(r.status_code, r.text))
+            if r.status_code != 200:
+                logging.info('Send image ERROR: {} : {}'.format(r.status_code, r.text))
+    elif system == 'telegram':
+        try:
+            qr_data = '{}qr/{}-{}.png'.format(BASE_URL, system, receiver)
+            logging.info("qr_data: {}".format(qr_data))
+            telegram_bot.send_photo(chat_id=receiver, photo=qr_data, caption=message)
+        except Exception as e:
+            logging.info("ERROR SENDING QR PHOTO TELEGRAM: {}".format(e))
 
 
 def set_message_info(status, message):
@@ -483,12 +492,12 @@ def get_qr_code(sender_id, sender_account, sm_system):
     """
     Check to see if a QR code has been generated for the sender_id / system combination.  If not, generate one.
     """
-    qr_exists = os.path.isfile('{}/qr/{}-{}.png'.format(os.getcwd(), sender_id, sm_system))
+    qr_exists = os.path.isfile('{}/qr/{}-{}.png'.format(os.getcwd(), sm_system, sender_id))
 
     if not qr_exists:
         print("No QR exists, generating a QR for account {}".format(sender_account))
         account_qr = pyqrcode.create('{}'.format(sender_account))
-        account_qr.png('{}/qr/{}-{}.png'.format(os.getcwd(), sender_id, sm_system), scale=4)
+        account_qr.png('{}/qr/{}-{}.png'.format(os.getcwd(), sm_system, sender_id), scale=10)
 
 
 def send_account_message(account_text, message, account):
@@ -496,11 +505,11 @@ def send_account_message(account_text, message, account):
     Send a message to the user with their account information.  If twitter, include a QR code for scanning.
     """
 
-    if message['system'] == 'twitter':
+    if message['system'] == 'twitter' or message['system'] == 'telegram':
         get_qr_code(message['sender_id'], account, message['system'])
-        path = ('{}/qr/{}-{}.png'.format(os.getcwd(), message['sender_id'], message['system']))
-        send_img(message['sender_id'], path, account_text)
-    elif message['system'] != 'twitter':
+        path = ('{}/qr/{}-{}.png'.format(os.getcwd(), message['system'], message['sender_id']))
+        send_img(message['sender_id'], path, account_text, message['system'])
+    else:
         send_dm(message['sender_id'], account_text, message['system'])
 
     send_dm(message['sender_id'], account, message['system'])
