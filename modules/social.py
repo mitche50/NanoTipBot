@@ -13,6 +13,7 @@ from TwitterAPI import TwitterAPI
 
 import modules.currency
 import modules.db
+import modules.orchestration
 import modules.translations as translations
 
 # Set Log File
@@ -38,6 +39,7 @@ TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
 # Constants
 MIN_TIP = config.get('webhooks', 'min_tip')
 NODE_IP = config.get('webhooks', 'node_ip')
+WALLET = config.get('webhooks', 'wallet')
 
 # IDs
 BOT_ID_TWITTER = config.get('webhooks', 'bot_id_twitter')
@@ -69,9 +71,19 @@ def get_language(message):
         message['language'] = language_return[0][0]
     except Exception as e:
         logging.info("{}: There was no language entry, setting default".format(datetime.now()))
-        # set_language_call = "INSERT INTO tip_bot.languages (user_id, language_code, system) VALUES (%s, 'en', %s)"
-        # set_language_values = [message['sender_id'], message['system']]
-        # modules.db.set_db_data(set_language_call, set_language_values)
+        # Check if the user has an account - if not, create one
+        no_lang_call = ("SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'"
+                         .format(message['sender_id'], message['system']))
+        data = modules.db.get_db_data(no_lang_call)
+
+        if not data:
+            # Create an account for the user
+            sender_account = rpc.account_create(wallet="{}".format(WALLET), work=False)
+            account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register) "
+                                   "VALUES(%s, %s, %s, %s, 1)")
+            account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'],
+                                     sender_account]
+            modules.db.set_db_data(account_create_call, account_create_values)
         message['language'] = 'en'
 
 
@@ -209,7 +221,18 @@ def check_message_action(message):
             message['action'] = None
             return message
     try:
-        message['action_index'] = message['text'].index("!tip")
+        message['action_index'] = None
+        for command in modules.translations.tip_commands[message['language']]:
+            if command in message['text']:
+                message['action_index'] = message['text'].index(command)
+        if message['language'] is not 'en':
+            for command in modules.translations.tip_commands['en']:
+                if command in message['text']:
+                    message['action_index'] = message['text'].index(command)
+        if message['action_index'] is None:
+            message['action'] = None
+            return message
+
     except ValueError:
         message['action'] = None
         return message

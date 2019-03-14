@@ -225,7 +225,7 @@ tip_success = {
     'ru': 'Вы успешно отправили свой {} $NANO тип. Проверьте эту транзакцию на '
           'https://nanocrawler.cc/explorer/block/{}',
     'sv': '',
-    'it': 'Hai inviato con successo le tue mance di {} $NANO. Controlla questa transazione su '
+    'it': 'Hai inviato con successo la tua mancia di {} $NANO. Controlla questa transazione su '
           'https://nanocrawler.cc/explorer/block/{}'
 }
 

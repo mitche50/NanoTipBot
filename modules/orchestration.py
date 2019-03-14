@@ -171,6 +171,8 @@ def parse_action(message):
                 else:
                     try:
                         new_language = message['text'].split(' ')[1].lower()
+                        if new_language == 'chinese':
+                            new_language += ' ' + message['text'].split(' ')[2].lower()
                         language_process(message, new_language)
                     except Exception as f:
                         logging.info("{}: Error in language process: {}".format(datetime.now(), f))
@@ -288,9 +290,13 @@ def register_process(message):
                                "VALUES(%s, %s, %s, %s, 1)")
         account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account]
         modules.db.set_db_data(account_create_call, account_create_values)
-
-        account_register_text = translations.account_register_text[message['language']]
-        modules.social.send_account_message(account_register_text, message, sender_account)
+        try:
+            account_register_text = translations.account_register_text[message['language']]
+            modules.social.send_account_message(account_register_text, message, sender_account)
+        except KeyError:
+            account_register_text = "You did not have an account before you set your language.  I have created " \
+                                    "an account for you:"
+            modules.social.send_account_message(account_register_text, message, sender_account)
 
         logging.info("{}: Register successful!".format(datetime.now()))
 
@@ -471,7 +477,9 @@ def donate_process(message):
                                    message['system'])
             return ''
         logging.info("balance: {} - send_amount: {}".format(Decimal(balance), Decimal(send_amount)))
-        if Decimal(balance) < Decimal(send_amount):
+        # We need to reduce the send_amount for a proper comparison - Decimal will not store exact amounts
+        # (e.g. 0.0003 = 0.00029999999999452123)
+        if Decimal(balance) < (Decimal(send_amount) - Decimal(0.00001)):
             modules.social.send_dm(message['sender_id'], translations.large_donate_text[message['language']]
                                    .format(balance, Decimal(send_amount)), message['system'])
             logging.info("{}: User tried to donate more than their balance.".format(datetime.now()))
@@ -480,18 +488,26 @@ def donate_process(message):
             modules.social.send_dm(message['sender_id'], translations.small_donate_text[message['language']]
                                    .format(MIN_TIP), message['system'])
             logging.info("{}: User tried to donate less than 0.000001".format(datetime.now()))
-
+            return ''
         else:
-            send_amount_raw = Decimal(send_amount) * 1000000000000000000000000000000
+            # If the send amount > balance, send the whole balance.  If not, send the send amount.
+            # This is to take into account for Decimal value conversions.
+            if Decimal(send_amount) > Decimal(balance):
+                send_amount_raw = Decimal(balance) * 1000000000000000000000000000000
+            else:
+                send_amount_raw = Decimal(send_amount) * 1000000000000000000000000000000
+            logging.info(('{}; send_amount_raw: {}'.format(datetime.now(), int(send_amount_raw))))
             work = modules.currency.get_pow(sender_account)
             if work == '':
                 logging.info("{}: Processing donation without work.".format(datetime.now()))
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
-                                     destination="{}".format(receiver_account), amount="{:f}".format(send_amount_raw))
+                                     destination="{}".format(receiver_account),
+                                     amount="{}".format(int(send_amount_raw)))
             else:
                 logging.info("{}: Processing donation with work: {}".format(datetime.now(), work))
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
-                                     destination="{}".format(receiver_account), amount="{:f}".format(send_amount_raw),
+                                     destination="{}".format(receiver_account),
+                                     amount="{}".format(int(send_amount_raw)),
                                      work=work)
 
             logging.info("{}: send_hash = {}".format(datetime.now(), send_hash))
