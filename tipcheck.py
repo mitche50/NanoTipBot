@@ -84,7 +84,7 @@ def send_returned_notice_to_receivers():
     unregistered_users_call = ("SELECT DISTINCT tip_bot.tip_list.receiver_id, tip_bot.tip_list.system FROM tip_bot.tip_list "
                                "INNER JOIN tip_bot.users "
                                "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                               "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 1 month) "
+                               "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                                "AND tip_bot.users.register = 0 "
                                "AND tip_bot.tip_list.processed = 9;")
     unregistered_users_data = get_db_data(unregistered_users_call)
@@ -121,7 +121,6 @@ def mark_notified(user_type):
         set_db_data(notified_send_call, notified_send_values)
 
 
-
 def send_returned_notice_to_senders():
     """
     Notify all users who sent tips which were returned that their balance has been updated.
@@ -130,7 +129,7 @@ def send_returned_notice_to_senders():
                                  "FROM tip_bot.tip_list "
                                  "INNER JOIN tip_bot.users "
                                  "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                                 "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 1 month) "
+                                 "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                                  "AND tip_bot.users.register = 0 "
                                  "AND tip_bot.tip_list.processed = 8 "
                                  "GROUP BY tip_bot.tip_list.sender_id, tip_bot.tip_list.system;")
@@ -150,7 +149,7 @@ def return_tips():
                            "FROM tip_bot.tip_list "
                            "INNER JOIN tip_bot.users "
                            "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                           "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 1 month) "
+                           "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                            "AND tip_bot.users.register = 0 "
                            "AND tip_bot.tip_list.processed = 2;")
     tip_list = get_db_data(tips_to_return_call)
@@ -180,8 +179,8 @@ def return_tips():
         except nano.rpc.RPCException as e:
             logging.info("{}: Insufficient balance to return.  Descriptive error: {}".format(datetime.now(), e))
             insufficient_balance_call = ("UPDATE tip_bot.tip_list "
-                                       "SET processed = 6 "
-                                       "WHERE dm_id = %s;")
+                                         "SET processed = 6 "
+                                         "WHERE dm_id = %s;")
             insufficient_balance_values = [transaction_id,]
             set_db_data(insufficient_balance_call, insufficient_balance_values)
         except Exception as f:
