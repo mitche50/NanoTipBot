@@ -135,7 +135,26 @@ def send_returned_notice_to_senders():
                                  "GROUP BY tip_bot.tip_list.sender_id, tip_bot.tip_list.system;")
     sender_return_list = get_db_data(sender_return_notice_call)
 
+    sender_return_names = ("SELECT tip_bot.tip_list.sender_id, tip_bot.tip_list.system, tip_bot.users.user_name "
+                           "FROM tip_bot.tip_list "
+                           "INNER JOIN tip_bot.users "
+                           "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
+                           "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                           "AND tip_bot.users.register = 0 "
+                           "AND tip_bot.tip_list.processed = 8;")
+    sender_return_name_list = get_db_data(sender_return_names)
+    return_dict = {}
+
+    for sender in sender_return_name_list:
+        sender_comp = sender[0] + "-" + sender[1]
+        if sender_comp not in return_dict.keys():
+            return_dict[sender_comp] = [sender[2]]
+        else:
+            return_dict[sender_comp].append(sender[2])
+
     for sender in sender_return_list:
+        sender_comp = sender[0] + "-" + sender[1]
+        logging.info("sender return list = {}".format(return_dict[sender_comp]))
         send_dm(sender[0], "You've had tips returned to your account due to unregistered users.  Your account has been "
                            "credited {} NANO.  Continue spreading the love or withdraw to your wallet!".format(sender[2]),
                 sender[1])
