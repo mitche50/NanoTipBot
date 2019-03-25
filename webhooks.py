@@ -136,15 +136,14 @@ def deep_link_test():
 
     if amount is None:
         uri = "nano:{}".format(address)
+        return render_template('uriformatter.html', uri=uri, address=address)
+
     else:
         logging.info(amount)
         amount_raw = int(Decimal(amount) * 1000000000000000000000000000000)
         logging.info("amount_raw = {}".format(int(amount_raw)))
         uri = "nano:{}?amount={}".format(address, amount_raw)
-
-    logging.info("uri: {}".format(uri))
-
-    return render_template('uriformatter.html', uri=uri, address=address, amount=amount_raw)
+        return render_template('uriformatter.html', uri=uri, address=address, amount=amount_raw)
 
 
 @app.route('/noappredirect')
@@ -155,10 +154,11 @@ def noappredirect():
     logging.info("amount: {}".format(amount_raw))
     logging.info("amount = none: {}".format((amount_raw is None)))
 
-    if amount_raw is None or amount_raw == 'None':
-        amount = 0
+    if amount_raw is None or amount_raw == 'None' or amount_raw == '':
+        return render_template('noappredirect.html', address=address, amount=0, amount_raw=0)
 
-    return render_template('noappredirect.html', address=address, amount=int(amount_raw) / 1000000000000000000000000000000)
+    return render_template('noappredirect.html', address=address,
+                           amount=int(amount_raw) / 1000000000000000000000000000000, amount_raw=amount_raw)
 
 
 @app.route('/paygenerator')

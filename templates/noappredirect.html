@@ -16,7 +16,7 @@
         <div id="qrcode"></div>
         <script type="text/javascript">
             var qrcode = new QRCode("qrcode", {
-                text: "{{ address }}",
+                text: "nano:{{ address }}{% if amount > 0 %}?amount={{ amount_raw }}{% endif %}",
                 width: 180,
                 height: 180,
                 colorDark : "#000c3f",
@@ -24,7 +24,7 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            qrcode.makeCode("{{ address }}");
+            qrcode.makeCode("nano:{{ address }}{% if amount > 0 %}?amount={{ amount_raw }}{% endif %}");
         </script>
         <div class="nano-button-container">
             <h1>Wallet List</h1>
