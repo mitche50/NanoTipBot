@@ -13,7 +13,7 @@ import nano
 import requests
 import telegram
 import tweepy
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, redirect
 from flask_weasyprint import HTML, render_pdf
 
 import modules.currency
@@ -127,6 +127,43 @@ def paperpdf():
                            qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
 
     return render_pdf(HTML(string=html))
+
+
+@app.route('/pay', methods=['GET'])
+def deep_link_test():
+    address = request.args.get('address')
+    amount = request.args.get('amount')
+
+    if amount is None:
+        uri = "nano:{}".format(address)
+    else:
+        logging.info(amount)
+        amount_raw = int(Decimal(amount) * 1000000000000000000000000000000)
+        logging.info("amount_raw = {}".format(int(amount_raw)))
+        uri = "nano:{}?amount={}".format(address, amount_raw)
+
+    logging.info("uri: {}".format(uri))
+
+    return render_template('uriformatter.html', uri=uri, address=address, amount=amount_raw)
+
+
+@app.route('/noappredirect')
+def noappredirect():
+    address = request.args.get('address')
+    amount_raw = request.args.get('amount')
+
+    logging.info("amount: {}".format(amount_raw))
+    logging.info("amount = none: {}".format((amount_raw is None)))
+
+    if amount_raw is None or amount_raw == 'None':
+        amount = 0
+
+    return render_template('noappredirect.html', address=address, amount=int(amount_raw) / 1000000000000000000000000000000)
+
+
+@app.route('/paygenerator')
+def linkgenerator():
+    return render_template('linkgenerator.html')
 
 
 @app.route('/tutorial')

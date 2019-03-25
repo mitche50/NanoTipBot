@@ -1,0 +1,22 @@
+<script>
+window.onload = function() {
+<!-- Deep link URL for existing users with app already installed on their device -->
+    window.location = '{{uri}}';
+}
+</script>
+
+{% extends "layout.html" %}
+{% block content %}
+    <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
+      <img src="{{ url_for('static', filename='nano_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
+    </div>
+    <div class="container">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        var uri = '/noappredirect?address={{ address }}&amount={{ amount }}';
+        setTimeout("window.location = '" + uri + "'", 1000);
+    </script>
+
+{% endblock %}

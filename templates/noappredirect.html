@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
+      <img src="{{ url_for('static', filename='nano_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
+    </div>
+    <div class="container">
+        <p style="text-align:center">You're attempting to send
+                {% if amount > 0 %}
+                    {{ amount }}
+                {% endif %}
+            NANO to {{ address }}.<br>
+        </p>
+        <div id="qrcode"></div>
+        <script type="text/javascript">
+            var qrcode = new QRCode("qrcode", {
+                text: "{{ address }}",
+                width: 180,
+                height: 180,
+                colorDark : "#000c3f",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            qrcode.makeCode("{{ address }}");
+        </script>
+        <div class="nano-button-container">
+            <h1>Wallet List</h1>
+            <p>These wallets are compatible with Deep Links.</p>
+            <a href="https://natrium.io"><button class="nano-button">
+                <svg width="25px" height="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1770.2 780.1" style="enable-background:new 0 0 1770.2 780.1;background: transparent;margin-bottom: -5px;display: inline-block;font-style: normal;vertical-align: baseline;position: relative;" xml:space="preserve" class="nano-icon">
+                    <g>
+                    <path class="st0" d="M985.7,390c0,55.6-45.1,100.6-100.6,100.6S784.4,445.6,784.4,390c0-75.5-25.2-100.6-100.6-100.6
+                    S583.2,314.6,583.2,390c0,55.6-45.1,100.6-100.6,100.6S381.9,445.6,381.9,390c0-55.6,45.1-100.6,100.6-100.6
+                    c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6s100.6,45.1,100.6,100.6c0,75.5,25.2,100.6,100.6,100.6
+                    C940.7,289.4,985.7,334.5,985.7,390z"></path>
+                    <circle class="st0" cx="281.2" cy="591.3" r="100.6"></circle>
+                    <path class="st0" d="M1589.6,188.7c0,55.6-45.1,100.6-100.6,100.6c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6
+                    c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6c-55.6,0-100.6-45.1-100.6-100.6c0-55.6,45.1-100.6,100.6-100.6
+                    c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6
+                    C1544.5,88.1,1589.6,133.2,1589.6,188.7z"></path>
+                    </g>
+                </svg>
+                Natrium</button></a>
+        <br>
+            <a href="https://getcanoe.io/"><button class="nano-button">
+                <svg width="25px" height="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1770.2 780.1" style="enable-background:new 0 0 1770.2 780.1;background: transparent;margin-bottom: -5px;display: inline-block;font-style: normal;vertical-align: baseline;position: relative;" xml:space="preserve" class="nano-icon">
+                    <g>
+                    <path class="st0" d="M985.7,390c0,55.6-45.1,100.6-100.6,100.6S784.4,445.6,784.4,390c0-75.5-25.2-100.6-100.6-100.6
+                    S583.2,314.6,583.2,390c0,55.6-45.1,100.6-100.6,100.6S381.9,445.6,381.9,390c0-55.6,45.1-100.6,100.6-100.6
+                    c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6s100.6,45.1,100.6,100.6c0,75.5,25.2,100.6,100.6,100.6
+                    C940.7,289.4,985.7,334.5,985.7,390z"></path>
+                    <circle class="st0" cx="281.2" cy="591.3" r="100.6"></circle>
+                    <path class="st0" d="M1589.6,188.7c0,55.6-45.1,100.6-100.6,100.6c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6
+                    c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6c-55.6,0-100.6-45.1-100.6-100.6c0-55.6,45.1-100.6,100.6-100.6
+                    c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6
+                    C1544.5,88.1,1589.6,133.2,1589.6,188.7z"></path>
+                    </g>
+                </svg>
+                Canoe</button></a>
+            <br><br>
+        </div>
+    </div>
+
+{% endblock %}
