@@ -34,7 +34,7 @@ window.onload=function() {
     var address = this.address.value;
     var amount = this.amount.value;
     if (address) {
-     document.getElementById("linkoutput").value = "https://nanotbdev.tk/pay?address="+address;
+     document.getElementById("linkoutput").value = window.location.origin + "/pay?address=" + address;
          if (amount) {
     			     document.getElementById("linkoutput").value = document.getElementById("linkoutput").value + "&amount=" + amount;
     		}
