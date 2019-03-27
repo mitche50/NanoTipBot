@@ -117,7 +117,7 @@ body
   z-index: 1;
 
   top: -5px;
-  left: 150%;
+  right: 150%;
 
 }
 
@@ -133,11 +133,11 @@ body
   content: " ";
   position: absolute;
   top: 50%;
-  right: 100%; /* To the left of the tooltip */
+  left: 100%;
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent #686868 transparent transparent;
+  border-color: transparent transparent transparent #686868;
 }
 
 .nano-form {

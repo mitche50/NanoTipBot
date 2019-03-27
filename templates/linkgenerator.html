@@ -5,10 +5,10 @@
     </div>
     <div class="container" style="text-align:center;">
         <p>Enter the destination address and amount (in NANO) to generate a payment request link</p>
-        <form id="linkform" action="" method="POST">
+        <form id="linkform" action="" method="POST" onsubmit="validate()">
             <ul class="nano-form">
                 <li>
-                    <label>Address<span class="required">*</span></label> <input type="text" id="address" name="address" placeholder="xrb_">
+                    <label>Address<span class="required">*</span></label> <input onblur="validate()" type="text" id="address" name="address" placeholder="xrb_... or nano_..." pattern="(xrb|nano)(_)(1|3)[13456789abcdefghijkmnopqrstuwxyz]{59}" oninvalid="setCustomValidity('Please enter a valid Nano address')">
                 </li><li>
                     <label>Amount (in NANO)</label> <input type="number" id="amount" name="amount" placeholder="1" step="any">
                 </li>

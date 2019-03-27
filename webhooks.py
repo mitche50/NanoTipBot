@@ -135,15 +135,15 @@ def deep_link_test():
     amount = request.args.get('amount')
 
     if amount is None:
-        uri = "nano:{}".format(address)
+        uri = "nano://{}".format(address)
         return render_template('uriformatter.html', uri=uri, address=address)
 
     else:
         logging.info(amount)
         amount_raw = int(Decimal(amount) * 1000000000000000000000000000000)
         logging.info("amount_raw = {}".format(int(amount_raw)))
-        uri = "nano:{}?amount={}".format(address, amount_raw)
-        return render_template('uriformatter.html', uri=uri, address=address, amount=amount_raw)
+        uri = "nano://{}?amount={}".format(address, amount_raw)
+        return render_template('uriformatter.html', uri=uri, address=address, amount=Decimal(amount), amount_raw=amount_raw)
 
 
 @app.route('/noappredirect')
