@@ -5,10 +5,9 @@ from datetime import datetime
 from decimal import Decimal
 from TwitterAPI import TwitterAPI
 import telegram
-from nano import convert
 from modules.db import get_db_data, set_db_data
 from modules.social import send_dm
-from modules.currency import get_pow
+from modules.currency import get_pow, receive_pending
 
 import MySQLdb, re, requests, nano, tweepy, configparser, logging, json
 
@@ -186,6 +185,8 @@ def return_tips():
         sender_account = sender_account_info[0][0]
         send_amount = int(amount * 1000000000000000000000000000000)
 
+        receive_pending(receiver_account)
+
         work = get_pow(receiver_account)
         try:
             if work == '':
@@ -202,8 +203,10 @@ def return_tips():
                                          "WHERE dm_id = %s;")
             insufficient_balance_values = [transaction_id,]
             set_db_data(insufficient_balance_call, insufficient_balance_values)
+            continue
         except Exception as f:
             logging.info("{}: Unexpected error: {}".format(datetime.now(), f))
+            continue
 
         update_tip_call = ("UPDATE tip_bot.tip_list "
                            "SET processed = 9 "
