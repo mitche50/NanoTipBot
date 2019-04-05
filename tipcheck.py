@@ -154,8 +154,9 @@ def send_returned_notice_to_senders():
     for sender in sender_return_list:
         sender_comp = str(sender[0]) + "-" + str(sender[1])
         logging.info("sender return list = {}".format(return_dict[sender_comp]))
-        send_dm(sender[0], "You've had tips returned to your account due to unregistered users.  Your account has been "
-                           "credited {} NANO.  Continue spreading the love or withdraw to your wallet!".format(sender[2]),
+        send_dm(sender[0], "You've had tips returned to your account due to the following list of users "
+                           "not registering: {}.  Your account has been credited {} NANO.  Continue spreading the "
+                           "love or withdraw to your wallet!".format(return_dict[sender_comp], sender[2]),
                 sender[1])
 
     mark_notified("senders")
