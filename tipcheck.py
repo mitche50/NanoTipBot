@@ -145,14 +145,14 @@ def send_returned_notice_to_senders():
     return_dict = {}
 
     for sender in sender_return_name_list:
-        sender_comp = sender[0] + "-" + sender[1]
+        sender_comp = str(sender[0]) + "-" + str(sender[1])
         if sender_comp not in return_dict.keys():
             return_dict[sender_comp] = [sender[2]]
         else:
             return_dict[sender_comp].append(sender[2])
 
     for sender in sender_return_list:
-        sender_comp = sender[0] + "-" + sender[1]
+        sender_comp = str(sender[0]) + "-" + str(sender[1])
         logging.info("sender return list = {}".format(return_dict[sender_comp]))
         send_dm(sender[0], "You've had tips returned to your account due to unregistered users.  Your account has been "
                            "credited {} NANO.  Continue spreading the love or withdraw to your wallet!".format(sender[2]),
