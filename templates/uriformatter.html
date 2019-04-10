@@ -1,4 +1,5 @@
 <script>
+//Convert from Scientific Notation to Standard Notation
 Number.prototype.toFixedSpecial = function(n) {
     var str = this.toFixed(n);
     if (str.indexOf('e+') < 0)
@@ -12,25 +13,23 @@ Number.prototype.toFixedSpecial = function(n) {
 
 window.onload = function() {
 
-var params = new URLSearchParams(window.location.search.slice(1));
-var account = params.get('address');
-var amount = params.get('amount');
+    var params = new URLSearchParams(window.location.search.slice(1));
+    var account = params.get('address');
+    var amount = params.get('amount');
 
-console.log(amount);
+    var uri = "nano:" + account;
 
-var uri = "nano:" + account;
+    if (amount !== null) {
 
-if (amount !== null) {
+        var raw_amount = parseFloat(amount) * "1000000000000000000000000000000";
+        var converted_str = raw_amount.toFixedSpecial(0);
+        uri += "?amount=" + converted_str.slice(0, -1);
+    }
 
-    var raw_amount = parseFloat(amount) * "1000000000000000000000000000000";
-    var converted_str = raw_amount.toFixedSpecial(0);
-    uri += "?amount=" + converted_str.slice(0, -1);
-}
-
-console.log(uri);
-
-<!-- Deep link URL for existing users with app already installed on their device -->
-    window.location = uri;
+    //Deep link URL for existing users with app already installed on their device
+    if (account !== null) {
+        window.location = uri;
+    }
 }
 </script>
 
