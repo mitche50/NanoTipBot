@@ -50,7 +50,13 @@ window.onload = function() {
             }
         };
         if (isMobile.any()) {
-            window.location = uri;
+            try {
+                //alert("browser: " + navigator.userAgent)
+                window.location = uri;
+            }
+            catch(err) {
+                console.log("Error: " + err);
+            };
         };
     }
 }
@@ -70,7 +76,7 @@ window.onload = function() {
                 {% endif %}
             NANO to {{ address }}.<br>
         </p>
-        <a href="nano:{{ address }}{% if amount and amount > 0 %}?amount={{ amount_raw }}{% endif %}">
+        <a href="nano:{{ address }}{% if amount and amount > 0 %}?amount={{ amount_raw }}{% endif %}" target="_new">
             <div id="qrcode"></div>
         </a>
         <script type="text/javascript">
