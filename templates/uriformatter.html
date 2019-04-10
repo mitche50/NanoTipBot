@@ -1,7 +1,36 @@
 <script>
+Number.prototype.toFixedSpecial = function(n) {
+    var str = this.toFixed(n);
+    if (str.indexOf('e+') < 0)
+        return str;
+
+    // if number is in scientific notation, pick (b)ase and (p)ower
+    return str.replace('.', '').split('e+').reduce(function(p, b) {
+        return p + Array(b - p.length + 2).join(0);
+    }) + '.' + Array(n + 1).join(0);
+};
+
 window.onload = function() {
+
+var params = new URLSearchParams(window.location.search.slice(1));
+var account = params.get('address');
+var amount = params.get('amount');
+
+console.log(amount);
+
+var uri = "nano:" + account;
+
+if (amount !== null) {
+
+    var raw_amount = parseFloat(amount) * "1000000000000000000000000000000";
+    var converted_str = raw_amount.toFixedSpecial(0);
+    uri += "?amount=" + converted_str.slice(0, -1);
+}
+
+console.log(uri);
+
 <!-- Deep link URL for existing users with app already installed on their device -->
-    window.location = '{{uri}}';
+    window.location = uri;
 }
 </script>
 
@@ -14,17 +43,17 @@ window.onload = function() {
     </div>
     <div class="container">
         <p style="text-align:center; word-break: break-all">You're attempting to send
-                {% if amount > 0 %}
+                {% if amount and amount > 0 %}
                     {{ amount }}
                 {% endif %}
             NANO to {{ address }}.<br>
         </p>
-        <a href="nano:{{ address }}{% if amount > 0 %}?amount={{ amount_raw }}{% endif %}">
+        <a href="nano:{{ address }}{% if amount and amount > 0 %}?amount={{ amount_raw }}{% endif %}">
             <div id="qrcode"></div>
         </a>
         <script type="text/javascript">
             var qrcode = new QRCode("qrcode", {
-                text: "nano:{{ address }}{% if amount > 0 %}?amount={{ amount_raw }}{% endif %}",
+                text: "nano:{{ address }}{% if amount and amount > 0 %}?amount={{ amount_raw }}{% endif %}",
                 width: 180,
                 height: 180,
                 colorDark : "#000c3f",
@@ -32,7 +61,7 @@ window.onload = function() {
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            qrcode.makeCode("nano:{{ address }}{% if amount > 0 %}?amount={{ amount_raw }}{% endif %}");
+            qrcode.makeCode("nano:{{ address }}{% if amount and amount > 0 %}?amount={{ amount_raw }}{% endif %}");
         </script>
         <div class="nano-button-container">
             <h1>Wallet List</h1>
