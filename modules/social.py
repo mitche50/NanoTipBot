@@ -24,26 +24,34 @@ logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.ge
 config = configparser.ConfigParser()
 config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
+# Check the currency of the bot
+CURRENCY = config.get('main', 'currency')
+CONVERT_MULTIPLIER = {
+    'nano': 1000000000000000000000000000000,
+    'banano': 100000000000000000000000000000
+}
+
 # Twitter API connection settings
-CONSUMER_KEY = config.get('webhooks', 'consumer_key')
-CONSUMER_SECRET = config.get('webhooks', 'consumer_secret')
-ACCESS_TOKEN = config.get('webhooks', 'access_token')
-ACCESS_TOKEN_SECRET = config.get('webhooks', 'access_token_secret')
+CONSUMER_KEY = config.get(CURRENCY, 'consumer_key')
+CONSUMER_SECRET = config.get(CURRENCY, 'consumer_secret')
+ACCESS_TOKEN = config.get(CURRENCY, 'access_token')
+ACCESS_TOKEN_SECRET = config.get(CURRENCY, 'access_token_secret')
 
 # Secondary API for non-tweepy supported requests
 twitterAPI = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 # Telegram API
-TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
+TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
 
 # Constants
-MIN_TIP = config.get('webhooks', 'min_tip')
-NODE_IP = config.get('webhooks', 'node_ip')
-WALLET = config.get('webhooks', 'wallet')
+MIN_TIP = config.get(CURRENCY, 'min_tip')
+NODE_IP = config.get(CURRENCY, 'node_ip')
+WALLET = config.get(CURRENCY, 'wallet')
 
 # IDs
-BOT_ID_TWITTER = config.get('webhooks', 'bot_id_twitter')
-BOT_ID_TELEGRAM = config.get('webhooks', 'bot_id_telegram')
+BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
+BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
+BOT_NAME = config.get(CURRENCY, 'bot_name')
 BASE_URL = config.get('routes', 'base_url')
 TELEGRAM_URI = config.get('routes', 'telegram_uri')
 
@@ -53,7 +61,9 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 # Connect to Telegram
-telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
+if TELEGRAM_KEY != 'none':
+    print(TELEGRAM_KEY)
+    telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Connect to Nano node
 rpc = nano.rpc.Client(NODE_IP)
@@ -168,8 +178,8 @@ def send_img(receiver, path, message, system):
                 logging.info('Send image ERROR: {} : {}'.format(r.status_code, r.text))
     elif system == 'telegram':
         try:
-            qr_data = '{}qr/{}-{}.png'.format(BASE_URL, system, receiver)
-            logging.info("qr_data: {}".format(qr_data))
+            qr_data = '{}{}qr/{}-{}.png'.format(BASE_URL, CURRENCY, system, receiver)
+            logging.info("{}qr_data: {}".format(CURRENCY, qr_data))
             telegram_bot.send_photo(chat_id=receiver, photo=qr_data, caption=message)
         except Exception as e:
             logging.info("ERROR SENDING QR PHOTO TELEGRAM: {}".format(e))
@@ -216,7 +226,7 @@ def check_message_action(message):
     logging.info("{}: in check_message_action.".format(datetime.now()))
     if message['system'] == 'telegram':
         try:
-            check_for_ntb = message['text'].index("@nanotipbot")
+            check_for_ntb = message['text'].index("{}".format(BOT_NAME))
         except ValueError:
             message['action'] = None
             return message
@@ -259,14 +269,14 @@ def validate_tip_amount(message):
         return message
 
     if Decimal(message['tip_amount']) < Decimal(MIN_TIP):
-        send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP))
+        send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP, CURRENCY.upper()))
 
         message['tip_amount'] = -1
-        logging.info("{}: User tipped less than {} NANO.".format(datetime.now(), MIN_TIP))
+        logging.info("{}: User tipped less than {} {}.".format(datetime.now(), MIN_TIP, CURRENCY.upper()))
         return message
 
     try:
-        message['tip_amount_raw'] = Decimal(message['tip_amount']) * 1000000000000000000000000000000
+        message['tip_amount_raw'] = Decimal(message['tip_amount']) * CONVERT_MULTIPLIER[CURRENCY]
     except Exception as e:
         logging.info("{}: Exception converting tip_amount to tip_amount_raw".format(datetime.now()))
         logging.info("{}: {}".format(datetime.now(), e))
@@ -452,7 +462,7 @@ def validate_sender(message):
 
     modules.currency.receive_pending(message['sender_account'])
     message['sender_balance_raw'] = rpc.account_balance(account='{}'.format(message['sender_account']))
-    message['sender_balance'] = message['sender_balance_raw']['balance'] / 1000000000000000000000000000000
+    message['sender_balance'] = message['sender_balance_raw']['balance'] / CONVERT_MULTIPLIER[CURRENCY]
 
     return message
 
@@ -462,8 +472,10 @@ def validate_total_tip_amount(message):
     Validate that the sender has enough Nano to cover the tip to all users
     """
     logging.info("{}: validating total tip amount".format(datetime.now()))
-    if message['sender_balance_raw']['balance'] < (message['total_tip_amount'] * 1000000000000000000000000000000):
-        send_reply(message, translations.not_enough_text[message['language']].format(message['total_tip_amount']))
+    if message['sender_balance_raw']['balance'] < (message['total_tip_amount'] * CONVERT_MULTIPLIER[CURRENCY]):
+        send_reply(message, translations.not_enough_text[message['language']].format(CURRENCY.upper(),
+                                                                                     message['total_tip_amount'],
+                                                                                     CURRENCY.upper()))
 
         logging.info("{}: User tried to send more than in their account.".format(datetime.now()))
         message['tip_amount'] = -1
@@ -515,12 +527,12 @@ def get_qr_code(sender_id, sender_account, sm_system):
     """
     Check to see if a QR code has been generated for the sender_id / system combination.  If not, generate one.
     """
-    qr_exists = os.path.isfile('{}/qr/{}-{}.png'.format(os.getcwd(), sm_system, sender_id))
+    qr_exists = os.path.isfile('{}/{}qr/{}-{}.png'.format(os.getcwd(), CURRENCY, sm_system, sender_id))
 
     if not qr_exists:
-        print("No QR exists, generating a QR for account {}".format(sender_account))
+        print("No {} QR exists, generating a QR for account {}".format(CURRENCY, sender_account))
         account_qr = pyqrcode.create('{}'.format(sender_account))
-        account_qr.png('{}/qr/{}-{}.png'.format(os.getcwd(), sm_system, sender_id), scale=10)
+        account_qr.png('{}/{}qr/{}-{}.png'.format(os.getcwd(), CURRENCY, sm_system, sender_id), scale=10)
 
 
 def send_account_message(account_text, message, account):
@@ -530,7 +542,7 @@ def send_account_message(account_text, message, account):
 
     if message['system'] == 'twitter' or message['system'] == 'telegram':
         get_qr_code(message['sender_id'], account, message['system'])
-        path = ('{}/qr/{}-{}.png'.format(os.getcwd(), message['system'], message['sender_id']))
+        path = ('{}/{}qr/{}-{}.png'.format(os.getcwd(), CURRENCY, message['system'], message['sender_id']))
         send_img(message['sender_id'], path, account_text, message['system'])
     else:
         send_dm(message['sender_id'], account_text, message['system'])
@@ -539,8 +551,11 @@ def send_account_message(account_text, message, account):
 
 
 def telegram_set_webhook():
-    response = telegram_bot.setWebhook('{}/{}'.format(BASE_URL, TELEGRAM_URI))
-    if response:
-        return "Webhook setup successfully"
-    else:
-        return "Error {}".format(response)
+    try:
+        response = telegram_bot.setWebhook('{}/{}'.format(BASE_URL, TELEGRAM_URI))
+        if response:
+            return "Webhook setup successfully"
+        else:
+            return "Error {}".format(response)
+    except Exception as e:
+        print("banano has no telegram bot")

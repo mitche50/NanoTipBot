@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
-      <img src="/static/nano_tip_bot_logo.jpg" class="ntb-jumbo-img">
+      <img src="{{ url_for('static', filename=currency + '_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
     </div>
     <div class="container">
       <h3 style="text-align:center">Top Tipper List</h3>
       <br>
       <p style="text-align:center">
-        A list of the top 15 tippers on the @NanoTipBot.<br>
+        A list of the top 15 tippers on the @{{ currency|title }}TipBot.<br>
         Returned tips have been removed to provide a more accurate amount of tips sent.
       </p>
       <br>
@@ -34,7 +34,7 @@
                 <tbody>
                     {% for row in top_tipper %}
                     <tr>
-                      <td><a href="https://www.nanode.co/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
+                      <td><a href="{{ explorer }}explorer/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
                       {% if row[3] == "twitter" %}
                       <td><span class="fab fa-twitter"></span></td>
                       {% endif %}
@@ -75,16 +75,16 @@
           <tr>
             <td style="text-align: center;"><b>{{ loop.index}}</b></td>
             {% if row[3] == "twitter" %}
-            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="{{ explorer }}explorer/account/{{row[2]}}"><u>@{{row[0]}}</u></a></td>
             <td style="text-align: center;"><span class="fab fa-twitter"></span></td>
             {% endif %}
             {% if row[3] == "facebook" %}
-            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><a href="{{ explorer }}explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
             <td style="text-align: center;"><span class="fab fa-facebook"></span></td>
             {% endif %}
             {% if row[3] == "telegram" %}
-            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
-            <td style="text-align: center;"><span class="fab fa-telegram"></span></span></td>
+            <td style="text-align: center;"><a href="{{ explorer }}explorer/account/{{row[2]}}"><u>{{row[0]}}</u></a></td>
+            <td style="text-align: center;"><span class="fab fa-telegram"></span></td>
             {% endif %}
             <td style="text-align: center;">{{row[1]}}</td>
           </tr>

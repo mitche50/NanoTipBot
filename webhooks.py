@@ -30,27 +30,42 @@ logging.basicConfig(handlers=[logging.FileHandler('webhooks.log', 'a', 'utf-8')]
 config = configparser.ConfigParser()
 config.read('webhookconfig.ini')
 
+# Check the currency of the bot
+CURRENCY = config.get('main', 'currency')
+CONVERT_MULTIPLIER = {
+    'nano': 1000000000000000000000000000000,
+    'banano': 100000000000000000000000000000
+}
+
 # Twitter API connection settings
-CONSUMER_KEY = config.get('webhooks', 'consumer_key')
-CONSUMER_SECRET = config.get('webhooks', 'consumer_secret')
-ACCESS_TOKEN = config.get('webhooks', 'access_token')
-ACCESS_TOKEN_SECRET = config.get('webhooks', 'access_token_secret')
+CONSUMER_KEY = config.get(CURRENCY, 'consumer_key')
+CONSUMER_SECRET = config.get(CURRENCY, 'consumer_secret')
+ACCESS_TOKEN = config.get(CURRENCY, 'access_token')
+ACCESS_TOKEN_SECRET = config.get(CURRENCY, 'access_token_secret')
 
 # Telegram API
-TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
+TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
 
 # IDs
-BOT_ID_TWITTER = config.get('webhooks', 'bot_id_twitter')
-BOT_ID_TELEGRAM = config.get('webhooks', 'bot_id_telegram')
+BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
+BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
+BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
 
 # Set key for webhook challenge from Twitter
-key = config.get('webhooks', 'consumer_secret')
+key = config.get(CURRENCY, 'consumer_secret')
 
 # Set route variables
 TWITTER_URI = config.get('routes', 'twitter_uri')
+TWITTER_BANANO_URI = config.get('routes', 'twitter_banano_uri')
 TELEGRAM_URI = config.get('routes', 'telegram_uri')
+TELEGRAM_BANANO_URI = config.get('routes', 'telegram_banano_uri')
 TELEGRAM_SET_URI = config.get('routes', 'telegram_set_uri')
 BASE_URL = config.get('routes', 'base_url')
+EXPLORER = config.get('routes', '{}_explorer'.format(CURRENCY))
+
+
+# DB Data
+DB_SCHEMA = config.get(CURRENCY, 'schema')
 
 # Set up Flask routing
 app = Flask(__name__)
@@ -61,10 +76,11 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 # Connect to Telegram
-telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
+if TELEGRAM_KEY != 'none':
+    telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Connect to Nano Node
-NODE_IP = config.get('webhooks', 'node_ip')
+NODE_IP = config.get(CURRENCY, 'node_ip')
 rpc = nano.rpc.Client(NODE_IP)
 
 
@@ -95,7 +111,7 @@ def papertiptest():
 
     return render_template('/templates/papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
                            currency_amount=currency_amount, gen_date=gen_date, exp_date=exp_date, nano_price=nano_price,
-                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
+                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip, currency=CURRENCY)
 
 
 @app.route('/test/papertippdf')
@@ -124,7 +140,7 @@ def paperpdf():
 
     html = render_template('papertip.html', nano_amount=nano_amount, currency_mark=currency_mark,
                            currency_amount=currency_amount, gen_date=gen_date, exp_date=exp_date, nano_price=nano_price,
-                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip)
+                           qr_img=qr_img, qr_link=qr_link, num_tip=num_tip, currency=CURRENCY)
 
     return render_pdf(HTML(string=html))
 
@@ -140,10 +156,11 @@ def deep_link_test():
 
     else:
         logging.info(amount)
-        amount_raw = int(Decimal(amount) * 1000000000000000000000000000000)
+        amount_raw = int(Decimal(amount) * CONVERT_MULTIPLIER[CURRENCY])
         logging.info("amount_raw = {}".format(int(amount_raw)))
         uri = "nano://{}?amount={}".format(address, amount_raw)
-        return render_template('uriformatter.html', uri=uri, address=address, amount=Decimal(amount), amount_raw=amount_raw)
+        return render_template('uriformatter.html', uri=uri, address=address, amount=Decimal(amount),
+                               amount_raw=amount_raw, currency=CURRENCY)
 
 
 @app.route('/noappredirect')
@@ -158,18 +175,19 @@ def noappredirect():
         return render_template('noappredirect.html', address=address, amount=0, amount_raw=0)
 
     return render_template('noappredirect.html', address=address,
-                           amount=int(amount_raw) / 1000000000000000000000000000000, amount_raw=amount_raw)
+                           amount=int(amount_raw) / CONVERT_MULTIPLIER[CURRENCY], amount_raw=amount_raw,
+                           currency=CURRENCY)
 
 
 @app.route('/paygenerator')
 def linkgenerator():
-    return render_template('linkgenerator.html')
+    return render_template('linkgenerator.html', currency=CURRENCY)
 
 
 @app.route('/tutorial')
 @app.route('/tutorial.html')
 def tutorial():
-    return render_template('tutorial.html')
+    return render_template('tutorial.html', currency=CURRENCY, bot_id=BOT_ID_TWITTER)
 
 
 @app.route('/about')
@@ -189,97 +207,100 @@ def about():
 
     return render_template('about.html', btc_energy=btc_energy_formatted, nano_energy=nano_energy,
                            btc_vs_nano=btc_vs_nano, total_energy=total_energy_formatted,
-                           checked_blocks=checked_blocks_formatted)
+                           checked_blocks=checked_blocks_formatted, currency=CURRENCY)
 
 
 @app.route('/contact')
 @app.route('/contact.html')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', currency=CURRENCY)
 
 
 @app.route('/contact-form-thank-you')
 @app.route('/contact-form-thank-you.html')
 def thanks():
-    return render_template('contact-form-thank-you.html')
+    return render_template('contact-form-thank-you.html', currency=CURRENCY)
 
 
 @app.route('/tippers')
 @app.route('/tippers.html')
 def tippers():
     largest_tip = ("SELECT user_name, amount, account, a.system, timestamp "
-                   "FROM tip_bot.tip_list AS a, tip_bot.users AS b "
+                   "FROM {0}.tip_list AS a, {0}.users AS b "
                    "WHERE user_id = sender_id "
                    "AND user_name IS NOT NULL "
                    "AND processed = 2 "
-                   "AND user_name != 'mitche50' "
+                   # "AND user_name != 'mitche50' "
                    "AND amount = (select max(amount) "
-                   "FROM tip_bot.tip_list) "
+                   "FROM {0}.tip_list) "
                    "ORDER BY timestamp DESC "
-                   "LIMIT 1;")
+                   "LIMIT 1;".format(DB_SCHEMA))
 
     tippers_call = ("SELECT user_name AS 'screen_name', sum(amount) AS 'total_tips', account, b.system "
-                    "FROM tip_bot.tip_list AS a, tip_bot.users AS b "
+                    "FROM {0}.tip_list AS a, {0}.users AS b "
                     "WHERE user_id = sender_id "
                     "AND user_name IS NOT NULL "
-                    "AND receiver_id IN (SELECT user_id FROM tip_bot.users)"
+                    "AND receiver_id IN (SELECT user_id FROM {0}.users) "
                     "GROUP BY sender_id "
                     "ORDER BY sum(amount) DESC "
-                    "LIMIT 15")
+                    "LIMIT 15".format(DB_SCHEMA))
 
     tipper_table = modules.db.get_db_data(tippers_call)
     top_tipper = modules.db.get_db_data(largest_tip)
+    logging.info("tipper_call: {}".format(tippers_call))
+    logging.info("largest_tip: {}".format(largest_tip))
     top_tipper_date = top_tipper[0][4].date()
     return render_template('tippers.html', tipper_table=tipper_table, top_tipper=top_tipper,
-                           top_tipper_date=top_tipper_date)
+                           top_tipper_date=top_tipper_date, currency=CURRENCY, explorer=EXPLORER)
 
 
 @app.route('/tiplist')
 def tip_list():
-    tip_list_call = ("SELECT t1.user_name AS 'Sender ID', t2.user_name AS 'Receiver ID', t1.amount, "
+    tip_list_call = ("SELECT DISTINCT t1.user_name AS 'Sender ID', t2.user_name AS 'Receiver ID', t1.amount, "
                      "t1.account AS 'Sender Account', t2.account AS 'Receiver Account', t1.system, t1.timestamp "
                      "FROM "
                      "(SELECT user_name, amount, account, a.system, timestamp "
-                     "FROM tip_bot.tip_list AS a, tip_bot.users AS b "
+                     "FROM {0}.tip_list AS a, {0}.users AS b "
                      "WHERE user_id = sender_id "
                      "AND user_name IS NOT NULL "
                      "AND processed = 2 "
-                     "AND user_name != 'mitche50' "
+                     # "AND user_name != 'mitche50' "
                      "ORDER BY timestamp desc "
                      "LIMIT 50) AS t1 "
                      "JOIN "
                      "(SELECT user_name, account, timestamp "
-                     "FROM tip_bot.tip_list, tip_bot.users "
+                     "FROM {0}.tip_list, {0}.users "
                      "WHERE user_id = receiver_id "
                      "AND user_name IS NOT NULL "
                      "AND processed = 2 "
                      "ORDER BY timestamp DESC "
                      "LIMIT 20) AS t2 "
-                     "ON t1.timestamp = t2.timestamp")
+                     "ON t1.timestamp = t2.timestamp".format(DB_SCHEMA))
     tip_list_table = modules.db.get_db_data(tip_list_call)
-    print(tip_list_table)
-    return render_template('tiplist.html', tip_list_table=tip_list_table)
+    return render_template('tiplist.html', tip_list_table=tip_list_table, currency=CURRENCY, explorer=EXPLORER)
 
 
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
 def index():
-    r = requests.get('https://api.coinmarketcap.com/v2/ticker/1567/')
+    r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd'.format(CURRENCY))
     rx = r.json()
-    price = round(rx['data']['quotes']['USD']['price'], 2)
+    price = float(rx[CURRENCY]['usd'])
+    if price > .01:
+        price = round(price, 2)
 
     total_tipped_nano = ("SELECT tip_list.system, sum(amount) AS total "
-                         "FROM tip_bot.tip_list "
-                         "WHERE receiver_id IN (SELECT user_id FROM tip_bot.users) "
+                         "FROM {0}.tip_list "
+                         "WHERE receiver_id IN (SELECT user_id FROM {0}.users) "
                          "GROUP BY system "
-                         "ORDER BY total DESC")
+                         "ORDER BY total DESC".format(DB_SCHEMA))
 
     total_tipped_number = ("SELECT tip_list.system, count(system) AS notips "
-                           "FROM tip_bot.tip_list "
-                           "WHERE receiver_id IN (SELECT user_id FROM tip_bot.users)"
+                           "FROM {0}.tip_list "
+                           "WHERE receiver_id IN (SELECT user_id FROM {0}.users)"
                            "GROUP BY tip_list.system "
-                           "ORDER BY notips DESC")
+                           "ORDER BY notips DESC".format(DB_SCHEMA))
 
     total_tipped_nano_table = modules.db.get_db_data(total_tipped_nano)
     total_tipped_number_table = modules.db.get_db_data(total_tipped_number)
@@ -287,9 +308,10 @@ def index():
 
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
                            total_tipped_number_table=total_tipped_number_table, total_value_usd=total_value_usd,
-                           price=price)
+                           price=price, currency=CURRENCY, bot_id=BOT_ID_TWITTER, bot_account=BOT_ACCOUNT)
 
 
+@app.route(TWITTER_BANANO_URI, methods=["GET"])
 @app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
     # creates HMAC SHA-256 hash from incoming token and your consumer secret
@@ -326,8 +348,8 @@ def get_twitter_account(screen_name):
             account_dict = {
                 'user_id': user.id_str,
                 'account': account_return[0],
-                'balance': str(balance_return['balance'] / 1000000000000000000000000000000),
-                'pending': str(balance_return['pending'] / 1000000000000000000000000000000)
+                'balance': str(balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]),
+                'pending': str(balance_return['pending'] / CONVERT_MULTIPLIER[CURRENCY])
             }
             response = Response(json.dumps(account_dict))
             response.headers['Access-Control-Allow-Credentials'] = True
@@ -381,6 +403,7 @@ def refresh_balance(account):
         return e, HTTPStatus.BAD_REQUEST
 
 
+@app.route(TELEGRAM_BANANO_URI, methods=["POST"])
 @app.route(TELEGRAM_URI, methods=["POST"])
 def telegram_event():
     message = {
@@ -480,11 +503,16 @@ def telegram_event():
                 if message['tip_amount'] <= 0:
                     return '', HTTPStatus.OK
 
+                logging.info("Got past initial checks.")
+                logging.info("message: {}".format(message))
+                logging.info("bot_id_telegram: {}".format(BOT_ID_TELEGRAM))
+                logging.info("sender id: {}".format(message['sender_id']))
+
                 if message['action'] != -1 and str(message['sender_id']) != str(BOT_ID_TELEGRAM):
                     new_pid = os.fork()
                     if new_pid == 0:
                         try:
-                            bot_status = config.get('webhooks', 'bot_status')
+                            bot_status = config.get('main', 'bot_status')
                             if bot_status == 'maintenance':
                                 modules.social.send_dm(message['sender_id'],
                                                        translations.maintenance_text[message['language']],
@@ -552,6 +580,7 @@ def telegram_event():
     return 'ok'
 
 
+@app.route(TWITTER_BANANO_URI, methods=["POST"])
 @app.route(TWITTER_URI, methods=["POST"])
 def twitter_event_received():
     message = {}
@@ -653,7 +682,7 @@ def twitter_event_received():
             new_pid = os.fork()
             if new_pid == 0:
                 try:
-                    bot_status = config.get('webhooks', 'bot_status')
+                    bot_status = config.get('main', 'bot_status')
                     if bot_status == 'maintenance':
                         modules.social.send_dm(message['sender_id'],
                                                translations.maintenance_text[message['language']],
@@ -691,6 +720,11 @@ def twitter_event_received():
     else:
         # Event type not supported
         return '', HTTPStatus.OK
+
+
+@app.cli.command('initdb')
+def initdb_command():
+    modules.db.db_init()
 
 
 if __name__ == "__main__":

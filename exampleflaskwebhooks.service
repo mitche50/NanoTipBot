@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve Nano / Banano Tip Bot
+After=network.target
+
+[Service]
+User=USERNAME
+Group=www-data
+WorkingDirectory=/home/USERNAME/webhooks
+Environment="PATH=/home/USERNAME/webhooks/venv/bin"
+ExecStart=/home/USERNAME/webhooks/venv/bin/gunicorn --workers 3 --bind unix:webhooks.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

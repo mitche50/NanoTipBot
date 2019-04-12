@@ -20,14 +20,22 @@ logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.ge
 config = configparser.ConfigParser()
 config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
+# Check the currency of the bot
+CURRENCY = config.get('main', 'currency')
+
 # Set constants
 BULLET = u"\u2022"
-NODE_IP = config.get('webhooks', 'node_ip')
-WALLET = config.get('webhooks', 'wallet')
-BOT_ID_TWITTER = config.get('webhooks', 'bot_id_twitter')
-BOT_NAME = config.get('webhooks', 'bot_name')
-BOT_ACCOUNT = config.get('webhooks', 'bot_account')
-MIN_TIP = config.get('webhooks', 'min_tip')
+NODE_IP = config.get(CURRENCY, 'node_ip')
+WALLET = config.get(CURRENCY, 'wallet')
+BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
+BOT_NAME = config.get(CURRENCY, 'bot_name')
+BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
+MIN_TIP = config.get(CURRENCY, 'min_tip')
+EXPLORER = config.get('routes', '{}_explorer'.format(CURRENCY))
+CONVERT_MULTIPLIER = {
+    'nano': 1000000000000000000000000000000,
+    'banano': 100000000000000000000000000000
+}
 
 # Connect to global functions
 rpc = nano.rpc.Client(NODE_IP)
@@ -52,9 +60,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     balance_process(message)
@@ -70,9 +79,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     register_process(message)
@@ -88,7 +98,8 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                modules.social.send_dm(message['sender_id'], translations.redirect_tip_text[message['language']],
+                modules.social.send_dm(message['sender_id'],
+                                       translations.redirect_tip_text[message['language']].format(BOT_NAME),
                                        message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
@@ -102,9 +113,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     withdraw_process(message)
@@ -120,9 +132,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     donate_process(message)
@@ -164,9 +177,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     try:
@@ -189,9 +203,10 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('webhooks', 'bot_status')
+                bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME),
                                            message['system'])
                 else:
                     language_list_process(message)
@@ -223,7 +238,11 @@ def help_process(message):
     """
     Reply to the sender with help commands
     """
-    modules.social.send_dm(message['sender_id'], translations.help_message[message['language']], message['system'])
+    modules.social.send_dm(message['sender_id'],
+                           translations.help_message[message['language']].format(CURRENCY.title(),
+                                                                                 BOT_NAME,
+                                                                                 BOT_ACCOUNT),
+                           message['system'])
     logging.info("{}: Help message sent!".format(datetime.now()))
 
 
@@ -254,21 +273,15 @@ def balance_process(message):
         balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
         message['sender_balance_raw'] = balance_return['balance']
         message['sender_pending_raw'] = balance_return['pending']
-        message['sender_balance'] = balance_return['balance'] / 1000000000000000000000000000000
-        message['sender_pending'] = balance_return['pending'] / 1000000000000000000000000000000
-        # if message['sender_balance'] == 0 and message['sender_pending'] == 0:
-        #     balance_text = "Your balance is 0 NANO."
-        # elif message['sender_balance'] == 0 and message['sender_pending'] > 0:
-        #     balance_text = "Available: 0 NANO\n" \
-        #                    "Pending: {} NANO".format(message['sender_pending'])
-        # elif message['sender_balance'] > 0 and message['sender_pending'] == 0:
-        #     balance_text = "Available: {} NANO\n" \
-        #                    "Pending: 0 NANO".format(message['sender_balance'])
-        # else:
-        #     balance_text = "Available: {} NANO\n" \
-        #                    "Pending: {} NANO".format(message['sender_balance'], message['sender_pending'])
+        message['sender_balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
+        message['sender_pending'] = balance_return['pending'] / CONVERT_MULTIPLIER[CURRENCY]
+
         modules.social.send_dm(message['sender_id'], translations.balance_text[message['language']]
-                               .format(message['sender_balance'], message['sender_pending']), message['system'])
+                               .format(message['sender_balance'],
+                                       CURRENCY.upper(),
+                                       message['sender_pending'],
+                                       CURRENCY.upper()),
+                               message['system'])
         logging.info("{}: Balance Message Sent!".format(datetime.now()))
         modules.currency.receive_pending(message['sender_account'])
 
@@ -416,15 +429,15 @@ def withdraw_process(message):
                                                translations.invalid_amount_text[message['language']],
                                                message['system'])
                         return
-                    withdraw_amount_raw = int(withdraw_amount * 1000000000000000000000000000000)
+                    withdraw_amount_raw = int(withdraw_amount * CONVERT_MULTIPLIER[CURRENCY])
                     if Decimal(withdraw_amount_raw) > Decimal(balance_return['balance']):
                         modules.social.send_dm(message['sender_id'],
-                                               translations.not_enough_balance_text[message['language']],
+                                               translations.not_enough_balance_text[message['language']].format(CURRENCY),
                                                message['system'])
                         return
                 else:
                     withdraw_amount_raw = balance_return['balance']
-                    withdraw_amount = balance_return['balance'] / 1000000000000000000000000000000
+                    withdraw_amount = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
                 # send the total balance to the provided account
                 work = modules.currency.get_pow(sender_account)
                 if work == '':
@@ -439,10 +452,12 @@ def withdraw_process(message):
                 logging.info("{}: send_hash = {}".format(datetime.now(), send_hash))
                 # respond that the withdraw has been processed
                 modules.social.send_dm(message['sender_id'], translations.withdraw_text[message['language']]
-                                       .format(withdraw_amount, send_hash), message['system'])
+                                       .format(withdraw_amount, CURRENCY, EXPLORER, send_hash), message['system'])
                 logging.info("{}: Withdraw processed.  Hash: {}".format(datetime.now(), send_hash))
     else:
-        modules.social.send_dm(message['sender_id'], translations.incorrect_withdraw_text[message['language']],
+        modules.social.send_dm(message['sender_id'],
+                               translations.incorrect_withdraw_text[message['language']].format(BOT_ACCOUNT,
+                                                                                                CURRENCY),
                                message['system'])
         logging.info("{}: User sent a withdraw with invalid syntax.".format(datetime.now()))
 
@@ -465,7 +480,7 @@ def donate_process(message):
         modules.currency.receive_pending(sender_account)
 
         balance_return = rpc.account_balance(account='{}'.format(sender_account))
-        balance = balance_return['balance'] / 1000000000000000000000000000000
+        balance = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
         receiver_account = BOT_ACCOUNT
 
         try:
@@ -479,8 +494,12 @@ def donate_process(message):
         # We need to reduce the send_amount for a proper comparison - Decimal will not store exact amounts
         # (e.g. 0.0003 = 0.00029999999999452123)
         if Decimal(balance) < (Decimal(send_amount) - Decimal(0.00001)):
-            modules.social.send_dm(message['sender_id'], translations.large_donate_text[message['language']]
-                                   .format(balance, Decimal(send_amount)), message['system'])
+            modules.social.send_dm(message['sender_id'],
+                                   translations.large_donate_text[message['language']]
+                                   .format(balance,
+                                           CURRENCY.upper(),
+                                           Decimal(send_amount)),
+                                   message['system'])
             logging.info("{}: User tried to donate more than their balance.".format(datetime.now()))
 
         elif Decimal(send_amount) < Decimal(MIN_TIP):
@@ -492,9 +511,9 @@ def donate_process(message):
             # If the send amount > balance, send the whole balance.  If not, send the send amount.
             # This is to take into account for Decimal value conversions.
             if Decimal(send_amount) > Decimal(balance):
-                send_amount_raw = Decimal(balance) * 1000000000000000000000000000000
+                send_amount_raw = Decimal(balance) * CONVERT_MULTIPLIER[CURRENCY]
             else:
-                send_amount_raw = Decimal(send_amount) * 1000000000000000000000000000000
+                send_amount_raw = Decimal(send_amount) * CONVERT_MULTIPLIER[CURRENCY]
             logging.info(('{}; send_amount_raw: {}'.format(datetime.now(), int(send_amount_raw))))
             work = modules.currency.get_pow(sender_account)
             if work == '':
@@ -512,7 +531,7 @@ def donate_process(message):
             logging.info("{}: send_hash = {}".format(datetime.now(), send_hash))
 
             modules.social.send_dm(message['sender_id'], translations.donate_text[message['language']]
-                                   .format(send_amount, send_hash), message['system'])
+                                   .format(send_amount, CURRENCY, EXPLORER, send_hash), message['system'])
             logging.info("{}: {} NANO donation processed.  Hash: {}".format(datetime.now(), Decimal(send_amount),
                                                                             send_hash))
 
@@ -548,18 +567,22 @@ def tip_process(message, users_to_tip, request_json):
     if len(users_to_tip) >= 2:
         try:
             modules.social.send_reply(message, translations.multi_tip_success[message['language']]
-                                      .format(message['tip_amount_text'], message['sender_account']))
+                                      .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                              message['sender_account']))
         except KeyError:
             modules.social.send_reply(message, translations.multi_tip_success['en']
-                                      .format(message['tip_amount_text'], message['sender_account']))
+                                      .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                              message['sender_account']))
 
     elif len(users_to_tip) == 1:
         try:
             modules.social.send_reply(message, translations.tip_success[message['language']]
-                                      .format(message['tip_amount_text'], message['send_hash']))
+                                      .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                              message['send_hash']))
         except KeyError:
             modules.social.send_reply(message, translations.tip_success['en']
-                                      .format(message['tip_amount_text'], message['send_hash']))
+                                      .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                              message['send_hash']))
 
 
 def language_process(message, new_language):

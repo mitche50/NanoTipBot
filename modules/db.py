@@ -16,22 +16,28 @@ logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.ge
 config = configparser.ConfigParser()
 config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
+# Check the currency of the bot
+CURRENCY = config.get('main', 'currency')
+
 # DB connection settings
-DB_HOST = config.get('webhooks', 'host')
-DB_USER = config.get('webhooks', 'user')
-DB_PW = config.get('webhooks', 'password')
-DB_SCHEMA = config.get('webhooks', 'schema')
+DB_HOST = config.get('main', 'host')
+DB_USER = config.get('main', 'user')
+DB_PW = config.get('main', 'password')
+DB_SCHEMA = config.get(CURRENCY, 'schema')
 
 
 def db_init():
     if not check_db_exist():
+        logging.info("db didn't exist: {}".format(DB_SCHEMA))
         create_db()
+    logging.info("db did exist: {}".format(DB_SCHEMA))
     create_tables()
 
 
 def check_db_exist():
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, use_unicode=True,
                          charset="utf8mb4")
+    logging.info("Checking if schema exists: {}".format(DB_SCHEMA))
     sql = "SHOW DATABASES LIKE '{}'".format(DB_SCHEMA)
     db_cursor = db.cursor()
     exists = db_cursor.execute(sql)
@@ -177,6 +183,9 @@ def create_tables():
              PRIMARY KEY (`account`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
             """
+            db_cursor.execute(sql)
+            logging.info("Checking if spare_accounts table was created: {}".format(
+                check_table_exists('spare_accounts')))
 
         db.commit()
         db_cursor.close()
@@ -261,7 +270,7 @@ def set_spare_accounts(accounts):
     """
     Set DB with spare accounts.
     """
-    insert_accounts_call = "INSERT INTO tip_bot.spare_accounts (account) VALUES "
+    insert_accounts_call = "INSERT INTO {}.spare_accounts (account) VALUES ".format(DB_SCHEMA)
 
     try:
         for index, account in enumerate(accounts):
@@ -283,16 +292,17 @@ def get_spare_account():
     """
     Retrieve an account from the database.
     """
-    check_accounts_call = "SELECT count(account) FROM tip_bot.spare_accounts;"
+    check_accounts_call = "SELECT count(account) FROM {}.spare_accounts;".format(DB_SCHEMA)
     check_accounts_return = get_db_data(check_accounts_call)
+    logging.info("")
     if int(check_accounts_return[0][0]) <= 5:
         accounts = modules.currency.generate_accounts()
         set_spare_accounts(accounts)
 
-    get_account_call = "SELECT account FROM tip_bot.spare_accounts LIMIT 1;"
+    get_account_call = "SELECT account FROM {}.spare_accounts LIMIT 1;".format(DB_SCHEMA)
     spare_account_return = get_db_data(get_account_call)
 
-    remove_account_call = "DELETE FROM tip_bot.spare_accounts WHERE account = %s"
+    remove_account_call = "DELETE FROM {}.spare_accounts WHERE account = %s".format(DB_SCHEMA)
     set_db_data(remove_account_call, spare_account_return[0])
 
     return spare_account_return[0][0]

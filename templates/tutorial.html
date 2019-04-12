@@ -2,7 +2,7 @@
 {% block content %}
 
     <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
-      <img src="/static/nano_tip_bot_logo.jpg" class="ntb-jumbo-img">
+      <img src="{{ url_for('static', filename=currency + '_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
     </div>
 
 
@@ -14,9 +14,9 @@
             <iframe src="https://www.youtube.com/embed/FQeF0R4t4ic" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <div class="card-body" style="text-align:center">
               <h5 class="card-title">How to - Send a Tip </h5>
-              <p class="card-text">An example of sending a Nano tip using the Nano Tip Bot.</p>
+              <p class="card-text">An example of sending a {{ currency|title }} tip using the {{ currency|title }} Tip Bot.</p>
               <div style="text-align: center;">
-                <a href="https://twitter.com/home?status=@NanoTipBot+!tip+" target="_blank"><button type="button" class="btn btn-info"><i class="fab fa-twitter"></i> Send a Tip!</button></a>
+                <a href="https://twitter.com/home?status=@{{ currency|title }}TipBot+!tip+" target="_blank"><button type="button" class="btn btn-info"><i class="fab fa-twitter"></i> Send a Tip!</button></a>
               </div>
             </div>
           </div>
@@ -26,9 +26,9 @@
             <iframe src="https://www.youtube.com/embed/4iIGD_MBWYo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <div class="card-body" style="text-align:center">
               <h5 class="card-title">How to - Fund Your Account </h5>
-              <p class="card-text">An example of sending Nano to your tip account.</p>
+              <p class="card-text">An example of sending {{ currency|title }} to your tip account.</p>
               <div style="text-align: center;">
-                <a href="https://goo.gl/JjLVE9" class="btn btn-info"><i class="fab fa-twitter"></i> Check Your Balance</a>
+                <a href="https://twitter.com/messages/compose?recipient_id={{ bot_id }}&text=!balance" class="btn btn-info"><i class="fab fa-twitter"></i> Check Your Balance</a>
               </div>
             </div>
           </div>
@@ -38,9 +38,9 @@
             <iframe src="https://www.youtube.com/embed/YZPtiXWeMH0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <div class="card-body" style="text-align:center">
               <h5 class="card-title">How to - Withdraw Your Tips</h5>
-              <p class="card-text">An example of withdrawing Nano from the Tip Bot.</p>
+              <p class="card-text">An example of withdrawing {{ currency|title }} from the Tip Bot.</p>
               <div style="text-align: center;">
-                <a href="https://goo.gl/o7p5Qh" class="btn btn-info" ><i class="fab fa-twitter"></i> Withdraw Through DM</a>
+                <a href="https://twitter.com/messages/compose?recipient_id={{ bot_id }}&text=!withdraw" class="btn btn-info" ><i class="fab fa-twitter"></i> Withdraw Through DM</a>
               </div>
             </div>
           </div>

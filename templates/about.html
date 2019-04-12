@@ -1,21 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
-      <img src="/static/nano_tip_bot_logo.jpg" class="ntb-jumbo-img">
+      <img src="{{ url_for('static', filename=currency + '_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
     </div>
     <div class="container">
         <p style="text-align:center">
+            {% if currency == "nano" %}
             Nano is a fast, feeless and energy efficient cryptocurrency that allows for the nearly instantaneous transfer of value over the internet.
-            The Nano Tip Bot showcases this speed and ease of use on multiple social media platforms, allowing you to tip friends, colleagues and
+            {% else %}
+            Banano is a feeless, instant, rich in potassium cryptocurrency powered by DAG technology disrupting the meme economy.
+            {% endif %}
+            The {{ currency|title }} Tip Bot showcases this speed and ease of use on multiple social media platforms, allowing you to tip friends, colleagues and
             content providers without leaving the platform!  Just fund your tip account through your main wallet, and the rest can be handled with
             commands directly in the website.
+
         </p>
         <br><br>
         <div class="container">
             <div class="card text-center col-md-6 offset-md-3">
                 <div class="card-body">
                     <h5 class="card-title text-align:center">
-                        BTC versus NANO Energy Consumption
+                        BTC versus {{ currency|upper }} Energy Consumption
                     </h5>
                     <table class="table">
                         <tr>
@@ -28,7 +33,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Energy per NANO Transaction (Wh)
+                                Energy per {{ currency|upper }} Transaction (Wh)
                             </td>
                             <td>
                                 {{nano_energy}}
@@ -36,7 +41,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Total confirmed NANO Transactions
+                                Total confirmed {{ currency|upper }} Transactions
                             </td>
                             <td>
                                 {{checked_blocks}}
@@ -44,7 +49,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Total energy consumed by NANO network (Wh)
+                                Total energy consumed by {{ currency|upper }} network (Wh)
                             </td>
                             <td>
                                 {{total_energy}}
@@ -52,7 +57,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Amount of BTC Transactions that could be done using energy to power entire NANO network
+                                Amount of BTC Transactions that could be done using energy to power entire {{ currency|upper }} network
                             </td>
                             <td>
                                 {{btc_vs_nano}}

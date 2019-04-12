@@ -1,12 +1,17 @@
 <div class="container">
   <p style="text-align:center">
     <small>Developed by Andrew Mitchell.  View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br>
-    You can donate on Twitter through the !donate command, or by <a href="https://nanote.net/pay/758b6c10-89fc-11e8-8cbe-b1db379191f2">clicking here!</a>
+    You can donate on Twitter / Telegram through the !donate command, or by
+      {% if currency=="nano" %}
+        <a href="https://nanote.net/pay/758b6c10-89fc-11e8-8cbe-b1db379191f2">clicking here!</a>
+      {% else %}
+        sending to <code>ban_187pa63dfni896sqe7986wndxe16uun8jn446o1zkqokwc1o6etcfmzqkxfb</code>
+      {% endif %}
     <br><br><br>
     Follow us on our Social Media accounts below:
     <br>
     </small>
-    <a href="https://twitter.com/NanoTipBot">
+    <a href="https://twitter.com/{{ currency|title }}TipBot">
     <button class="btn btn-social-icon btn-twitter">
       <span class="fab fa-twitter"></span>
     </button>

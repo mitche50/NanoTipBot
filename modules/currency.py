@@ -24,25 +24,34 @@ logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.ge
 config = configparser.ConfigParser()
 config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
+# Check the currency of the bot
+CURRENCY = config.get('main', 'currency')
+
 # Constants
-WALLET = config.get('webhooks', 'wallet')
-NODE_IP = config.get('webhooks', 'node_ip')
-WORK_SERVER = config.get('webhooks', 'work_server')
-WORK_KEY = config.get('webhooks', 'work_key')
+WALLET = config.get(CURRENCY, 'wallet')
+NODE_IP = config.get(CURRENCY, 'node_ip')
+WORK_SERVER = config.get(CURRENCY, 'work_server')
+WORK_KEY = config.get(CURRENCY, 'work_key')
 RE_EMOJI = re.compile('[\U00010000-\U0010ffff\U000026A1]', flags=re.UNICODE)
-TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
+TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
+URL = config.get('routes', '{}_url'.format(CURRENCY))
+CONVERT_MULTIPLIER = {
+    'nano': 1000000000000000000000000000000,
+    'banano': 100000000000000000000000000000
+}
 
 # Twitter API connection settings
-CONSUMER_KEY = config.get('webhooks', 'consumer_key')
-CONSUMER_SECRET = config.get('webhooks', 'consumer_secret')
-ACCESS_TOKEN = config.get('webhooks', 'access_token')
-ACCESS_TOKEN_SECRET = config.get('webhooks', 'access_token_secret')
+CONSUMER_KEY = config.get(CURRENCY, 'consumer_key')
+CONSUMER_SECRET = config.get(CURRENCY, 'consumer_secret')
+ACCESS_TOKEN = config.get(CURRENCY, 'access_token')
+ACCESS_TOKEN_SECRET = config.get(CURRENCY, 'access_token_secret')
 
 # Connect to Nano node
 rpc = nano.rpc.Client(NODE_IP)
 
 # Connect to Telegram
-telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
+if TELEGRAM_KEY != 'none':
+    telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Connect to Twitter
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -102,9 +111,15 @@ def get_pow(sender_account):
     work = ''
     while work == '':
         try:
-            work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
+            if CURRENCY == 'nano':
+                work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
+            else:
+                work_data = {'action': 'work_generate', 'hash': hash}
             json_request = json.dumps(work_data)
-            r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+            if CURRENCY == 'nano':
+                r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+            else:
+                r = requests.post('http://90.230.67.169:7070/', data=json_request)
             rx = r.json()
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))
@@ -119,7 +134,7 @@ def send_tip(message, users_to_tip, tip_index):
     """
     Process tip for specified user
     """
-    bot_status = config.get('webhooks', 'bot_status')
+    bot_status = config.get('main', 'bot_status')
     if bot_status == 'maintenance':
         modules.social.send_dm(message['sender_id'], translations.maintenance_text[message['language']],
                                message['system'])
@@ -127,7 +142,8 @@ def send_tip(message, users_to_tip, tip_index):
     else:
         logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
         if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
-            modules.social.send_reply(message, translations.self_tip_text[message['language']])
+            modules.social.send_reply(message,
+                                      translations.self_tip_text[message['language']].format(CURRENCY.upper()))
 
             logging.info("{}: User tried to tip themself").format(datetime.now())
             return
@@ -185,7 +201,7 @@ def send_tip(message, users_to_tip, tip_index):
 
             receive_pending(users_to_tip[tip_index]['receiver_account'])
             balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
-            users_to_tip[tip_index]['balance'] = balance_return['balance'] / 1000000000000000000000000000000
+            users_to_tip[tip_index]['balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
             # create a string to remove scientific notation from small decimal tips
             if str(users_to_tip[tip_index]['balance'])[0] == ".":
                 users_to_tip[tip_index]['balance'] = "0{}".format(str(users_to_tip[tip_index]['balance']))
@@ -196,7 +212,7 @@ def send_tip(message, users_to_tip, tip_index):
             modules.social.send_dm(users_to_tip[tip_index]['receiver_id'],
                                    translations.receiver_tip_text[users_to_tip[tip_index]['receiver_language']]
                                    .format(message['sender_screen_name'], message['tip_amount_text'],
-                                           users_to_tip[tip_index]['balance']), message['system'])
+                                           CURRENCY.upper(), CURRENCY.upper(), URL), message['system'])
 
         except Exception as e:
             logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
@@ -281,12 +297,12 @@ def get_fiat_price(fiat, crypto_currency):
 
 def generate_accounts():
     accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
-
-    logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
-    work_data = {'accounts': accounts, 'key': WORK_KEY}
-    json_request = json.dumps(work_data)
-    r = requests.post('{}'.format(WORK_SERVER), data=json_request)
-    rx = r.json()
-    logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
+    if CURRENCY == 'nano':
+        logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
+        work_data = {'accounts': accounts, 'key': WORK_KEY}
+        json_request = json.dumps(work_data)
+        r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+        rx = r.json()
+        logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
 
     return accounts

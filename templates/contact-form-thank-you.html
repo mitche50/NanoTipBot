@@ -2,7 +2,7 @@
 {% block content %}
 
     <div class="jumbotron" style="display:block;margin-left:auto;margin-right:auto;width:100%">
-      <img src="/static/nano_tip_bot_logo.jpg" class="ntb-jumbo-img">
+      <img src="{{ url_for('static', filename=currency + '_tip_bot_logo.jpg') }}" class="ntb-jumbo-img">
     </div>
     <h3 style="text-align:center">Thanks for your feedback!</h3>
     <br><br>
