@@ -177,7 +177,7 @@ def create_tables():
         check_exists = check_table_exists('spare_accounts')
         if not check_exists:
             # create spare_accounts table
-            sql= """
+            sql = """
             CREATE TABLE `spare_accounts` (
              `account` varchar(100) NOT NULL,
              PRIMARY KEY (`account`)
