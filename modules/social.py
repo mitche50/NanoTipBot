@@ -51,7 +51,7 @@ WALLET = config.get(CURRENCY, 'wallet')
 # IDs
 BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
 BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
-BOT_NAME = config.get(CURRENCY, 'bot_name')
+BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
 BASE_URL = config.get('routes', 'base_url')
 TELEGRAM_URI = config.get('routes', 'telegram_uri')
 
@@ -226,7 +226,7 @@ def check_message_action(message):
     logging.info("{}: in check_message_action.".format(datetime.now()))
     if message['system'] == 'telegram':
         try:
-            check_for_ntb = message['text'].index("{}".format(BOT_NAME))
+            check_for_ntb = message['text'].index("{}".format(BOT_NAME_TELEGRAM))
         except ValueError:
             message['action'] = None
             return message

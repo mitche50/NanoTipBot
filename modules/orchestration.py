@@ -28,7 +28,8 @@ BULLET = u"\u2022"
 NODE_IP = config.get(CURRENCY, 'node_ip')
 WALLET = config.get(CURRENCY, 'wallet')
 BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
-BOT_NAME = config.get(CURRENCY, 'bot_name')
+BOT_NAME_TWITTER = config.get(CURRENCY, 'bot_name_twitter')
+BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
 BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
 MIN_TIP = config.get(CURRENCY, 'min_tip')
 EXPLORER = config.get('routes', '{}_explorer'.format(CURRENCY))
@@ -63,7 +64,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     balance_process(message)
@@ -82,7 +83,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     register_process(message)
@@ -99,7 +100,7 @@ def parse_action(message):
         if new_pid == 0:
             try:
                 modules.social.send_dm(message['sender_id'],
-                                       translations.redirect_tip_text[message['language']].format(BOT_NAME),
+                                       translations.redirect_tip_text[message['language']].format(BOT_NAME_TWITTER),
                                        message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
@@ -116,7 +117,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     withdraw_process(message)
@@ -135,7 +136,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     donate_process(message)
@@ -180,7 +181,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     try:
@@ -206,7 +207,7 @@ def parse_action(message):
                 bot_status = config.get('main', 'bot_status')
                 if bot_status == 'maintenance':
                     modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME),
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
                                            message['system'])
                 else:
                     language_list_process(message)
@@ -240,8 +241,9 @@ def help_process(message):
     """
     modules.social.send_dm(message['sender_id'],
                            translations.help_message[message['language']].format(CURRENCY.title(),
-                                                                                 BOT_NAME,
-                                                                                 BOT_ACCOUNT),
+                                                                                 BOT_NAME_TWITTER,
+                                                                                 BOT_ACCOUNT,
+                                                                                 BOT_NAME_TELEGRAM),
                            message['system'])
     logging.info("{}: Help message sent!".format(datetime.now()))
 
