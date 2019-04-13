@@ -9,26 +9,29 @@ from modules.db import get_db_data, set_db_data
 from modules.social import send_dm
 from modules.currency import get_pow, receive_pending
 
-import MySQLdb, re, requests, nano, tweepy, configparser, logging, json
+import nano, tweepy, configparser, logging, os
 
 # CONFIG CONSTANTS =====================================
+# Read config and parse constants
 config = configparser.ConfigParser()
-config.read('webhookconfig.ini')
+config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
-CONSUMER_KEY = config.get('webhooks', 'consumer_key')
-CONSUMER_SECRET = config.get('webhooks', 'consumer_secret')
-ACCESS_TOKEN = config.get('webhooks', 'access_token')
-ACCESS_TOKEN_SECRET = config.get('webhooks', 'access_token_secret')
-DB_HOST = config.get('webhooks', 'host')
-DB_USER = config.get('webhooks', 'user')
-DB_PW = config.get('webhooks', 'password')
-DB_SCHEMA = config.get('webhooks', 'schema')
-WALLET = config.get('webhooks', 'wallet')
-NODE_IP = config.get('webhooks', 'node_ip')
-BOT_ACCOUNT = config.get('webhooks', 'bot_account')
-WORK_SERVER = config.get('webhooks', 'work_server')
-WORK_KEY = config.get('webhooks', 'work_key')
-TELEGRAM_KEY = config.get('webhooks', 'telegram_key')
+CURRENCY = config.get('main', 'currency')
+
+CONSUMER_KEY = config.get(CURRENCY, 'consumer_key')
+CONSUMER_SECRET = config.get(CURRENCY, 'consumer_secret')
+ACCESS_TOKEN = config.get(CURRENCY, 'access_token')
+ACCESS_TOKEN_SECRET = config.get(CURRENCY, 'access_token_secret')
+DB_HOST = config.get('main', 'host')
+DB_USER = config.get('main', 'user')
+DB_PW = config.get('main', 'password')
+DB_SCHEMA = config.get(CURRENCY, 'schema')
+WALLET = config.get(CURRENCY, 'wallet')
+NODE_IP = config.get(CURRENCY, 'node_ip')
+BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
+WORK_SERVER = config.get(CURRENCY, 'work_server')
+WORK_KEY = config.get(CURRENCY, 'work_key')
+TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
 
 
 # Connect to Twitter
@@ -45,7 +48,7 @@ rpc = nano.rpc.Client(NODE_IP)
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('/root/webhooks/unregistered.log', 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 
@@ -90,8 +93,9 @@ def send_returned_notice_to_receivers():
 
     for user in unregistered_users_data:
         send_dm(user[0], "You had tips that were sent 30 or more days ago, and you haven't registered your account. "
-                         "These tips were returned to the sender so they can continue to spread Nano to others. "
-                         "If you would like to keep any future tips, please register to prevent any more returns!",
+                         "These tips were returned to the sender so they can continue to spread {} to others. "
+                         "If you would like to keep any future tips, please register to prevent any more returns!"
+                .format(CURRENCY.title()),
                 user[1])
 
     mark_notified("receivers")
@@ -155,8 +159,8 @@ def send_returned_notice_to_senders():
         sender_comp = str(sender[0]) + "-" + str(sender[1])
         logging.info("sender return list = {}".format(return_dict[sender_comp]))
         send_dm(sender[0], "You've had tips returned to your account due to the following list of users "
-                           "not registering: {}.  Your account has been credited {} NANO.  Continue spreading the "
-                           "love or withdraw to your wallet!".format(return_dict[sender_comp], sender[2]),
+                           "not registering: {}.  Your account has been credited {} {}.  Continue spreading the "
+                           "love or withdraw to your wallet!".format(return_dict[sender_comp], sender[2], CURRENCY.upper()),
                 sender[1])
 
     mark_notified("senders")

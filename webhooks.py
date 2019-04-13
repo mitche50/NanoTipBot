@@ -50,6 +50,8 @@ TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
 BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
 BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
 BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
+BOT_NAME_TWITTER = config.get(CURRENCY, 'bot_name_twitter')
+BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
 
 # Set key for webhook challenge from Twitter
 key = config.get(CURRENCY, 'consumer_secret')
@@ -311,7 +313,8 @@ def index():
 
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
                            total_tipped_number_table=total_tipped_number_table, total_value_usd=total_value_usd,
-                           price=price, currency=CURRENCY, bot_id=BOT_ID_TWITTER, bot_account=BOT_ACCOUNT)
+                           price=price, currency=CURRENCY, bot_id=BOT_ID_TWITTER, bot_account=BOT_ACCOUNT,
+                           bot_name_twitter=BOT_NAME_TWITTER, bot_name_telegram=BOT_NAME_TELEGRAM)
 
 
 @app.route(TWITTER_BANANO_URI, methods=["GET"])
