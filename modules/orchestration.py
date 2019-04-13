@@ -271,21 +271,20 @@ def balance_process(message):
         if new_pid == 0:
             modules.currency.receive_pending(message['sender_account'])
             os._exit(0)
+        else:
+            balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
+            message['sender_balance_raw'] = balance_return['balance']
+            message['sender_pending_raw'] = balance_return['pending']
+            message['sender_balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
+            message['sender_pending'] = balance_return['pending'] / CONVERT_MULTIPLIER[CURRENCY]
 
-        balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
-        message['sender_balance_raw'] = balance_return['balance']
-        message['sender_pending_raw'] = balance_return['pending']
-        message['sender_balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
-        message['sender_pending'] = balance_return['pending'] / CONVERT_MULTIPLIER[CURRENCY]
-
-        modules.social.send_dm(message['sender_id'], translations.balance_text[message['language']]
-                               .format(message['sender_balance'],
-                                       CURRENCY.upper(),
-                                       message['sender_pending'],
-                                       CURRENCY.upper()),
-                               message['system'])
-        logging.info("{}: Balance Message Sent!".format(datetime.now()))
-        modules.currency.receive_pending(message['sender_account'])
+            modules.social.send_dm(message['sender_id'], translations.balance_text[message['language']]
+                                   .format(message['sender_balance'],
+                                           CURRENCY.upper(),
+                                           message['sender_pending'],
+                                           CURRENCY.upper()),
+                                   message['system'])
+            logging.info("{}: Balance Message Sent!".format(datetime.now()))
 
 
 def register_process(message):

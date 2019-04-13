@@ -101,8 +101,8 @@ def get_pow(sender_account):
     """
     logging.info("{}: in get_pow".format(datetime.now()))
     try:
-        account_frontiers = rpc.accounts_frontiers(accounts=["{}".format(sender_account)])
-        hash = account_frontiers[sender_account]
+        account_info = rpc.account_info(account="{}".format(sender_account))
+        hash = account_info['frontier']
         logging.info("{}: account: {} - frontier: {}".format(datetime.now(), sender_account, hash))
     except Exception as e:
         logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
@@ -116,10 +116,7 @@ def get_pow(sender_account):
             else:
                 work_data = {'action': 'work_generate', 'hash': hash}
             json_request = json.dumps(work_data)
-            if CURRENCY == 'nano':
-                r = requests.post('{}'.format(WORK_SERVER), data=json_request)
-            else:
-                r = requests.post('http://90.230.67.169:7070/', data=json_request)
+            r = requests.post('{}'.format(WORK_SERVER), data=json_request)
             rx = r.json()
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))

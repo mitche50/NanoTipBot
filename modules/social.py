@@ -226,7 +226,7 @@ def check_message_action(message):
     logging.info("{}: in check_message_action.".format(datetime.now()))
     if message['system'] == 'telegram':
         try:
-            check_for_ntb = message['text'].index("{}".format(BOT_NAME_TELEGRAM))
+            check_for_ntb = message['text'].index("{}".format(BOT_NAME_TELEGRAM.lower()))
         except ValueError:
             message['action'] = None
             return message
