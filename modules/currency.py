@@ -109,20 +109,20 @@ def get_pow(sender_account):
         return ''
 
     work = ''
-    while work == '':
-        try:
-            if CURRENCY == 'nano':
-                work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
-            else:
-                work_data = {'action': 'work_generate', 'hash': hash}
-            json_request = json.dumps(work_data)
-            r = requests.post('{}'.format(WORK_SERVER), data=json_request)
-            rx = r.json()
+    try:
+        if CURRENCY == 'nano':
+            work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
+        else:
+            work_data = {'action': 'work_generate', 'hash': hash}
+        json_request = json.dumps(work_data)
+        r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+        rx = r.json()
+        if 'work' in rx.keys():
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))
-        except Exception as e:
-            logging.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
-            pass
+    except Exception as e:
+        logging.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
+        pass
 
     return work
 
