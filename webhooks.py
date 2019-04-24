@@ -289,6 +289,10 @@ def index():
     r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd'.format(CURRENCY))
     rx = r.json()
     price = float(rx[CURRENCY]['usd'])
+    if CURRENCY == 'banano':
+        tip_command = '!ban'
+    else:
+        tip_command = '!tip'
     if price > .01:
         price = round(price, 2)
 
@@ -314,7 +318,8 @@ def index():
     return render_template('index.html', total_tipped_nano_table=total_tipped_nano_table,
                            total_tipped_number_table=total_tipped_number_table, total_value_usd=total_value_usd,
                            price=price, currency=CURRENCY, bot_id=BOT_ID_TWITTER, bot_account=BOT_ACCOUNT,
-                           bot_name_twitter=BOT_NAME_TWITTER, bot_name_telegram=BOT_NAME_TELEGRAM)
+                           bot_name_twitter=BOT_NAME_TWITTER, bot_name_telegram=BOT_NAME_TELEGRAM,
+                           tip_command=tip_command)
 
 
 @app.route(TWITTER_BANANO_URI, methods=["GET"])
