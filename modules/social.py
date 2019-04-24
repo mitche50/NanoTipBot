@@ -52,6 +52,7 @@ WALLET = config.get(CURRENCY, 'wallet')
 BOT_ID_TWITTER = config.get(CURRENCY, 'bot_id_twitter')
 BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
 BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
+BOT_NAME_TWITTER = config.get(CURRENCY, 'bot_name_twitter')
 BASE_URL = config.get('routes', 'base_url')
 TELEGRAM_URI = config.get('routes', 'telegram_uri')
 
@@ -73,7 +74,7 @@ def get_language(message):
     """
     Set the language for messaging the user
     """
-    get_language_call = "SELECT language_code FROM tip_bot.languages WHERE user_id = %s AND languages.system = %s"
+    get_language_call = "SELECT language_code FROM languages WHERE user_id = %s AND languages.system = %s"
     language_values = [message['sender_id'], message['system']]
     language_return = modules.db.get_db_data_new(get_language_call, language_values)
     # If there is no record, create a new one with default EN language
@@ -101,7 +102,7 @@ def get_receiver_language(user_id, system):
     """
     Set the language for the receiver of the tip
     """
-    get_language_call = ("SELECT language_code FROM tip_bot.languages WHERE user_id = %s "
+    get_language_call = ("SELECT language_code FROM languages WHERE user_id = %s "
                          "AND languages.system = %s")
     language_values = [user_id, system]
     language_return = modules.db.get_db_data_new(get_language_call, language_values)
@@ -232,13 +233,17 @@ def check_message_action(message):
             return message
     try:
         message['action_index'] = None
-        for command in modules.translations.tip_commands[message['language']]:
+
+        if CURRENCY == 'banano':
+            tip_commands = modules.translations.banano_tip_commands['en']
+        else:
+            tip_commands = modules.translations.nano_tip_commands[message['language']]
+            if message['language'] is not 'en':
+                tip_commands.append(modules.translations.nano_tip_commands['en'])
+
+        for command in tip_commands:
             if command in message['text']:
                 message['action_index'] = message['text'].index(command)
-        if message['language'] is not 'en':
-            for command in modules.translations.tip_commands['en']:
-                if command in message['text']:
-                    message['action_index'] = message['text'].index(command)
         if message['action_index'] is None:
             message['action'] = None
             return message
@@ -257,13 +262,25 @@ def validate_tip_amount(message):
     """
     Validate the tweet includes an amount to tip, and if that tip amount is greater than the minimum tip amount.
     """
+    # Set tip commands
+    if CURRENCY == 'banano':
+        tip_commands = modules.translations.banano_tip_commands['en']
+    else:
+        tip_commands = modules.translations.nano_tip_commands[message['language']]
+        if message['language'] is not 'en':
+            tip_commands.append(modules.translations.nano_tip_commands['en'])
+
     logging.info("{}: in validate_tip_amount".format(datetime.now()))
     try:
         message['tip_amount'] = Decimal(message['text'][message['starting_point']])
     except Exception:
         logging.info("{}: Tip amount was not a number: {}".format(datetime.now(),
                                                                   message['text'][message['starting_point']]))
-        send_reply(message, translations.not_a_number_text[message['language']])
+        if message['system'] == 'twitter':
+            bot_name = BOT_NAME_TWITTER
+        else:
+            bot_name = BOT_NAME_TELEGRAM
+        send_reply(message, translations.not_a_number_text[message['language']].format(bot_name, tip_commands[0]))
 
         message['tip_amount'] = -1
         return message
