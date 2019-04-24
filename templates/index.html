@@ -108,16 +108,16 @@
       <h5>Tweet / Group Message Commands: Tips are sent through public tweets, retweets, and messages in Telegram groups.  These are processed in real time.</h5>
       <br>
       <ul>
-        <li><a href="https://twitter.com/home?status=@{{ currency|title }}TipBot+!tip+">!ban</a>: Send a tip of a specified amount to a user on Twitter or Telegram.
+        <li><a href="https://twitter.com/home?status=@{{ currency|title }}TipBot+{{ tip_command }}+">{{ tip_command }}</a>: Send a tip of a specified amount to a user on Twitter or Telegram.
             <ul>
-                <li>Twitter Example: <code>{{ bot_name_twitter }} !tip 1.01 @mitche50</code> will send a 1.01 {{ currency|upper }} tip to user @mitche50.</li>
-                <li>Telegram Example: <code>{{ bot_name_telegram }} !tip 2.22 @mitche50</code> will send a 2.22 {{ currency|upper }} tip to user @mitche50</li>
+                <li>Twitter Example: <code>{{ bot_name_twitter }} {{ tip_command }} 1.01 @mitche50</code> will send a 1.01 {{ currency|upper }} tip to user @mitche50.</li>
+                <li>Telegram Example: <code>{{ bot_name_telegram }} {{ tip_command }} 2.22 @mitche50</code> will send a 2.22 {{ currency|upper }} tip to user @mitche50</li>
             </ul>
         </li>
       </ul>
       <br><br>
       <div style="text-align: center;">
-        <a href="https://twitter.com/home?status=@{{ currency|title }}TipBot+!tip+" target="_blank"><button type="button" class="btn btn-primary btn-lg"><i class="fab fa-twitter"></i> Click here to send a tip</button></a>
+        <a href="https://twitter.com/home?status=@{{ currency|title }}TipBot+{{ tip_command }}+" target="_blank"><button type="button" class="btn btn-primary btn-lg"><i class="fab fa-twitter"></i> Click here to send a tip on Twitter!</button></a>
       </div>
       <br><br>
     </div>
