@@ -19,49 +19,48 @@ maintenance_text = {
     'it': 'Il tip bot è in manutenzione. Controlla {} su Twitter per ulteriori informazioni.'
 }
 redirect_tip_text = {
-    'en': 'Tips are processed through public messages now.  Please send in the format {} !tip 1 @user1.',
+    'en': 'Tips are processed through public messages now.  Please send in the format {} {} 1 @user1.',
     'es': 'Los tips ahora están siendo procesados a través de mensajes públicos. Por favor, envíalos con el formato '
-          '{} !tip 1 @usuario1.',
-    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {} !tip 1 '
+          '{} {} 1 @usuario1.',
+    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {} {} 1 '
           '@gebruikersnaam.',
     'ja': '',
     'zh-t': '現在小費只可以通過公開消息傳遞。請用這個格式 “{} ！賞 <金額> @<用戶名>”',
     'zh-s': '现在小费只可以通过公开消息传递。请用这个格式 “{} ！赏 <金额> @<用户名>”',
     'fr': 'Les tips sont dès à présent traités via message public. Veuillez les envoyer sous le format {} '
-          '!tip 1 @utilisateur1',
+          '{} 1 @utilisateur1',
     'pt': 'Agora, as tips são enviadas através de mensagens públicas. Por favor utiliza o seguinte formato '
-          '{} !tip 1 @utilizador1',
+          '{} {} 1 @utilizador1',
     'th': '',
     'de': '',
-    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {} !tip 1 @user1.',
+    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {} {} 1 @user1.',
     'vt': '',
     'ru': 'Типы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате {} '
-          '!тип 1 @имя_пользователя1.',
+          '{} 1 @имя_пользователя1.',
     'sv': '',
     'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato {} '
-          '!tip 1 @utente1.'
+          '{} 1 @utente1.'
 }
-# TODO: Make Twitter into a dynamic system
 self_tip_text = {
-    'en': 'Self tipping is not allowed.  Please use this bot to spread the ${} to other Twitter users!',
-    'es': 'Enviarte tips a ti mismo no está permitido. Por favor, ¡usa este bot para difundir el ${} a otros '
-          'usuarios de Twitter!',
-    'nl': 'Jezelf tippen is niet toegestaan. Gebruik deze bot om ${} naar andere Twitter-gebruikers te verspreiden!',
+    'en': 'Self tipping is not allowed.  Please use this bot to spread the ${0} to other {1} users!',
+    'es': 'Enviarte tips a ti mismo no está permitido. Por favor, ¡usa este bot para difundir el ${0} a otros '
+          'usuarios de {1}!',
+    'nl': 'Jezelf tippen is niet toegestaan. Gebruik deze bot om ${0} naar andere {1}-gebruikers te verspreiden!',
     'ja': '',
-    'zh-t': '不可以給自己小費。請用這個助手來轉發${}給其他人！',
-    'zh-s': '不可以给自己小费哦。请用这个助手来转发${}给其他的推特用户们！',
+    'zh-t': '不可以給自己小費。請用這個助手來轉發${0}給其他的{1}用戶們！',
+    'zh-s': '不可以给自己小费哦。请用这个助手来转发${0}给其他的{1}用户们！',
     'fr': 'Les tips destinés à soi-même ne sont pas autorisés. Veuillez utiliser le bot pour introduire d\'autres '
-          'utilisateurs Twitter à ${} s.v.p!',
-    'pt': 'Não é permitido enviar tips a si próprio. Por favor utiliza este bot para difundir e partilhar ${} '
-          'com outros usuários do Twitter!',
+          'utilisateurs {1} à ${0} s.v.p!',
+    'pt': 'Não é permitido enviar tips a si próprio. Por favor utiliza este bot para difundir e partilhar ${0} '
+          'com outros usuários do {1}!',
     'th': '',
     'de': '',
-    'id': 'Tidak boleh self tipping. Silakan gunakan bot ini untuk menyebarkan ${} ke pengguna Twitter lain!',
+    'id': 'Tidak boleh self tipping. Silakan gunakan bot ini untuk menyebarkan ${0} ke pengguna {1} lain!',
     'vt': '',
     'ru': 'Делать тип самому себе не допускаются. Пожалуйста, используйте этот бот, чтобы распространять '
-          '${} другим пользователям Twitter!',
+          '${0} другим пользователям {1}!',
     'sv': '',
-    'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${} agli altri utenti Twitter!'
+    'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${0} agli altri utenti {1}!'
 }
 
 receiver_tip_text = {
@@ -102,26 +101,26 @@ receiver_tip_text = {
 }
 
 private_tip_text = {
-    'en': 'Private Tip is under maintenance.  To send your tip, use the !tip function in a tweet or reply!',
+    'en': 'Private Tip is under maintenance.  To send your tip, use the {} function in a tweet or reply!',
     'es': 'Los tips privados están en mantenimiento. Para poder enviar tu tip, usa la función '
-          '!tip en un tweet o en una respuesta.',
+          '{} en un tweet o en una respuesta.',
     'nl': 'Privé tippen is momenteel in onderhoud. Gebruik de tipfunctie in een tweet of antwoord om '
           'jouw tip te verzenden!',
     'ja': '',
     'zh-t': '私賞正在維修中。請用 “！賞” 指令發推或回覆來發送小費！',
     'zh-s': '私赏正在维修中。请用 “！赏” 指令发推或回复来发送小费！',
-    'fr': 'Les tips privés sont en maintenance. Afin d\'envoyer un tip, veuillez utiliser la fonction !tip dans '
+    'fr': 'Les tips privés sont en maintenance. Afin d\'envoyer un tip, veuillez utiliser la fonction {} dans '
           'un tweet ou une réponse!',
-    'pt': 'A funcionalidade de tips privadas está em manutenção. Para enviar uma tip, utiliza o comando !tip num '
+    'pt': 'A funcionalidade de tips privadas está em manutenção. Para enviar uma tip, utiliza o comando {} num '
           'tweet ou numa resposta.',
     'th': '',
     'de': '',
-    'id': 'Tip pribadi sedang dalam perbaikan. Untuk mengirim tip Anda, gunakan fungsi !tip dalam tweet atau balasan!',
+    'id': 'Tip pribadi sedang dalam perbaikan. Untuk mengirim tip Anda, gunakan fungsi {} dalam tweet atau balasan!',
     'vt': '',
     'ru': 'Приватный тип находится на обслуживании. Чтобы отправить свой тип, используйте функцию '
           '!тип в твите или ответе!',
     'sv': '',
-    'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione !tip in un tweet o '
+    'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione {} in un tweet o '
           'in una risposta!'
 }
 
@@ -153,28 +152,28 @@ wrong_format_text = {
 
 no_users_text = {
     'en': 'Looks like you didn\'t enter in anyone to tip, or you mistyped someone\'s handle.  You can try '
-          'to tip again using the format !tip 1234 @username',
+          'to tip again using the format {0} {1} 1234 @username',
     'es': 'Parece que no ingresaste a nadie para enviar un tip, o te equivocaste en la escritura de su nombre. '
-          'Puedes intentar realizar un tip nuevamente usando el formato !tip 1234 @usuario',
+          'Puedes intentar realizar un tip nuevamente usando el formato {0} {1} 1234 @usuario',
     'nl': 'Het lijkt erop dat je niemand hebt genoemd om te ​​tippen, of dat je iemands naam verkeerd hebt '
-          'getypt. Je kan proberen opnieuw een tip te versturen in het formaat: !tip 1234 @gebruikersnaam',
+          'getypt. Je kan proberen opnieuw een tip te versturen in het formaat: {0} {1} 1234 @gebruikersnaam',
     'ja': '',
-    'zh-t': '您似乎沒有輸入小費的接受人，或者誤輸了接受人的用戶名。您可以用此格式再試一次： “！賞 <金額> @<用戶名>”',
-    'zh-s': '您似乎没有输入小费的接受人，或者误输了接受人的用户名。您可以用此格式再试一次： “！赏 <金额> @<用户名>”',
+    'zh-t': '您似乎沒有輸入小費的接受人，或者誤輸了接受人的用戶名。您可以用此格式再試一次： “{0} {1} <金額> @<用戶名>”',
+    'zh-s': '您似乎没有输入小费的接受人，或者误输了接受人的用户名。您可以用此格式再试一次： “{0} {1} <金额> @<用户名>”',
     'fr': 'Il semble que vous n\'ayez pas indiqué à qui envoyer un tip, ou que vous ayez fait une faute de frappe. '
-          'Veuillez réessayer avec le format !tip 1234 @utilisateur',
+          'Veuillez réessayer avec le format {0} {1} 1234 @utilisateur',
     'pt': 'Parece que não especificaste nenhum utilizador na tip, ou esse utilizador não existe. Podes tentar '
-          'enviar uma tip novamente com o seguinte formato !tip 1234 @utilizador',
+          'enviar uma tip novamente com o seguinte formato {0} {1} 1234 @utilizador',
     'th': '',
     'de': '',
     'id': 'Sepertinya Anda tidak memasukkan siapapun untuk memberi tip, atau Anda salah mengetik nama pengguna '
-          'seseorang. Anda dapat mencoba memberi tip lagi menggunakan format !tip 1234 @username',
+          'seseorang. Anda dapat mencoba memberi tip lagi menggunakan format {0} {1} 1234 @username',
     'vt': '',
     'ru': 'Похоже, вы не отметили никого, чтобы сделать тип, или набрали неверно. Вы можете попробовать сделать '
-          'тип снова, используя формат !тип 1234 @имя_пользователя',
+          'тип снова, используя формат {0} {1} 1234 @имя_пользователя',
     'sv': '',
     'it': 'Sembra che tu non abbia inserito nessuno cui dare la mancia, oppure abbia sbagliato a scrivere il suo nome '
-          'utente. Puoi riprovare usando il formato !tip 1234 @nomeutente'
+          'utente. Puoi riprovare usando il formato {0} {1} 1234 @nomeutente'
 }
 
 multi_tip_success = {
@@ -231,27 +230,27 @@ tip_success = {
 
 not_a_number_text = {
     'en': 'Looks like the value you entered to tip was not a number.  You can try to tip '
-          'again using the format !tip 1234 @username',
+          'again using the format {0} {1} 1234 @username',
     'es': 'Parece que el valor que ingresaste para realizar un tip no fue un número. Puedes intentarlo nuevamente '
-          'usando el formato !tip 1234 @usuario',
+          'usando el formato {0} {1} 1234 @usuario',
     'nl': 'Het lijkt erop dat de waarde die je hebt ingevoerd om een tip te geven geen getal was. '
-          'Je kan proberen opnieuw een tip te geven in het formaat: !tip 1234 @gebruikersnaam',
+          'Je kan proberen opnieuw een tip te geven in het formaat: {0} {1} 1234 @gebruikersnaam',
     'ja': '',
-    'zh-t': '您輸入的小費額度似乎不是個數字。您可以用此格式再試一次 “！賞 <金額> @<用戶名>”',
-    'zh-s': '您输入的小费额度似乎不是个数字。您可以再试一次用此格式 “！赏 <金额> @<用户名>”',
+    'zh-t': '您輸入的小費額度似乎不是個數字。您可以用此格式再試一次 “{0} {1} <金額> @<用戶名>”',
+    'zh-s': '您输入的小费额度似乎不是个数字。您可以再试一次用此格式 “{0} {1} <金额> @<用户名>”',
     'fr': 'Il semble que le montant indiqué de votre tip se trouve ne pas être un nombre. Veuillez réessayer votre '
-          'tip avec le format !tip 1234 @utilisateur',
-    'pt': 'Parece que o valor da tip não é um número. Tenta novamente utilizando o formato !tip 1234 @utilizador',
+          'tip avec le format {0} {1} 1234 @utilisateur',
+    'pt': 'Parece que o valor da tip não é um número. Tenta novamente utilizando o formato {0} {1} 1234 @utilizador',
     'th': '',
     'de': '',
     'id': 'Sepertinya nilai yang Anda masukkan ke tip bukan angka. Anda dapat mencoba memberi tip lagi menggunakan '
-          'format !tip 1234 @username',
+          'format {0} {1} 1234 @username',
     'vt': '',
     'ru': 'Похоже, значение, которое вы ввели для тип, не было числом. Вы можете попробовать сделать снова '
-          'тип, используя формат !тип 1234 @имя_пользователя',
+          'тип, используя формат {0} {1} 1234 @имя_пользователя',
     'sv': '',
     'it': 'Sembra che il valore della mancia inserito non sia un numero. Puoi riprovare usando il formato '
-          '!tip 1234 @nomeutente'
+          '{0} {1} 1234 @nomeutente'
 }
 
 min_tip_text = {
@@ -356,10 +355,10 @@ help_message = {
                      ' your tips. Make sure to withdraw to a private wallet, as the tip bot is not meant to be a '
                      'long term storage device for {0}.\n\n'
           + BULLET + '!balance: This returns the balance of the account linked with your user ID.\n\n'
-          + BULLET + '!tip: Tips are sent through public tweets or in Telegram groups.\n'
-                     ' On Twitter: Tag {1} in a tweet and mention !tip <amount> <@username>.\n'
-                     ' Example: {1} !tip 1 @mitche50 would send a 1 {0} tip to user @mitche50.\n'
-                     ' On Telegram send {3} !tip <amount> <@username> to tip in the group.\n\n'
+          + BULLET + '{4}: Tips are sent through public tweets or in Telegram groups.\n'
+                     ' On Twitter: Tag {1} in a tweet and mention {4} <amount> <@username>.\n'
+                     ' Example: {1} {4} 1 @mitche50 would send a 1 {0} tip to user @mitche50.\n'
+                     ' On Telegram send {3} {4} <amount> <@username> to tip in the group.\n\n'
           + BULLET + ' !privatetip: Currently disabled.  This will send a tip to another user through DM.  If you '
                      'would like your tip amount to be private, use this function!  Proper usage is !privatetip '
                      '@username 1234\n\n'
@@ -383,10 +382,10 @@ help_message = {
                      'se utiliza para almacenar tus tips. Asegúrate de retirar tus fondos a una billetera privada, ya '
                      'que el tip bot no pretende ser un dispositivo de almacenamiento a largo plazo para {0}.\n\n'
           + BULLET + ' !balance: Te muestra el saldo de la cuenta vinculada con tu ID de usuario.\n\n'
-          + BULLET + ' !tip: Los tips se envían a través de tweets públicos o en grupos de Telegram.\n'
-                     'En Twitter: Etiqueta a {1} en un tweet y menciona !tip <monto> <@usuario>. Ejemplo: '
-                     '{1} !tip 1 @mitche50 enviaría un tip de 1 {0} al usuario @mitche50.\n'
-                     'En Telegram: Envía {3} !tip <monto> <@usuario> para realizar un tip en el grupo.\n\n'
+          + BULLET + ' {4}: Los tips se envían a través de tweets públicos o en grupos de Telegram.\n'
+                     'En Twitter: Etiqueta a {1} en un tweet y menciona {4} <monto> <@usuario>. Ejemplo: '
+                     '{1} {4} 1 @mitche50 enviaría un tip de 1 {0} al usuario @mitche50.\n'
+                     'En Telegram: Envía {3} {4} <monto> <@usuario> para realizar un tip en el grupo.\n\n'
           + BULLET + ' !privatetip: Actualmente deshabilitado. Esto enviará un tip a otro usuario a través de un'
                      ' mensaje directo. Si deseas que la cantidad de tu tip sea privada, ¡usa esta función! El uso '
                      'correcto es: !privatetip @usuario 1234\n\n'
@@ -411,10 +410,10 @@ help_message = {
                      'privé-account verstuurt, want de Tip Bot is niet bedoeld als lange termijn opslag '
                      'voor jouw {0}.\n\n'
           + BULLET + ' !balance: Hiermee wordt het saldo van jouw persoonlijke Tip Bot account getoond.\n\n'
-          + BULLET + ' !tip: Tips worden verzonden via openbare tweets of in Telegram-groepen.\n'
-                     'Op Twitter: Tag {1} in een tweet en vermeld !tip <aantal> <@gebruikersnaam>. '
-                     'Voorbeeld: {1} !tip 1 @mitche50 stuurt een 1 {0}-tip naar gebruiker @mitche50.\n'
-                     'Op Telegram stuur {3} !tip <aantal> <@gebruikersnaam> om iemand een ​​tip te geven in de groep.\n\n'
+          + BULLET + ' {4}: Tips worden verzonden via openbare tweets of in Telegram-groepen.\n'
+                     'Op Twitter: Tag {1} in een tweet en vermeld {4} <aantal> <@gebruikersnaam>. '
+                     'Voorbeeld: {1} {4} 1 @mitche50 stuurt een 1 {0}-tip naar gebruiker @mitche50.\n'
+                     'Op Telegram stuur {3} {4} <aantal> <@gebruikersnaam> om iemand een ​​tip te geven in de groep.\n\n'
           + BULLET + ' !privatetip: Momenteel uitgeschakeld. Hiermee wordt via DM een tip naar een andere '
                      'gebruiker verzonden. Als je wilt dat jouw tipbedrag privé is, gebruik dan deze '
                      'functie! Correct gebruik is !privatetip @gebruikersnaam 1234\n\n'
@@ -439,9 +438,9 @@ help_message = {
             + BULLET + ' ！幫助：小費助手會在您的私信裡回復指令單和每個指令的功能。如果您記不清指令，可以用這個回想起來！\n\n'
             + BULLET + ' ！註冊：註冊跟您用戶名相連的賬戶。這是用來儲存您的小費的。別忘了把小費提取到一個私人錢包裡，因為小費助手並不是一個用來長期保管{0}的設備。\n\n'
             + BULLET + ' ！餘額：此指令可匯報連著您用戶名的賬戶餘額。\n\n'
-            + BULLET + ' ！賞：小費通過發推或電報群聊天傳送。\n'
-                       '在推特上：發推時點名{1}然後輸入 “！賞 <金額> @<用戶名>”。比如：“{1} ！賞 1 @mitche50” 會給用戶 @mitche50 1 {0}的小費。\n'
-                       '在電報上發 “{3} ！賞 <金額> @<用戶名>” 來在群裡賞小費。\n\n'
+            + BULLET + ' {4}：小費通過發推或電報群聊天傳送。\n'
+                       '在推特上：發推時點名{1}然後輸入 “{4} <金額> @<用戶名>”。比如：“{1} {4} 1 @mitche50” 會給用戶 @mitche50 1 {0}的小費。\n'
+                       '在電報上發 “{3} {4} <金額> @<用戶名>” 來在群裡賞小費。\n\n'
             + BULLET + ' ！私賞：目前不能使用。這會用私信給另一個用戶小費。如果您想私密地給小費，請用這個指令。正確用法是 “！私賞 @<用戶名> <金額>”。\n\n'
             + BULLET + ' ！賬戶：匯報和平台用戶名相連的賬戶號碼（目前每個平台的賬戶都不一樣）。您可以用個人錢包給此賬戶充值更多的{0}。\n\n'
             + BULLET + ' ！取款：正確用法是 “！取款 <目的地賬戶>” （別忘了的前綴）。這會把此賬戶裡的全部餘額發送到目的地的{0}賬戶。\n\n'
@@ -455,10 +454,10 @@ help_message = {
             + BULLET + ' ！注册：注册跟您用户名相连的账户。这是用来储存您的小费的。别忘了把小费提取到一个私人钱包里，'
                        '因为小费助手并不是一个用来长期保管{0}的设备。\n\n'
             + BULLET + ' ！余额：此指令可汇报连着您用户名的账户余额。\n\n'
-            + BULLET + ' ！赏：小费通过发推或电报群聊天传送。\n'
-                       '在推特上：发推时点名{1}然后输入 “！赏 <金额> @<用户名>”。\n'
-                       '比如：“{1} ！赏 1 @mitche50” 会给用户 @mitche50 1 {0}的小费。\n'
-                       '在电报上发 “{3} ！赏 <金额> @<用户名>” 来在群里赏小费。\n\n'
+            + BULLET + ' {4}：小费通过发推或电报群聊天传送。\n'
+                       '在推特上：发推时点名{1}然后输入 “{4} <金额> @<用户名>”。\n'
+                       '比如：“{1} {4} 1 @mitche50” 会给用户 @mitche50 1 {0}的小费。\n'
+                       '在电报上发 “{3} {4} <金额> @<用户名>” 来在群里赏小费。\n\n'
             + BULLET + ' ！私赏：目前不能使用。这会用私信赏给另一个用户小费。如果您想私密地赏小费，请用这个指令。正确用法是 '
                        '“！私赏 @<用户名> <金额>”。\n\n'
             + BULLET + ' ！账户：汇报和平台用户名相连的账户号码（目前每个平台的账户都不一样）。'
@@ -479,10 +478,10 @@ help_message = {
                      'portefeuille privé, puisque le tip bot n\'est pas voué à être un outil de stockage à long '
                      'terme pour vos {0}s.\n\n'
           + BULLET + ' !balance: Vous indique le solde de votre compte lié à votre identifiant utilisateur.\n\n'
-          + BULLET + '!tip: Les tips sont envoyés via les tweets publics ou au sein de groupes Telegram.\n'
-                     'Sur Twitter: Taggez {1} dans un tweet et indiquer !tip <montant> <@utilisateur>. '
-                     'Exemple: {1} !tip 1 @mitche50 enverrait un tip de 1 {0} à l\'utilisateur @mitche50.\n'
-                     'Sur Telegram, envoyez {3} !tip <montant> <@utilisateur> afin d\'envoyer un tip dans le groupe.\n\n'
+          + BULLET + '{4}: Les tips sont envoyés via les tweets publics ou au sein de groupes Telegram.\n'
+                     'Sur Twitter: Taggez {1} dans un tweet et indiquer {4} <montant> <@utilisateur>. '
+                     'Exemple: {1} {4} 1 @mitche50 enverrait un tip de 1 {0} à l\'utilisateur @mitche50.\n'
+                     'Sur Telegram, envoyez {3} {4} <montant> <@utilisateur> afin d\'envoyer un tip dans le groupe.\n\n'
           + BULLET + ' !privatetip: Désactivé pour l\'instant. Ceci enverra un tip à un autre utilisateur via message '
                      'privé. Si vous désirez que le montant de votre tip soit privé, utilisez cette fonction! '
                      'Sous ce format: !privatetip 1234 @utilisateur\n\n'
@@ -507,10 +506,10 @@ help_message = {
                      'faça levantamento das tips para uma carteira privada quando o objetivo for guardar {0} por '
                      'longos períodos de tempo. O tip bot não deve ser usado para guardar {0}.\n\n'
           + BULLET + ' !balance: Mostra o saldo do utilizador.\n\n'
-          + BULLET + ' !tip: As tips são gorjetas enviadas através de tweets públicos ou em grupos do Telegram.\n'
-                     'No Twitter, faz tag do {1} num tweet e utiliza o comando !tip <valor> <@utilizador>. '
-                     'Por exemplo: {1} !tip 1 @mitche50.\n'
-                     'No Telegram, envia {3} !tip <valor> <@utilizador> no grupo.\n\n'
+          + BULLET + ' {4}: As tips são gorjetas enviadas através de tweets públicos ou em grupos do Telegram.\n'
+                     'No Twitter, faz tag do {1} num tweet e utiliza o comando {4} <valor> <@utilizador>. '
+                     'Por exemplo: {1} {4} 1 @mitche50.\n'
+                     'No Telegram, envia {3} {4} <valor> <@utilizador> no grupo.\n\n'
           + BULLET + ' !privatetip: De momento encontra-se desativado. Permite enviar uma tip a outro utilizador '
                      'através de mensagens privadas. Para utilizar, o formato é !privatetip <@utilizador> <valor>\n\n'
           + BULLET + ' !account: Devolve a conta associada ao teu utilizador. Envia {0} de uma carteira privada para '
@@ -536,10 +535,10 @@ help_message = {
                      'dimaksudkan sebagai perangkat penyimpanan jangka panjang untuk {0}.\n\n'
           + BULLET + ' !balance: Ini mengembalikan/menunjukkan jumlah saldo akun yang ditautkan dengan ID '
                      'pengguna Anda.\n\n'
-          + BULLET + ' !tip: Tip dikirim melalui tweet publik atau dalam grup Telegram.\n'
-                     'Di Twitter: Beri tag {1} dalam tweet dan sebutkan !tip <amount> <@username>. '
-                     'Contoh: {1} !tip 1 @mitche50 akan mengirim tip 1 {0} ke pengguna @mitche50.\n'
-                     'Di Telegram, kirim {3} !tip <amount> <@username> untuk memberi tip di grup.\n\n'
+          + BULLET + ' {4}: Tip dikirim melalui tweet publik atau dalam grup Telegram.\n'
+                     'Di Twitter: Beri tag {1} dalam tweet dan sebutkan {4} <amount> <@username>. '
+                     'Contoh: {1} {4} 1 @mitche50 akan mengirim tip 1 {0} ke pengguna @mitche50.\n'
+                     'Di Telegram, kirim {3} {4} <amount> <@username> untuk memberi tip di grup.\n\n'
           + BULLET + ' !privatetip: Saat ini dinonaktifkan. Ini akan mengirim tip ke pengguna lain melalui DM. Jika '
                      'Anda ingin jumlah tip Anda menjadi pribadi, gunakan fungsi ini! Penggunaan yang benar '
                      'adalah !privatetip @username 1234\n\n'
@@ -565,10 +564,10 @@ help_message = {
                      'ним. Это используется для хранения ваших тип. Обязательно выводите на собственный кошелек, '
                      'так как тип бот не предназначен для длительного хранения {0}.\n\n'
           + BULLET + ' !баланс: показывает баланс учетной записи, связанной с вашим идентификатором пользователя.\n\n'
-          + BULLET + ' !тип: Тип отправляются через публичные твиты или в группах Telegram.\n'
-                     'В Твиттере: Отметьте {1} в твиттере и упомяните !тип <сумма> <@имя_пользователя>. '
-                     'Пример: {1} !тип 1 @mitche50 будет отправлено 1 {0} тип пользователю @mitche50.\n'
-                     'В Telegram отправьте {3} !тип <сумма> <@имя_пользователя> , чтобы сделать тип в группе.\n\n'
+          + BULLET + ' {4}: Тип отправляются через публичные твиты или в группах Telegram.\n'
+                     'В Твиттере: Отметьте {1} в твиттере и упомяните {4} <сумма> <@имя_пользователя>. '
+                     'Пример: {1} {4} 1 @mitche50 будет отправлено 1 {0} тип пользователю @mitche50.\n'
+                     'В Telegram отправьте {3} {4} <сумма> <@имя_пользователя> , чтобы сделать тип в группе.\n\n'
           + BULLET + ' !приватныйтип: В настоящее время отключен. Это отправит тип другому пользователю через DM. '
                      'Если вы хотите, чтобы сумма тип была конфиденциальной, используйте эту функцию! '
                      'Правильное использование  !приватныйтип @имя_пользователя 1234\n\n'
@@ -594,10 +593,10 @@ help_message = {
                      'conservare le tue mance. Assicurati di prelevarle nel tuo portafoglio privato, in quanto il tip '
                      'bot non è destinato ad essere un mezzo per conservare i tuoi {0} nel lungo termine.\n\n'
           + BULLET + ' !balance: Mostra il saldo dell\'account collegato al tuo ID utente.\n\n'
-          + BULLET + ' !tip: Le mance vengono inviate attraverso tweets pubblici o nei gruppi Telegram.\n'
-                     'Su Twitter: Menziona {1} in un tweet e usa !tip <importo> <@nomeutente>.\n'
-                     'Esempio: {1} !tip 1 @mitche50 invierà una mancia di 1 {0} all\'utente @mitche50.\n'
-                     'Su Telegram invia {3} !tip <importo> <@nomeutente> per dare una mancia nel gruppo.\n\n'
+          + BULLET + ' {4}: Le mance vengono inviate attraverso tweets pubblici o nei gruppi Telegram.\n'
+                     'Su Twitter: Menziona {1} in un tweet e usa {4} <importo> <@nomeutente>.\n'
+                     'Esempio: {1} {4} 1 @mitche50 invierà una mancia di 1 {0} all\'utente @mitche50.\n'
+                     'Su Telegram invia {3} {4} <importo> <@nomeutente> per dare una mancia nel gruppo.\n\n'
           + BULLET + ' !privatetip: Attualmente disabilitata. Questo invierà una mancia ad un altro utente tramite '
                      'DM. Se vuoi che l\'importo della tua mancia rimanga privato, usa questa funzione! L\'uso '
                      'corretto è !privatetip @nomeutente 1234\n\n'
@@ -1212,7 +1211,7 @@ donate_commands = {
     'it': ['!dona', '!d', '/dona', '/d']
 }
 
-tip_commands = {
+nano_tip_commands = {
     'en': ['!tip', '!t', '/tip', '/t'],
     'es': [
         # Users said they would prefer english commands
@@ -1236,6 +1235,11 @@ tip_commands = {
     'ru': ['!тип', '!т', '/тип', '/т'],
     'sv': [],
     'it': ['!mancia', '!m', '/mancia', '/m']
+}
+
+banano_tip_commands = {
+    # Specialized banano tip commands to prevent issues with banano and nano being tagged in the same tweet
+    'en': ['!ban', '/ban']
 }
 
 private_tip_commands = {

@@ -68,11 +68,14 @@ def receive_pending(sender_account):
     """
     try:
         logging.info("{}: in receive pending".format(datetime.now()))
-        pending_blocks = rpc.pending(account='{}'.format(sender_account))
-        logging.info("pending blocks: {}".format(pending_blocks))
-        if len(pending_blocks) > 0:
+        pending_data = {'action': 'pending', 'account': sender_account, 'include_active': 'true'}
+        pending_data_json = json.dumps(pending_data)
+        r = requests.post(NODE_IP, data=pending_data_json)
+        pending_blocks = r.json()
+        logging.info("pending blocks: {}".format(pending_blocks['blocks']))
+        if len(pending_blocks['blocks']) > 0:
             try:
-                for block in pending_blocks:
+                for block in pending_blocks['blocks']:
                     work = get_pow(sender_account)
                     if work == '':
                         logging.info("{}: processing without pow".format(datetime.now()))
@@ -140,7 +143,8 @@ def send_tip(message, users_to_tip, tip_index):
         logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
         if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
             modules.social.send_reply(message,
-                                      translations.self_tip_text[message['language']].format(CURRENCY.upper()))
+                                      translations.self_tip_text[message['language']].format(CURRENCY.upper(),
+                                                                                             message['system']))
 
             logging.info("{}: User tried to tip themself").format(datetime.now())
             return

@@ -17,6 +17,10 @@ config = configparser.ConfigParser()
 config.read('{}/webhookconfig.ini'.format(os.getcwd()))
 
 CURRENCY = config.get('main', 'currency')
+CONVERT_MULTIPLIER = {
+    'nano': 1000000000000000000000000000000,
+    'banano': 100000000000000000000000000000
+}
 
 CONSUMER_KEY = config.get(CURRENCY, 'consumer_key')
 CONSUMER_SECRET = config.get(CURRENCY, 'consumer_secret')
@@ -188,7 +192,10 @@ def return_tips():
         sender_account_call = "SELECT account FROM users WHERE user_id = {}".format(sender_id)
         sender_account_info = get_db_data(sender_account_call)
         sender_account = sender_account_info[0][0]
-        send_amount = int(amount * 1000000000000000000000000000000)
+        # TODO: Add % donation on returned tips for server costs
+        # if amount > (CONVERT_MULTIPLIER[CURRENCY] / 1000)
+
+        send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
 
         receive_pending(receiver_account)
 

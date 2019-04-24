@@ -43,6 +43,14 @@ rpc = nano.rpc.Client(NODE_IP)
 
 
 def parse_action(message):
+    # Set tip commands
+    if CURRENCY == 'banano':
+        tip_commands = modules.translations.banano_tip_commands['en']
+    else:
+        tip_commands = modules.translations.nano_tip_commands[message['language']]
+        if message['language'] is not 'en':
+            tip_commands.append(modules.translations.nano_tip_commands['en'])
+
     if message['dm_action'] in translations.help_commands['en'] or \
             message['dm_action'] in translations.help_commands[message['language']]:
         new_pid = os.fork()
@@ -94,13 +102,13 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in translations.tip_commands['en'] or \
-            message['dm_action'] in translations.tip_commands[message['language']]:
+    elif message['dm_action'] in tip_commands:
         new_pid = os.fork()
         if new_pid == 0:
             try:
                 modules.social.send_dm(message['sender_id'],
-                                       translations.redirect_tip_text[message['language']].format(BOT_NAME_TWITTER),
+                                       translations.redirect_tip_text[message['language']].format(BOT_NAME_TWITTER,
+                                                                                                  tip_commands[0]),
                                        message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
@@ -239,11 +247,20 @@ def help_process(message):
     """
     Reply to the sender with help commands
     """
+    if CURRENCY == 'banano':
+        tip_command = modules.translations.banano_tip_commands['en'][0]
+    else:
+        if len(modules.translations.nano_tip_commands[message['language']]) > 0:
+            tip_command = modules.translations.nano_tip_commands[message['language']][0]
+        else:
+            tip_command = modules.translations.nano_tip_commands['en'][0]
+
     modules.social.send_dm(message['sender_id'],
                            translations.help_message[message['language']].format(CURRENCY.title(),
                                                                                  BOT_NAME_TWITTER,
                                                                                  BOT_ACCOUNT,
-                                                                                 BOT_NAME_TELEGRAM),
+                                                                                 BOT_NAME_TELEGRAM,
+                                                                                 tip_command),
                            message['system'])
     logging.info("{}: Help message sent!".format(datetime.now()))
 
@@ -548,9 +565,18 @@ def tip_process(message, users_to_tip, request_json):
     """
     logging.info("{}: in tip_process".format(datetime.now()))
 
+    # Set tip commands
+    if CURRENCY == 'banano':
+        tip_commands = modules.translations.banano_tip_commands['en']
+    else:
+        tip_commands = modules.translations.nano_tip_commands[message['language']]
+        if message['language'] is not 'en':
+            tip_commands.append(modules.translations.nano_tip_commands['en'])
+
     message, users_to_tip = modules.social.set_tip_list(message, users_to_tip, request_json)
     if len(users_to_tip) < 1 and message['system'] != 'telegram':
-        modules.social.send_reply(message, translations.no_users_text[message['language']])
+        modules.social.send_reply(message, translations.no_users_text[message['language']].format(BOT_NAME_TWITTER,
+                                                                                                  tip_commands[0]))
         return
 
     message = modules.social.validate_sender(message)
@@ -597,7 +623,7 @@ def language_process(message, new_language):
                                translations.missing_language[message['language']],
                                message['system'])
     else:
-        set_language_call = "UPDATE tip_bot.languages SET language_code = %s WHERE user_id = %s AND system = %s"
+        set_language_call = "UPDATE languages SET language_code = %s WHERE user_id = %s AND system = %s"
         set_language_values = [translations.language_dict[new_language], message['sender_id'], message['system']]
         modules.db.set_db_data(set_language_call, set_language_values)
         modules.social.send_dm(message['sender_id'],
