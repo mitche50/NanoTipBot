@@ -245,7 +245,7 @@ def tippers():
                     "AND receiver_id IN (SELECT user_id FROM {0}.users) "
                     "GROUP BY sender_id "
                     "ORDER BY sum(amount) DESC "
-                    "LIMIT 15".format(DB_SCHEMA))
+                    "LIMIT 50".format(DB_SCHEMA))
 
     tipper_table = modules.db.get_db_data(tippers_call)
     top_tipper = modules.db.get_db_data(largest_tip)
