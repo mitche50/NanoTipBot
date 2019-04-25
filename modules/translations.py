@@ -1239,7 +1239,7 @@ nano_tip_commands = {
 
 banano_tip_commands = {
     # Specialized banano tip commands to prevent issues with banano and nano being tagged in the same tweet
-    'en': ['!ban', '/ban']
+    'en': ['!ban', '/ban', '!b', '/b']
 }
 
 private_tip_commands = {
