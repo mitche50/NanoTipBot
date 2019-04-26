@@ -405,7 +405,7 @@ def withdraw_process(message):
 
         if not withdraw_data:
 
-            modules.social.send_dm(message['sender_id'], translations.withdraw_no_account_text[message['language']],
+            modules.social.send_dm(message['sender_id'], translations.no_account_text[message['language']],
                                    message['system'])
             logging.info("{}: User tried to withdraw with no account".format(datetime.now()))
 

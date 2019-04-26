@@ -1,48 +1,50 @@
 BULLET = u'\u2022'
-
+# 1
 maintenance_text = {
-    'en': 'The tip bot is in maintenance.  Check {} on Twitter for more information.',
-    'es': 'El tip bot está en mantenimiento. Revisa {} en Twitter para más información.',
-    'nl': 'De Tip Bot is momenteel in onderhoud. Check {} op Twitter voor meer informatie.',
+    'en': 'The tip bot is in maintenance.  Check {0} on Twitter for more information.',
+    'es': 'El tip bot está en mantenimiento. Revisa {0} en Twitter para más información.',
+    'nl': 'De Tip Bot is momenteel in onderhoud. Check {0} op Twitter voor meer informatie.',
     'ja': '',
-    'zh-t': '小費助手正在維修中。請觀看{}來獲得更多信息。',
-    'zh-s': '小费助手正在维修中。请访问推特网上的{}来获得更多信息。',
-    'fr': 'Le tip bot est en maintenance. Veuillez suivre {} sur Twitter pour plus d\'informations.',
-    'pt': 'O tip bot encontra-se em manutenção. {} no Twitter para mais informações.',
+    'zh-t': '小費助手正在維修中。請觀看{0}來獲得更多信息。',
+    'zh-s': '小费助手正在维修中。请访问推特网上的{0}来获得更多信息。',
+    'fr': 'Le tip bot est en maintenance. Veuillez suivre {0} sur Twitter pour plus d\'informations.',
+    'pt': 'O tip bot encontra-se em manutenção. {0} no Twitter para mais informações.',
     'th': '',
     'de': '',
-    'id': 'Bot tip dalam pemeliharaan. Periksa {} di Twitter untuk informasi lebih lanjut.',
+    'id': 'Bot tip dalam pemeliharaan. Periksa {0} di Twitter untuk informasi lebih lanjut.',
     'vt': '',
-    'ru': 'Тип бот находится на обслуживании. Проверьте {} в Twitter для получения дополнительной '
+    'ru': 'Тип бот находится на обслуживании. Проверьте {0} в Twitter для получения дополнительной '
           'информации.',
     'sv': '',
-    'it': 'Il tip bot è in manutenzione. Controlla {} su Twitter per ulteriori informazioni.',
-    'tr': 'Tip bot bakım altında. Daha fazla bilgi için {} da Twitter i kontrol edin'
+    'it': 'Il tip bot è in manutenzione. Controlla {0} su Twitter per ulteriori informazioni.',
+    'tr': 'Tip bot bakım altında. Daha fazla bilgi için {0} da Twitter i kontrol edin'
 }
+# 2
 redirect_tip_text = {
-    'en': 'Tips are processed through public messages now.  Please send in the format {} {} 1 @user1.',
+    'en': 'Tips are processed through public messages now.  Please send in the format {0} {1} 1 @user1.',
     'es': 'Los tips ahora están siendo procesados a través de mensajes públicos. Por favor, envíalos con el formato '
-          '{} {} 1 @usuario1.',
-    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {} {} 1 '
+          '{0} {1} 1 @usuario1.',
+    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {0} {1} 1 '
           '@gebruikersnaam.',
     'ja': '',
-    'zh-t': '現在小費只可以通過公開消息傳遞。請用這個格式 “{} ！賞 <金額> @<用戶名>”',
-    'zh-s': '现在小费只可以通过公开消息传递。请用这个格式 “{} ！赏 <金额> @<用户名>”',
-    'fr': 'Les tips sont dès à présent traités via message public. Veuillez les envoyer sous le format {} '
-          '{} 1 @utilisateur1',
+    'zh-t': '現在小費只可以通過公開消息傳遞。請用這個格式 “{0} {1} <金額> @<用戶名>”',
+    'zh-s': '现在小费只可以通过公开消息传递。请用这个格式 “{0} {1} <金额> @<用户名>”',
+    'fr': 'Les tips sont dès à présent traités via message public. Veuillez les envoyer sous le format {0} '
+          '{1} 1 @utilisateur1',
     'pt': 'Agora, as tips são enviadas através de mensagens públicas. Por favor utiliza o seguinte formato '
-          '{} {} 1 @utilizador1',
+          '{0} {1} 1 @utilizador1',
     'th': '',
     'de': '',
-    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {} {} 1 @user1.',
+    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {0} {1} 1 @user1.',
     'vt': '',
-    'ru': 'Типы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате {} '
-          '{} 1 @имя_пользователя1.',
+    'ru': 'Типы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате {0} '
+          '{1} 1 @имя_пользователя1.',
     'sv': '',
-    'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato {} '
-          '{} 1 @utente1.',
-    'tr': 'Tipler herkese açık mesajlarla işleme konuluyor. Lütfen gönderi formatınız {} {} 1 @kullanıcı1 olsun.'
+    'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato {0} '
+          '{1} 1 @utente1.',
+    'tr': 'Tipler herkese açık mesajlarla işleme konuluyor. Lütfen gönderi formatınız {0} {1} 1 @kullanıcı1 olsun.'
 }
+# 3
 self_tip_text = {
     'en': 'Self tipping is not allowed.  Please use this bot to spread the ${0} to other {1} users!',
     'es': 'Enviarte tips a ti mismo no está permitido. Por favor, ¡usa este bot para difundir el ${0} a otros '
@@ -65,17 +67,17 @@ self_tip_text = {
     'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${0} agli altri utenti {1}!',
     'tr': 'Kendinize tip yollamaya izin verilmiyor. Lütfen bu botu diğer {1} kullanıcılarına ${0} dağıtmakta kullanın.'
 }
-
+# 4
 receiver_tip_text = {
-    'en': '@{} just sent you a {} {} tip! Reply to this DM with !balance to see your new balance.  '
+    'en': '@{0} just sent you a {1} {2} tip! Reply to this DM with !balance to see your new balance.  '
           'If you have not registered an account, send a reply with !register to get started, or '
-          '!help to see a list of commands!  Learn more about {} at {}',
-    'es': '¡@{} acaba de enviarte un tip de {} {}! Responde a este mensaje directo con !balance para revisar tu '
+          '!help to see a list of commands!  Learn more about {3} at {4}',
+    'es': '¡@{0} acaba de enviarte un tip de {1} {2}! Responde a este mensaje directo con !balance para revisar tu '
           'nuevo saldo. Si no has registrado una cuenta, responde con !register para comenzar, o con !help para ver '
-          'una lista de comandos. Aprende más sobre {} en {}',
-    'nl': '@{} heeft je zojuist een {} {} tip gestuurd! Reageer op deze DM met !balance om jouw nieuwe saldo te '
+          'una lista de comandos. Aprende más sobre {3} en {4}',
+    'nl': '@{0} heeft je zojuist een {1} {2} tip gestuurd! Reageer op deze DM met !balance om jouw nieuwe saldo te '
           'zien. Als je nog geen account hebt geregistreerd, stuur dan een antwoord met !register om aan de slag te '
-          'gaan, of !help om een lijst met opdrachten te bekijken! Meer informatie over {} op {}',
+          'gaan, of !help om een lijst met opdrachten te bekijken! Meer informatie over {3} op {4}',
     'ja': '',
     'zh-t': '@{0} 剛發給您 {1} {2} 小費！在此回覆 “！餘額” 來查詢您賬戶的餘額。如果您還未註冊賬戶，在此回覆 “！註冊” 來註冊，'
             '或者回覆 “！幫助” 來看指令單。請拜訪 {4} 來了解更多信息。',
@@ -85,53 +87,53 @@ receiver_tip_text = {
           'voir votre solde. Si vous ne disposez pas encore de compte, veuillez répondre avec !register afin de vous '
           'inscrire, ou !help afin de recevoir une liste avec d\'autres fonctions! Voir {4} afin d\'en '
           'savoir plus.',
-    'pt': '@{} enviou-te uma tip de {} {} agora mesmo! Responde a esta mensagem direta com !balance para '
+    'pt': '@{0} enviou-te uma tip de {1} {2} agora mesmo! Responde a esta mensagem direta com !balance para '
           'verificares o teu saldo. Se ainda não estás registado, responde com !register para começar, ou !help '
-          'para uma lista de comandos. Aprende mais sobre o {} em {}',
+          'para uma lista de comandos. Aprende mais sobre o {3} em {4}',
     'th': '',
     'de': '',
-    'id': '@{} baru saja mengirimi Anda {} tip {}! Balas DM ini dengan !balance untuk melihat saldo baru Anda. '
+    'id': '@{0} baru saja mengirimi Anda {1} tip {2}! Balas DM ini dengan !balance untuk melihat saldo baru Anda. '
           'Jika Anda belum mendaftarkan akun, kirim balasan dengan !register untuk memulai, atau !help untuk melihat '
-          'daftar perintah! Pelajari lebih lanjut tentang {} di {}',
+          'daftar perintah! Pelajari lebih lanjut tentang {3} di {4}',
     'vt': '',
-    'ru': '@{} только что отправил вам {} {} тип! Ответьте на этот DM с помощью  !баланс, чтобы увидеть '
+    'ru': '@{0} только что отправил вам {1} {2} тип! Ответьте на этот DM с помощью  !баланс, чтобы увидеть '
           'ваш новый баланс. Если вы еще не зарегистрировали учетную запись, отправьте ответ с сообщением !регистрация '
-          'для начала или !помощь, чтобы увидеть список команд! Узнайте больше о {} на {}',
+          'для начала или !помощь, чтобы увидеть список команд! Узнайте больше о {3} на {4}',
     'sv': '',
-    'it': '@{} ti ha inviato una mancia di {} {}! Rispondi a questo DM con !balance per vedere il tuo saldo. '
+    'it': '@{0} ti ha inviato una mancia di {1} {2}! Rispondi a questo DM con !balance per vedere il tuo saldo. '
           'Se non hai registrato un account, invia una risposta con !register per cominciare, o !help per vedere una '
-          'lista dei comandi! Per saperne di più su {} visita {}',
-    'tr': '@{} az önce size {} {} tip yolladı. Yeni bakiyenizi görmek için bu DM\'e  !balance koduyla cevap verin. '
+          'lista dei comandi! Per saperne di più su {3} visita {4}',
+    'tr': '@{0} az önce size {1} {2} tip yolladı. Yeni bakiyenizi görmek için bu DM\'e  !balance koduyla cevap verin. '
           'Eğer kayıtlı bir kullanıcı değilseniz, cevap olarak !register yazarak, ya da komut listesini görmek için '
-          '!help yazarak başlayabilirsiniz. Hakkında daha fazlası için {} at {}'
+          '!help yazarak başlayabilirsiniz. Hakkında daha fazlası için {3} at {4}'
 }
-
+# 5
 private_tip_text = {
-    'en': 'Private Tip is under maintenance.  To send your tip, use the {} function in a tweet or reply!',
+    'en': 'Private Tip is under maintenance.  To send your tip, use the {0} function in a tweet or reply!',
     'es': 'Los tips privados están en mantenimiento. Para poder enviar tu tip, usa la función '
-          '{} en un tweet o en una respuesta.',
+          '{0} en un tweet o en una respuesta.',
     'nl': 'Privé tippen is momenteel in onderhoud. Gebruik de tipfunctie in een tweet of antwoord om '
           'jouw tip te verzenden!',
     'ja': '',
-    'zh-t': '私賞正在維修中。請用 “！賞” 指令發推或回覆來發送小費！',
-    'zh-s': '私赏正在维修中。请用 “！赏” 指令发推或回复来发送小费！',
-    'fr': 'Les tips privés sont en maintenance. Afin d\'envoyer un tip, veuillez utiliser la fonction {} dans '
+    'zh-t': '私賞正在維修中。請用 “{0}” 指令發推或回覆來發送小費！',
+    'zh-s': '私赏正在维修中。请用 “{0}” 指令发推或回复来发送小费！',
+    'fr': 'Les tips privés sont en maintenance. Afin d\'envoyer un tip, veuillez utiliser la fonction {0} dans '
           'un tweet ou une réponse!',
-    'pt': 'A funcionalidade de tips privadas está em manutenção. Para enviar uma tip, utiliza o comando {} num '
+    'pt': 'A funcionalidade de tips privadas está em manutenção. Para enviar uma tip, utiliza o comando {0} num '
           'tweet ou numa resposta.',
     'th': '',
     'de': '',
-    'id': 'Tip pribadi sedang dalam perbaikan. Untuk mengirim tip Anda, gunakan fungsi {} dalam tweet atau balasan!',
+    'id': 'Tip pribadi sedang dalam perbaikan. Untuk mengirim tip Anda, gunakan fungsi {0} dalam tweet atau balasan!',
     'vt': '',
     'ru': 'Приватный тип находится на обслуживании. Чтобы отправить свой тип, используйте функцию '
-          '!тип в твите или ответе!',
+          '{0} в твите или ответе!',
     'sv': '',
-    'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione {} in un tweet o '
+    'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione {0} in un tweet o '
           'in una risposta!',
-    'tr': 'Gizli Tip şu an bakımda. Tip yollamak için !tip fonksiyonunu bir tweette veya Telegram mesajı yanıtlarken '
+    'tr': 'Gizli Tip şu an bakımda. Tip yollamak için {0} fonksiyonunu bir tweette veya Telegram mesajı yanıtlarken '
           'kullanın!'
 }
-
+# 6
 wrong_format_text = {
     'en': 'The command or syntax you sent is not recognized.  Please send !help for a list of '
           'commands and what they do.',
@@ -159,7 +161,7 @@ wrong_format_text = {
     'tr': 'Gönderdiğiniz komut ya da sözcük tanınamadı. Lütfen komut listesini ve yaptıklarını görmek için !help '
           'yazıp gönderin.'
 }
-
+# 7
 no_users_text = {
     'en': 'Looks like you didn\'t enter in anyone to tip, or you mistyped someone\'s handle.  You can try '
           'to tip again using the format {0} {1} 1234 @username',
@@ -187,61 +189,61 @@ no_users_text = {
     'tr': 'Görünüşe göre kimseye tip yollamadınız, ya da birilerinin kullanıcı adını yanlış yazdınız.{0} {1} 1234 '
           '@kullanıcıadı formatını yazarak tekrar tip göndermeyi deneyebilirsiniz'
 }
-
+# 8
 multi_tip_success = {
-    'en': 'You have successfully sent your {} ${} tips.  '
-          'Check your account at {}explorer/account/{}',
-    'es': 'Has enviado exitosamente tus tips de {} ${}. Revisa tu cuenta en '
-          '{}explorer/account/{}',
-    'nl': 'Je hebt jouw {} ${} tips met succes verzonden. Controleer jouw account op '
-          '{}explorer/account/{}',
+    'en': 'You have successfully sent your {0} ${1} tips.  '
+          'Check your account at {2}explorer/account/{3}',
+    'es': 'Has enviado exitosamente tus tips de {0} ${1}. Revisa tu cuenta en '
+          '{2}explorer/account/{3}',
+    'nl': 'Je hebt jouw {0} ${1} tips met succes verzonden. Controleer jouw account op '
+          '{2}explorer/account/{3}',
     'ja': '',
-    'zh-t': '成功發送了{} ${} 的小費。您可以在 {}explorer/account/{} 觀察您的賬戶。',
-    'zh-s': '成功发送了{} ${} 的小费。您可以在 {}explorer/account/{} 查看您的账户。',
-    'fr': 'Vous avez envoyé vos tips de {} ${} avec succès. Pour voir votre compte veuillez cliquer sur '
-          '{}explorer/account/{}',
-    'pt': 'As tuas tips de {} ${} cada foram enviadas. Verifica a tua conta em '
-          '{}explorer/account/{}',
+    'zh-t': '成功發送了{0} ${1} 的小費。您可以在 {2}explorer/account/{3} 觀察您的賬戶。',
+    'zh-s': '成功发送了{0} ${1} 的小费。您可以在 {2}explorer/account/{3} 查看您的账户。',
+    'fr': 'Vous avez envoyé vos tips de {0} ${1} avec succès. Pour voir votre compte veuillez cliquer sur '
+          '{2}explorer/account/{3}',
+    'pt': 'As tuas tips de {0} ${1} cada foram enviadas. Verifica a tua conta em '
+          '{2}explorer/account/{3}',
     'th': '',
     'de': '',
-    'id': 'Anda telah berhasil mengirim {} ${} tips Anda. Periksa akun Anda di '
-          '{}explorer/account/{}',
+    'id': 'Anda telah berhasil mengirim {0} ${1} tips Anda. Periksa akun Anda di '
+          '{2}explorer/account/{3}',
     'vt': '',
-    'ru': 'Вы успешно отправили свои {} ${} тип. Проверьте свой адрес на '
-          '{}explorer/account/{} ',
+    'ru': 'Вы успешно отправили свои {0} ${1} тип. Проверьте свой адрес на '
+          '{2}explorer/account/{3} ',
     'sv': '',
-    'it': 'Hai inviato con successo le tue mance di {} ${}. Controlla il tuo account su '
-          '{}explorer/account/{}',
-    'tr': 'Başarılı bir şekilde {} ${} tip yolladınız. Hesabınızı kontrol etmek için {}/account/{}'
+    'it': 'Hai inviato con successo le tue mance di {0} ${1}. Controlla il tuo account su '
+          '{2}explorer/account/{3}',
+    'tr': 'Başarılı bir şekilde {0} ${1} tip yolladınız. Hesabınızı kontrol etmek için {2}/account/{3}'
 }
-
+# 9
 tip_success = {
-    'en': 'You have successfully sent your {} ${} tip.  '
-          'Check out this transaction at {}explorer/block/{}',
-    'es': 'Has enviado exitosamente tu tip de {} ${}. Verifica esta transacción en '
-          '{}explorer/block/{}',
-    'nl': 'Je hebt jouw {} ${} tip succesvol verzonden. Bekijk deze transactie op '
-          '{}explorer/block/{}',
+    'en': 'You have successfully sent your {0} ${1} tip.  '
+          'Check out this transaction at {2}explorer/block/{3}',
+    'es': 'Has enviado exitosamente tu tip de {0} ${1}. Verifica esta transacción en '
+          '{2}explorer/block/{3}',
+    'nl': 'Je hebt jouw {0} ${1} tip succesvol verzonden. Bekijk deze transactie op '
+          '{2}explorer/block/{3}',
     'ja': '',
-    'zh-t': '成功發送了{} ${} 的小費。您可以在 {}explorer/block/{} 查看這筆交易。',
-    'zh-s': '成功发送了{} ${} 的小费。您可以在 {}explorer/block/{} 查看这笔交易。',
-    'fr': 'Vous avez envoyé votre tip de {} ${} avec succès. Vous pouvez voir la transaction en cliquant sur '
-          '{}explorer/block/{}',
-    'pt': 'A tua tip de {} ${} foi enviada com sucesso. Verifica esta transação em '
-          '{}explorer/block/{}',
+    'zh-t': '成功發送了{0} ${1} 的小費。您可以在 {2}explorer/block/{3} 查看這筆交易。',
+    'zh-s': '成功发送了{0} ${1} 的小费。您可以在 {2}explorer/block/{3} 查看这笔交易。',
+    'fr': 'Vous avez envoyé votre tip de {0} ${1} avec succès. Vous pouvez voir la transaction en cliquant sur '
+          '{2}explorer/block/{3}',
+    'pt': 'A tua tip de {0} ${1} foi enviada com sucesso. Verifica esta transação em '
+          '{2}explorer/block/{3}',
     'th': '',
     'de': '',
-    'id': 'Anda telah berhasil mengirim tip {} ${} Anda. Lihat transaksi ini di '
-          '{}explorer/block/{}',
+    'id': 'Anda telah berhasil mengirim tip {0} ${1} Anda. Lihat transaksi ini di '
+          '{2}explorer/block/{3}',
     'vt': '',
-    'ru': 'Вы успешно отправили свой {} ${} тип. Проверьте эту транзакцию на '
-          '{}explorer/block/{}',
+    'ru': 'Вы успешно отправили свой {0} ${1} тип. Проверьте эту транзакцию на '
+          '{2}explorer/block/{3}',
     'sv': '',
-    'it': 'Hai inviato con successo la tua mancia di {} ${}. Controlla questa transazione su '
-          '{}explorer/block/{}',
-    'tr': 'Başarılı bir şekilde {} ${} tip yolladınız. Bu işlemi kontrol etmek için {}explorer/block/{}'
+    'it': 'Hai inviato con successo la tua mancia di {0} ${1}. Controlla questa transazione su '
+          '{2}explorer/block/{3}',
+    'tr': 'Başarılı bir şekilde {0} ${1} tip yolladınız. Bu işlemi kontrol etmek için {2}explorer/block/{3}'
 }
-
+# 10
 not_a_number_text = {
     'en': 'Looks like the value you entered to tip was not a number.  You can try to tip '
           'again using the format {0} {1} 1234 @username',
@@ -268,56 +270,56 @@ not_a_number_text = {
     'tr': 'Görünüşe göre yazdığınız tip miktarı bir sayı değil. {0} {1} 1234 @kullanıcıadı formatını yazarak tekrar '
           'tip göndermeyi deneyebilirsiniz.'
 }
-
+# 11
 min_tip_text = {
-    'en': 'The minimum tip amount is {} {}.  Please update your tip amount and try again.',
-    'es': 'El monto mínimo para realizar un tip es de {} {}. Por favor, actualiza el monto de tu tip e '
+    'en': 'The minimum tip amount is {0} {1}.  Please update your tip amount and try again.',
+    'es': 'El monto mínimo para realizar un tip es de {0} {1}. Por favor, actualiza el monto de tu tip e '
           'intenta nuevamente.',
-    'nl': 'Het minimale tipbedrag is {} {}. Pas je tipbedrag aan en probeer het opnieuw.',
+    'nl': 'Het minimale tipbedrag is {0} {1}. Pas je tipbedrag aan en probeer het opnieuw.',
     'ja': '',
-    'zh-t': '最低小費額度是{} {}。請更新您的小費額度後再試一次。',
-    'zh-s': '最低小费额度是{} {}。请更新您的小费额度并再试一次。',
-    'fr': 'Le montant de tip minimum est {} {}. Veuillez changer le montant de votre tip et réessayez.',
-    'pt': 'O valor mínimo por cada tip é {} {}. Por favor corrige o valor e tenta novamente.',
+    'zh-t': '最低小費額度是{0} {1}。請更新您的小費額度後再試一次。',
+    'zh-s': '最低小费额度是{0} {1}。请更新您的小费额度并再试一次。',
+    'fr': 'Le montant de tip minimum est {0} {1}. Veuillez changer le montant de votre tip et réessayez.',
+    'pt': 'O valor mínimo por cada tip é {0} {1}. Por favor corrige o valor e tenta novamente.',
     'th': '',
     'de': '',
-    'id': 'Jumlah tip minimum adalah {} {}. Harap perbarui jumlah tip Anda dan coba lagi.',
+    'id': 'Jumlah tip minimum adalah {0} {1}. Harap perbarui jumlah tip Anda dan coba lagi.',
     'vt': '',
-    'ru': 'Минимальная сумма тип составляет {} {}. Пожалуйста, обновите сумму тип и попробуйте снова.',
+    'ru': 'Минимальная сумма тип составляет {0} {1}. Пожалуйста, обновите сумму тип и попробуйте снова.',
     'sv': '',
-    'it': 'La mancia minima è di {} {}. Aggiorna l\'importo della e riprova.',
-    'tr': 'Minimum tip miktarı {} {} \'dur. Lütfen tip miktarınızı güncelleyerek tekrar deneyin.'
+    'it': 'La mancia minima è di {0} {1}. Aggiorna l\'importo e riprova.',
+    'tr': 'Minimum tip miktarı {0} {1} \'dur. Lütfen tip miktarınızı güncelleyerek tekrar deneyin.'
 }
-
+# 12
 missing_user_message = {
-    'en': '{} not found in our records.  In order to tip them, they need to be a member of the channel.  If they are '
+    'en': '{0} not found in our records.  In order to tip them, they need to be a member of the channel.  If they are '
           'in the channel, please have them send a message in the chat so I can add them.',
-    'es': '{} no se encontró en nuestros registros. Para poder realizarle un tip, el usuario debe ser miembro del '
+    'es': '{0} no se encontró en nuestros registros. Para poder realizarle un tip, el usuario debe ser miembro del '
           'grupo. Si está en el grupo, por favor que envíe un mensaje en el chat para poderlo agregar.',
-    'nl': '{} wordt niet gevonden in onze administratie. Om personen een tip te geven, moeten ze lid zijn van het '
+    'nl': '{0} wordt niet gevonden in onze administratie. Om personen een tip te geven, moeten ze lid zijn van het '
           'kanaal. Als ze deel uitmaken van het kanaal, stuur ze dan een bericht in de chat zodat ik ze kan toevoegen.',
     'ja': '',
-    'zh-t': '{} 不在我們的記錄裏。被賞小費的人必須是此群組的成員，並要在群組裡發送過信息。',
-    'zh-s': '{} 不在我们的记录里。若想给TA小费，TA需要成为此群的成员。如果TA在这个群，请让TA在聊天里冒个泡以让我来把TA加进来。',
-    'fr': '{} introuvable. Afin de leur envoyer un tip, il faut qu\'ils soient membre de ce channel. S\'ils sont '
+    'zh-t': '{0} 不在我們的記錄裏。被賞小費的人必須是此群組的成員，並要在群組裡發送過信息。',
+    'zh-s': '{0} 不在我们的记录里。若想给TA小费，TA需要成为此群的成员。如果TA在这个群，请让TA在聊天里冒个泡以让我来把TA加进来。',
+    'fr': '{0} introuvable. Afin de leur envoyer un tip, il faut qu\'ils soient membre de ce channel. S\'ils sont '
           'membre du channel, veuillez leur envoyer un message dans le chat afin que je puisse les inscrire.',
-    'pt': 'O utilizador {} não se encontra na nossa lista. Para poder receber uma tip, ele tem de fazer parte do '
+    'pt': 'O utilizador {0} não se encontra na nossa lista. Para poder receber uma tip, ele tem de fazer parte do '
           'canal. Se ele já se encontra no canal, terá de enviar uma mensagem pública no chat para o bot '
           'poder adicioná-lo.',
     'th': '',
     'de': '',
-    'id': '{} tidak ditemukan dalam catatan kami. Untuk memberi tip, mereka harus menjadi anggota saluran. Jika ada '
+    'id': '{0} tidak ditemukan dalam catatan kami. Untuk memberi tip, mereka harus menjadi anggota saluran. Jika ada '
           'di saluran, minta mereka mengirim pesan di obrolan sehingga saya dapat menambahkannya.',
     'vt': '',
-    'ru': '{} не найдено в наших записях. Чтобы дать им тип, им нужно быть участником канала. Если они '
+    'ru': '{0} не найдено в наших записях. Чтобы дать им тип, им нужно быть участником канала. Если они '
           'находятся на канале, попросите их отправить сообщение в чат, чтобы я мог добавить их.',
     'sv': '',
-    'it': '{} non trovato. Per dare loro una mancia, devono essere membri del gruppo. Se sono nel gruppo, dì '
+    'it': '{0} non trovato. Per dare loro una mancia, devono essere membri del gruppo. Se sono nel gruppo, dì '
           'loro di inviare un messaggio nella chat così potrò aggiungerli.',
-    'tr': '{} kayıtlarımızda bulunamadı. Onlara tip yollayabilmek için kanalın üyesi olmalılar. Eğer kanaldaysalar, '
+    'tr': '{0} kayıtlarımızda bulunamadı. Onlara tip yollayabilmek için kanalın üyesi olmalılar. Eğer kanaldaysalar, '
           'kanala bir mesaj yazmalılar, bu şekilde onları listeleyebilirim.'
 }
-
+# 13
 no_account_text = {
     'en': 'You do not have an account with the bot.  Please send a DM to me with !register to set up an account.',
     'es': 'No tienes una cuenta registrada con el bot. Por favor, envíame un mensaje directo con !register para '
@@ -340,35 +342,35 @@ no_account_text = {
     'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.',
     'tr': 'Botta bir hesabınız yoktur. Lütfen bana DM atıp !register yazın, bu sayede hesabınızı açabilirim'
 }
-
+# 14
 not_enough_text = {
-    'en': 'You do not have enough {} to cover this {} {} tip.  '
+    'en': 'You do not have enough {0} to cover this {1} {0} tip.  '
           'Please check your balance by sending a DM to me with !balance and retry.',
-    'es': 'No tienes suficiente {} para cubrir este tip de {} {}. Por favor verifica tu saldo enviándome un '
+    'es': 'No tienes suficiente {0} para cubrir este tip de {1} {0}. Por favor verifica tu saldo enviándome un '
           'mensaje directo con !balance e intenta nuevamente.',
-    'nl': 'Je hebt niet genoeg {} om deze {} {} tip te dekken. Controleer jouw saldo door een DM naar mij '
+    'nl': 'Je hebt niet genoeg {0} om deze {1} {0} tip te dekken. Controleer jouw saldo door een DM naar mij '
           'te sturen met !balance en probeer het opnieuw.',
     'ja': '',
-    'zh-t': '您沒有足夠 {} 去支付 {} {} 的小費。請向我發送私信 “！餘額” 來查詢您的餘額，然後再嘗試。',
-    'zh-s': '您没有足够 {} 去支付 {} {} 的小费。请向我发送私信 “！余额” 来查询您的余额，然后再尝试。',
-    'fr': 'Vous n\'avez pas assez de {} pour couvrir ce {} tip {}. Veuillez vérifier votre solde en m\'envoyant '
+    'zh-t': '您沒有足夠 {0} 去支付 {1} {0} 的小費。請向我發送私信 “！餘額” 來查詢您的餘額，然後再嘗試。',
+    'zh-s': '您没有足够 {0} 去支付 {1} {0} 的小费。请向我发送私信 “！余额” 来查询您的余额，然后再尝试。',
+    'fr': 'Vous n\'avez pas assez de {0} pour couvrir ce {1} tip {0}. Veuillez vérifier votre solde en m\'envoyant '
           'un message privé contenant !balance et réessayez.',
-    'pt': 'Não tens saldo suficiente para esta tip de {1} {2}. Por favor verifica o teu saldo enviando-me uma '
+    'pt': 'Não tens saldo suficiente para esta tip de {1} {0}. Por favor verifica o teu saldo enviando-me uma '
           'mensagem com !balance e tenta novamente.',
     'th': '',
     'de': '',
-    'id': 'Anda tidak memiliki cukup {} untuk mengirim {} tip {} ini. Silakan periksa saldo Anda dengan '
+    'id': 'Anda tidak memiliki cukup {0} untuk mengirim {1} tip {0} ini. Silakan periksa saldo Anda dengan '
           'mengirimkan DM kepada saya dengan !balance dan coba lagi.',
     'vt': '',
-    'ru': 'У вас недостаточно {}, чтобы покрыть этот {} {} тип. Пожалуйста, проверьте свой баланс, '
+    'ru': 'У вас недостаточно {0}, чтобы покрыть этот {1} {0} тип. Пожалуйста, проверьте свой баланс, '
           'отправив мне Личное Сообщение с !баланс и повторите попытку.',
     'sv': '',
-    'it': 'Non hai abbastanza {} per coprire questa mancia di {} {}. Controlla il tuo saldo inviandomi un '
+    'it': 'Non hai abbastanza {0} per coprire questa mancia di {1} {0}. Controlla il tuo saldo inviandomi un '
           'DM con !balance e riprova.',
-    'tr': '{} tip atmak için yeterli {} {} \'nuz bulunmamaktadır. Lütfen bakiyenizi kontrol etmek için bana DM '
+    'tr': '{0} tip atmak için yeterli {1} {0} \'nuz bulunmamaktadır. Lütfen bakiyenizi kontrol etmek için bana DM '
           'atıp !balance yazın ve tekrar deneyin.'
 }
-
+# 15
 help_message = {
     'en': 'Thank you for using the {0} Tip Bot!  Below is a list of commands, and a description of what they do:\n\n'
           + BULLET + '!help: The tip bot will respond to your DM with a list of commands and their functions. If you'
@@ -664,63 +666,7 @@ help_message = {
                      'Rusça ya çevirir.\n\n'
           + BULLET + ' !languages: Çeviri için uygun dilleri liste halinde getirir.'
 }
-account_register_text = {
-    'en': 'You have successfully registered for an account.  Your account number is:',
-    'es': 'Te has registrado exitosamente para obtener una cuenta. Tu número de cuenta es:',
-    'nl': 'Je bent succesvol geregistreerd voor een account. Jouw accountnummer is:',
-    'ja': '',
-    'zh-t': '您成功註冊了新賬戶。你的賬戶號碼是：',
-    'zh-s': '您成功注册了新账户。你的账户号码是：',
-    'fr': 'Vous vous êtes inscrit avec succès. Votre numéro de votre compte est:',
-    'pt': 'Registaste uma conta com sucesso. A tua conta é:',
-    'th': '',
-    'de': '',
-    'id': 'Anda telah berhasil membuat akun baru. Nomor akun Anda adalah:',
-    'vt': '',
-    'ru': 'Вы успешно зарегистрировались для учетной записи. Ваш адрес счета:',
-    'sv': '',
-    'it': 'Hai registrato un account con successo. Il numero del tuo account è:',
-    'tr': 'Başarılı bir şekilde kayıt oldunuz. Hesap numaranız:',
-}
-
-account_already_registered = {
-    'en': 'You already have registered your account.  Your account number is:',
-    'es': 'Ya habías registrado tu cuenta. Tu número de cuenta es:',
-    'nl': 'Je hebt al een account geregistreerd. Jouw accountnummer is:',
-    'ja': '',
-    'zh-t': '您已經有賬戶了。你的賬戶號碼是：',
-    'zh-s': '您已经有账户了。你的账户号码是：',
-    'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
-    'pt': 'Já te encontras registado. A tua conta é:',
-    'th': '',
-    'de': '',
-    'id': 'Anda sudah mendaftarkan akun Anda. Nomor akun Anda adalah:',
-    'vt': '',
-    'ru': 'Вы уже зарегистрировали свой аккаунт. Ваш адрес счета:',
-    'sv': '',
-    'it': 'Hai già registrato un account. Il numero del tuo account è:',
-    'tr': 'Daha önce hesaba kayıt olmuştunuz. Hesap numaranız:'
-}
-
-account_create_text = {
-    'en': 'You didn\'t have an account set up, so I set one up for you.  Your account number is:',
-    'es': 'No tenías una cuenta configurada, así que he configurado una para ti. Tu número de cuenta es:',
-    'nl': 'Je had nog geen account ingesteld, dus ik heb er één voor je aangemaakt. Jouw accountnummer is:',
-    'ja': '',
-    'zh-t': '您還沒有賬戶，所以我幫您註冊了新賬戶。您的賬戶號碼是：',
-    'zh-s': '您还没有账户，所以我帮您注册了新账户。您的账户号码是：',
-    'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
-    'pt': 'Ainda não tinhas uma conta, por isso criei uma para ti. A conta é:',
-    'th': '',
-    'de': '',
-    'id': 'Anda belum memiliki akun yang diatur, jadi saya mengaturnya untuk Anda. Nomor akun Anda adalah:',
-    'vt': '',
-    'ru': 'У вас не было учетной записи, поэтому я создал ее для вас. Ваш адрес счета:',
-    'sv': '',
-    'it': 'Non hai ancora configurato un account, quindi ne ho fatto uno per te. Il numero del tuo account è:',
-    'tr': 'Henüz bir hesap açmamıştınız, o yüzden ben sizin için açtım. Hesap numaranız:'
-}
-
+# 16
 account_text = {
     'en': 'Your account number is:',
     'es': 'Tu número de cuenta es:',
@@ -739,28 +685,94 @@ account_text = {
     'it': 'Il numero del tuo account è:',
     'tr': 'Hesap numaranız:'
 }
-
-withdraw_no_account_text = {
-    'en': 'You do not have an account with the bot.  Please send a DM to me with !register to set up an account.',
-    'es': 'No tienes una cuenta registrada con el bot. Por favor, envíame un mensaje directo con !register para '
-          'configurar una cuenta.',
-    'nl': 'Je hebt nog geen account bij de bot. Stuur een DM naar mij met !register om een ​​account aan te maken.',
+# 17
+balance_text = {
+    'en': 'Available: {0} {1}\n'
+          'Pending: {2} {1}',
+    'es': 'Disponible: {0} {1}\n'
+          'Pendiente: {2} {1}',
+    'nl': 'Beschikbaar: {0} {1}\n'
+          'In afwachting: {2} {1}',
     'ja': '',
-    'zh-t': '您沒有小費助手的賬戶。請向我發送私信 “！註冊” 來註冊一個新賬戶。',
-    'zh-s': '您没有小费助手的账户。请向我发送私信 “！注册” 来注册一个新账户。',
-    'fr': 'Vous ne disposez pas de compte avec le bot. Veuillez m\'envoyer un message privé contenant '
-          '!register pour vous inscrire.',
-    'pt': 'Ainda não tens uma conta registada com o tip bot. Envia-me uma mensagem direta com !register para começar.',
+    'zh-t': '現有金額： {0} {1}\n'
+            '等候金額： {2} {1}',
+    'zh-s': '现有金额： {0} {1}\n'
+            '等候金额： {2} {1}',
+    'fr': 'Disponible: {0} {1}\n'
+          'En attente: {2} {1}',
+    'pt': 'Disponível: {0} {1}\n'
+          'Pendente: {2} {1}',
     'th': '',
     'de': '',
-    'id': 'Anda tidak memiliki akun dengan bot. Silakan kirim DM kepada saya dengan !register untuk mengatur '
-          'sebuah akun.',
+    'id': 'Tersedia: {0} {1}\n'
+          'Tertunda: {2} {1}',
     'vt': '',
-    'ru': 'У вас нет учетной записи. Ответьте !регистрация для создания учетной записи.',
+    'ru': 'Имеется в наличии: {0} {1}\n'
+          'В ожидании: {2} {1}',
     'sv': '',
-    'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.'
+    'it': 'Disponibile: {0} {1}\n'
+          'In sospeso: {2} {1}',
+    'tr': 'Mevcut: {0} {1}\n'
+          'Bekleyen: {2} {1}'
 }
-
+# 18
+account_register_text = {
+    'en': 'You have successfully registered for an account.  Your account number is:',
+    'es': 'Te has registrado exitosamente para obtener una cuenta. Tu número de cuenta es:',
+    'nl': 'Je bent succesvol geregistreerd voor een account. Jouw accountnummer is:',
+    'ja': '',
+    'zh-t': '您成功註冊了新賬戶。你的賬戶號碼是：',
+    'zh-s': '您成功注册了新账户。你的账户号码是：',
+    'fr': 'Vous vous êtes inscrit avec succès. Votre numéro de votre compte est:',
+    'pt': 'Registaste uma conta com sucesso. A tua conta é:',
+    'th': '',
+    'de': '',
+    'id': 'Anda telah berhasil membuat akun baru. Nomor akun Anda adalah:',
+    'vt': '',
+    'ru': 'Вы успешно зарегистрировались для учетной записи. Ваш адрес счета:',
+    'sv': '',
+    'it': 'Hai registrato un account con successo. Il numero del tuo account è:',
+    'tr': 'Başarılı bir şekilde kayıt oldunuz. Hesap numaranız:',
+}
+# 19
+account_already_registered = {
+    'en': 'You already have registered your account.  Your account number is:',
+    'es': 'Ya habías registrado tu cuenta. Tu número de cuenta es:',
+    'nl': 'Je hebt al een account geregistreerd. Jouw accountnummer is:',
+    'ja': '',
+    'zh-t': '您已經有賬戶了。你的賬戶號碼是：',
+    'zh-s': '您已经有账户了。你的账户号码是：',
+    'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
+    'pt': 'Já te encontras registado. A tua conta é:',
+    'th': '',
+    'de': '',
+    'id': 'Anda sudah mendaftarkan akun Anda. Nomor akun Anda adalah:',
+    'vt': '',
+    'ru': 'Вы уже зарегистрировали свой аккаунт. Ваш адрес счета:',
+    'sv': '',
+    'it': 'Hai già registrato un account. Il numero del tuo account è:',
+    'tr': 'Daha önce hesaba kayıt olmuştunuz. Hesap numaranız:'
+}
+# 20
+account_create_text = {
+    'en': 'You didn\'t have an account set up, so I set one up for you.  Your account number is:',
+    'es': 'No tenías una cuenta configurada, así que he configurado una para ti. Tu número de cuenta es:',
+    'nl': 'Je had nog geen account ingesteld, dus ik heb er één voor je aangemaakt. Jouw accountnummer is:',
+    'ja': '',
+    'zh-t': '您還沒有賬戶，所以我幫您註冊了新賬戶。您的賬戶號碼是：',
+    'zh-s': '您还没有账户，所以我帮您注册了新账户。您的账户号码是：',
+    'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
+    'pt': 'Ainda não tinhas uma conta, por isso criei uma para ti. A conta é:',
+    'th': '',
+    'de': '',
+    'id': 'Anda belum memiliki akun yang diatur, jadi saya mengaturnya untuk Anda. Nomor akun Anda adalah:',
+    'vt': '',
+    'ru': 'У вас не было учетной записи, поэтому я создал ее для вас. Ваш адрес счета:',
+    'sv': '',
+    'it': 'Non hai ancora configurato un account, quindi ne ho fatto uno per te. Il numero del tuo account è:',
+    'tr': 'Henüz bir hesap açmamıştınız, o yüzden ben sizin için açtım. Hesap numaranız:'
+}
+# 21
 invalid_account_text = {
     'en': 'The account number you provided is invalid.  Please double check and resend your request.',
     'es': 'El número de cuenta que proveíste no es válido. Por favor revisa nuevamente y vuelve a enviar tu solicitud.',
@@ -780,28 +792,28 @@ invalid_account_text = {
     'it': 'Il numero dell\'account da te fornito non è valido. Controllalo di nuovo e rinvia la tua richiesta.',
     'tr': 'Verdiğiniz hesap numarası geçerli değil. Lütfen iki kez kontrol edin ve isteğinizi tekrarlayın.'
 }
-
+# 22
 no_balance_text = {
-    'en': 'You have 0 balance in your account.  Please deposit to your account {} to send more tips!',
-    'es': 'Tienes 0 saldo en tu cuenta. ¡Por favor deposita en tu cuenta {} para enviar más tips!',
-    'nl': 'U heeft 0 saldo in uw account. Stort meer op uw adres {} om meer tips te kunnen sturen!',
+    'en': 'You have 0 balance in your account.  Please deposit to your account {0} to send more tips!',
+    'es': 'Tienes 0 saldo en tu cuenta. ¡Por favor deposita en tu cuenta {0} para enviar más tips!',
+    'nl': 'U heeft 0 saldo in uw account. Stort meer op uw adres {0} om meer tips te kunnen sturen!',
     'ja': '',
-    'zh-t': '您的賬戶沒有任何餘額。請在 {} 存款後再發送小費！',
-    'zh-s': '您的账户没有任何余额。请在 {} 存款再发送小费！',
-    'fr': 'Le solde de votre compte est de 0. Veuillez déposer des fonds sur votre adresse {} pour '
+    'zh-t': '您的賬戶沒有任何餘額。請在 {0} 存款後再發送小費！',
+    'zh-s': '您的账户没有任何余额。请在 {0} 存款再发送小费！',
+    'fr': 'Le solde de votre compte est de 0. Veuillez déposer des fonds sur votre adresse {0} pour '
           'pouvoir envoyer plus de tips!',
-    'pt': 'Não tens saldo na tua conta, por favor deposita na conta {} para enviar mais tips!',
+    'pt': 'Não tens saldo na tua conta, por favor deposita na conta {0} para enviar mais tips!',
     'th': '',
     'de': '',
-    'id': 'Anda memiliki saldo 0 di akun Anda. Harap setorkan ke alamat Anda {} untuk mengirim tip lainnya!',
+    'id': 'Anda memiliki saldo 0 di akun Anda. Harap setorkan ke alamat Anda {0} untuk mengirim tip lainnya!',
     'vt': '',
-    'ru': 'У вас 0 баланса на вашем счету. Пожалуйста, внесите депозит на ваш адрес {}, '
+    'ru': 'У вас 0 баланса на вашем счету. Пожалуйста, внесите депозит на ваш адрес {0}, '
           'чтобы отправить больше тип!',
     'sv': '',
-    'it': 'Hai un saldo di 0 nel tuo account. Deposita nel tuo indirizzo {} per inviare altre mance!',
-    'tr': 'Hesap bakiyeniz 0\'dır. Daha fazla tip yollayabilmek için adresinize {} gönderim yapın.'
+    'it': 'Hai un saldo di 0 nel tuo account. Deposita nel tuo indirizzo {0} per inviare altre mance!',
+    'tr': 'Hesap bakiyeniz 0\'dır. Daha fazla tip yollayabilmek için adresinize {0} gönderim yapın.'
 }
-
+# 23
 invalid_amount_text = {
     'en': 'You did not send a number to withdraw.  Please resend with the format !withdraw <account> or '
           '!withdraw <amount> <account>',
@@ -828,55 +840,55 @@ invalid_amount_text = {
     'tr': 'Çekim için miktar belirtmediniz. Lütfen bu formatta tekrar gönderin  !withdraw <hesap> ya da '
           '!withdraw <miktar> <hesap>'
 }
-
+# 24
 not_enough_balance_text = {
-    'en': 'You do not have that much {} in your account.  To withdraw your full amount, send !withdraw <account>',
-    'es': 'No tienes esa cantidad de {} en tu cuenta. Para retirar el monto total, envía !withdraw <cuenta>',
-    'nl': 'Je hebt niet zoveel {} in jouw account. Om het volledige bedrag op te nemen, verzendt '
+    'en': 'You do not have that much {0} in your account.  To withdraw your full amount, send !withdraw <account>',
+    'es': 'No tienes esa cantidad de {0} en tu cuenta. Para retirar el monto total, envía !withdraw <cuenta>',
+    'nl': 'Je hebt niet zoveel {0} in jouw account. Om het volledige bedrag op te nemen, verzendt '
           'je !withdraw <account>',
     'ja': '',
     'zh-t': '您的賬戶沒有那麼多的{0}。發送 “！取款 <目的地賬戶>” 來提款你所有的{0}。',
     'zh-s': '您的账户没有那么多的{0}。发送 “！取款 <目的地账户>” 来提款你所有的{0}。',
-    'fr': 'Vous ne disposez pas d\'assez de {} dans votre compte. Pour retirer le montant total, veuillez '
+    'fr': 'Vous ne disposez pas d\'assez de {0} dans votre compte. Pour retirer le montant total, veuillez '
           'envoyer !withdraw <compte>',
-    'pt': 'Não tens {} suficiente. Para enviar todo o saldo, usa !withdraw <conta>',
+    'pt': 'Não tens {0} suficiente. Para enviar todo o saldo, usa !withdraw <conta>',
     'th': '',
     'de': '',
-    'id': 'Anda tidak memiliki {} sebanyak itu di akun Anda. Untuk menarik jumlah penuh Anda, kirim '
+    'id': 'Anda tidak memiliki {0} sebanyak itu di akun Anda. Untuk menarik jumlah penuh Anda, kirim '
           '!withdraw <account>',
     'vt': '',
-    'ru': 'У вас не так много {} на вашем аккаунте. Чтобы вывести всю сумму, отправьте !вывод <адрес>',
+    'ru': 'У вас не так много {0} на вашем аккаунте. Чтобы вывести всю сумму, отправьте !вывод <адрес>',
     'sv': '',
-    'it': 'Non hai così tanti {} nel tuo account. Per prelevarne l\'intero importo, invia !withdraw <account>',
-    'tr': 'Hesabınızda o kadar çok {} bulunmuyor. Tüm hesabı çekmek için, !withdraw <hesap> yazarak gönderin.'
+    'it': 'Non hai così tanti {0} nel tuo account. Per prelevarne l\'intero importo, invia !withdraw <account>',
+    'tr': 'Hesabınızda o kadar çok {0} bulunmuyor. Tüm hesabı çekmek için, !withdraw <hesap> yazarak gönderin.'
 }
-
+# 25
 withdraw_text = {
-    'en': 'You have successfully withdrawn {} {}!  You can check the transaction at '
-          '{}explorer/block/{}',
-    'es': '¡Has retirado con éxito {} {}! Puedes verificar la transacción en '
-          '{}explorer/block/{}',
-    'nl': 'Je hebt met succes {} {} opgenomen! Je kan de transactie bekijken op '
-          '{}explorer/block/{}',
+    'en': 'You have successfully withdrawn {0} {1}!  You can check the transaction at '
+          '{2}explorer/block/{3}',
+    'es': '¡Has retirado con éxito {0} {1}! Puedes verificar la transacción en '
+          '{2}explorer/block/{3}',
+    'nl': 'Je hebt met succes {0} {1} opgenomen! Je kan de transactie bekijken op '
+          '{2}explorer/block/{3}',
     'ja': '',
-    'zh-t': '您已成功提取{} {}！您可以在 {}explorer/block/{} 查看交易記錄。',
-    'zh-s': '您已成功提取{} {}！您可以在 {}explorer/block/{} 查看交易记录。',
-    'fr': 'Vous avez retiré {} {} avec succès! Vous pouvez consulter la transaction à partir de '
-          '{}explorer/block/{}',
-    'pt': 'Enviaste {} {} com sucesso! Verifica a transação em {}explorer/block/{}',
+    'zh-t': '您已成功提取{0} {1}！您可以在 {2}explorer/block/{3} 查看交易記錄。',
+    'zh-s': '您已成功提取{0} {1}！您可以在 {2}explorer/block/{3} 查看交易记录。',
+    'fr': 'Vous avez retiré {0} {1} avec succès! Vous pouvez consulter la transaction à partir de '
+          '{2}explorer/block/{3}',
+    'pt': 'Enviaste {0} {1} com sucesso! Verifica a transação em {2}explorer/block/{3}',
     'th': '',
     'de': '',
-    'id': 'Anda telah berhasil menarik {} {}! Anda dapat memeriksa transaksi di '
-          '{}explorer/block/{}',
+    'id': 'Anda telah berhasil menarik {0} {1}! Anda dapat memeriksa transaksi di '
+          '{2}explorer/block/{3}',
     'vt': '',
-    'ru': 'Вы успешно отправили {} {}! Вы можете проверить транзакцию по адресу '
-          '{}explorer/block/{}',
+    'ru': 'Вы успешно отправили {0} {1}! Вы можете проверить транзакцию по адресу '
+          '{2}explorer/block/{3}',
     'sv': '',
-    'it': 'Hai prelevato con successo {} {}! Puoi controllare la transazione su '
-          '{}explorer/block/{}',
-    'tr': 'Başarılı bir şekilde {} {} çektiniz. Bu işlemi kontrol etmek için {}explorer/block/{}'
+    'it': 'Hai prelevato con successo {0} {1}! Puoi controllare la transazione su '
+          '{2}explorer/block/{3}',
+    'tr': 'Başarılı bir şekilde {0} {1} çektiniz. Bu işlemi kontrol etmek için {2}explorer/block/{3}'
 }
-
+# 26
 incorrect_withdraw_text = {
     'en': 'I didn\'t understand your withdraw request.  Please resend with !withdraw <optional:amount> <account>.  '
           'Example, !withdraw 1 {0} would withdraw 1 {1} to account {0}.  '
@@ -922,7 +934,7 @@ incorrect_withdraw_text = {
           'Örnek , !withdraw 1 {0}  komutu 1 {1}  {0}  hesap numaralı hesaba aktarır.  Ayrıca, !withdraw {0} '
           'komutu tüm bakiyenizi {0}  nolu hesaba aktarır.'
 }
-
+# 27
 wrong_donate_text = {
     'en': 'Only number amounts are accepted.  Please resend as !donate 1234',
     'es': 'Solo se aceptan cantidades en números. Por favor vuelve a intentar con !donate 1234',
@@ -941,7 +953,7 @@ wrong_donate_text = {
     'it': 'Sono accettati solo importi numerici. Rinvia tramite !donate 1234',
     'tr': 'Sadece rakamla yazılan miktarlar kabul edilir. Lütfen !donate 1234 şeklinde tekrar yollayın'
 }
-
+# 28
 large_donate_text = {
     'en': 'Your balance is only {0} {1} and you tried to send {2}.  Please add more {1} to your account, or lower '
           'your donation amount.',
@@ -969,56 +981,56 @@ large_donate_text = {
     'tr': 'Bakiyeniz sadece {0} {1} ve siz {2} yollamak istediniz. Lütfen hesabınıza daha fazla {1} ekleyin veya '
           'bağış miktarınızı azaltın.'
 }
-
+# 29
 small_donate_text = {
-    'en': 'The minimum donation amount is {}.  Please update your donation amount and resend.',
-    'es': 'La cantidad mínima de donación es de {}. Por favor actualiza el monto de tu donación e '
+    'en': 'The minimum donation amount is {0}.  Please update your donation amount and resend.',
+    'es': 'La cantidad mínima de donación es de {0}. Por favor actualiza el monto de tu donación e '
           'intenta nuevamente.',
-    'nl': 'Het minimale donatiebedrag is {}. Pas je donatiebedrag aan en verzend het opnieuw.',
+    'nl': 'Het minimale donatiebedrag is {0}. Pas je donatiebedrag aan en verzend het opnieuw.',
     'ja': '',
-    'zh-t': '最低捐款是{}。請改變捐款額後再嘗試。',
-    'zh-s': '最低捐款是{}。请改变捐款额后再尝试。',
-    'fr': 'Le montant de donation minimum est de {}. Veuillez changer le montant de votre donation et réessayer.',
-    'pt': 'A quantidade mínima de doação é {}. Por favor corrige o momante e tenta novamente.',
+    'zh-t': '最低捐款是{0}。請改變捐款額後再嘗試。',
+    'zh-s': '最低捐款是{0}。请改变捐款额后再尝试。',
+    'fr': 'Le montant de donation minimum est de {0}. Veuillez changer le montant de votre donation et réessayer.',
+    'pt': 'A quantidade mínima de doação é {0}. Por favor corrige o momante e tenta novamente.',
     'th': '',
     'de': '',
-    'id': 'Jumlah donasi minimum adalah {}. Harap perbarui jumlah donasi Anda dan kirim kembali.',
+    'id': 'Jumlah donasi minimum adalah {0}. Harap perbarui jumlah donasi Anda dan kirim kembali.',
     'vt': '',
-    'ru': 'Минимальная сумма тип составляет {}. Пожалуйста, обновите сумму тип и '
+    'ru': 'Минимальная сумма тип составляет {0}. Пожалуйста, обновите сумму тип и '
           'отправьте повторно.',
     'sv': '',
-    'it': 'L\'importo minimo per la donazione è {}. Aggiorna l\'importo della donazione e rinvia.',
-    'tr': 'Minimum bağış miktarı {} olarak belirlenmiştir. Bağış miktarınızı güncelleyin ve tekrar gönderin.'
+    'it': 'L\'importo minimo per la donazione è {0}. Aggiorna l\'importo della donazione e rinvia.',
+    'tr': 'Minimum bağış miktarı {0} olarak belirlenmiştir. Bağış miktarınızı güncelleyin ve tekrar gönderin.'
 }
-
+# 30
 donate_text = {
-    'en': 'Thank you for your generosity!  You have successfully donated {} {}!  You can check the '
-          'transaction at {}explorer/block/{}',
-    'es': '¡Gracias por tu generosidad! Has donado {} {} de manera exitosa. Puedes verificar esta transacción en '
-          '{}explorer/block/{}',
-    'nl': 'Bedankt voor jouw vrijgevigheid! Je hebt met succes {} {} gedoneerd! Je kan de transactie '
-          'bekijken op {}explorer/block/{}',
+    'en': 'Thank you for your generosity!  You have successfully donated {0} {1}!  You can check the '
+          'transaction at {2}explorer/block/{3}',
+    'es': '¡Gracias por tu generosidad! Has donado {0} {1} de manera exitosa. Puedes verificar esta transacción en '
+          '{2}explorer/block/{3}',
+    'nl': 'Bedankt voor jouw vrijgevigheid! Je hebt met succes {0} {1} gedoneerd! Je kan de transactie '
+          'bekijken op {2}explorer/block/{3}',
     'ja': '',
-    'zh-t': '謝謝您慷慨的捐款！您成功捐款了 {} {}！可以在{}explorer/block/{} 審核捐款記錄。',
-    'zh-s': '谢谢您慷慨的捐款！您成功捐款了 {} {}！可以在{}explorer/block/{} 审核捐款记录。',
-    'fr': 'Merci beaucoup pour votre générosité! Vous avez donné {} {} avec succès! Vous pouvez consulter la '
-          'transaction à partir de {}explorer/block/{}',
-    'pt': 'Obrigado pela tua generosidade, doaste {} {} com sucesso! Verifica a transação em '
-          '{}explorer/block/{}',
+    'zh-t': '謝謝您慷慨的捐款！您成功捐款了 {0} {1}！可以在{2}explorer/block/{3} 審核捐款記錄。',
+    'zh-s': '谢谢您慷慨的捐款！您成功捐款了 {0} {1}！可以在{2}explorer/block/{3} 审核捐款记录。',
+    'fr': 'Merci beaucoup pour votre générosité! Vous avez donné {0} {1} avec succès! Vous pouvez consulter la '
+          'transaction à partir de {2}explorer/block/{3}',
+    'pt': 'Obrigado pela tua generosidade, doaste {0} {1} com sucesso! Verifica a transação em '
+          '{2}explorer/block/{3}',
     'th': '',
     'de': '',
-    'id': 'Terima kasih atas kedermawanan Anda! Anda telah berhasil menyumbang {} {}! Anda dapat memeriksa '
-          'transaksi di {}explorer/block/ {}',
+    'id': 'Terima kasih atas kedermawanan Anda! Anda telah berhasil menyumbang {0} {1}! Anda dapat memeriksa '
+          'transaksi di {2}explorer/block/{3}',
     'vt': '',
-    'ru': 'Благодарим вас за щедрость! Вы успешно пожертвовали {} {}! Вы можете проверить '
-          'транзакцию по адресу {}explorer/block/{}',
+    'ru': 'Благодарим вас за щедрость! Вы успешно пожертвовали {0} {1}! Вы можете проверить '
+          'транзакцию по адресу {2}explorer/block/{3}',
     'sv': '',
-    'it': 'Grazie della tua generosità! Hai inviato con successo {} {}! Puoi controllare la transazione su '
-          '{}explorer/block/{}',
-    'tr': 'Cömertliğiniz için teşekkürler! Başarılı bir şekilde {} {}! bağışladınız. Bu işlemi kontrol etmek için '
-          '{}explorer/block/{}'
+    'it': 'Grazie della tua generosità! Hai inviato con successo {0} {1}! Puoi controllare la transazione su '
+          '{2}explorer/block/{3}',
+    'tr': 'Cömertliğiniz için teşekkürler! Başarılı bir şekilde {0} {1}! bağışladınız. Bu işlemi kontrol etmek için '
+          '{2}explorer/block/{3}'
 }
-
+# 31
 incorrect_donate_text = {
     'en': 'Incorrect syntax.  Please use the format !donate 1234',
     'es': 'Sintaxis incorrecta. Por favor usa el formato !donate 1234',
@@ -1037,37 +1049,7 @@ incorrect_donate_text = {
     'it': 'Sintassi incorretta. Usa il formato !donate 1234',
     'tr': 'Yanlış komut. Lütfen !donate 1234 formatını kullanın.'
 }
-
-balance_text = {
-    'en': 'Available: {} {}\n'
-          'Pending: {} {}',
-    'es': 'Disponible: {} {}\n'
-          'Pendiente: {} {}',
-    'nl': 'Beschikbaar: {} {}\n'
-          'In afwachting: {} {}',
-    'ja': '',
-    'zh-t': '現有金額： {} {}\n'
-            '等候金額： {} {}',
-    'zh-s': '现有金额： {} {}\n'
-            '等候金额： {} {}',
-    'fr': 'Disponible: {} {}\n'
-          'En attente: {} {}',
-    'pt': 'Disponível: {} {}\n'
-          'Pendente: {} {}',
-    'th': '',
-    'de': '',
-    'id': 'Tersedia: {} {}\n'
-          'Tertunda: {} {}',
-    'vt': '',
-    'ru': 'Имеется в наличии: {} {}\n'
-          'В ожидании: {} {}',
-    'sv': '',
-    'it': 'Disponibile: {} {}\n'
-          'In sospeso: {} {}',
-    'tr': 'Mevcut: {} {}\n'
-          'Bekleyen: {} {}'
-}
-
+# 32
 language_change_success = {
     'en': 'You have successfully updated your language.  Message you receive from the bot will now be in your new '
           'language.  If you\'d like to change back, resend the !setlanguage command with your new language!',
@@ -1097,7 +1079,7 @@ language_change_success = {
     'tr': 'Başarılı bir şekilde dilinizi seçiniz. Artık bottan aldığınız cevaplar yeni dilinizle olacak. Tekrar '
           'değiştirmek isterseniz !setlanguage komutuyla dilinizi değiştirebilirsiniz.'
 }
-
+# 33
 missing_language = {
     'en': 'This language is not available for translations, please send !languagelist for a '
           'list of languages and codes.',
