@@ -16,7 +16,8 @@ maintenance_text = {
     'ru': 'Тип бот находится на обслуживании. Проверьте {} в Twitter для получения дополнительной '
           'информации.',
     'sv': '',
-    'it': 'Il tip bot è in manutenzione. Controlla {} su Twitter per ulteriori informazioni.'
+    'it': 'Il tip bot è in manutenzione. Controlla {} su Twitter per ulteriori informazioni.',
+    'tr': 'Tip bot bakım altında. Daha fazla bilgi için {} da Twitter i kontrol edin'
 }
 redirect_tip_text = {
     'en': 'Tips are processed through public messages now.  Please send in the format {} {} 1 @user1.',
@@ -39,7 +40,8 @@ redirect_tip_text = {
           '{} 1 @имя_пользователя1.',
     'sv': '',
     'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato {} '
-          '{} 1 @utente1.'
+          '{} 1 @utente1.',
+    'tr': 'Tipler herkese açık mesajlarla işleme konuluyor. Lütfen gönderi formatınız {} {} 1 @kullanıcı1 olsun.'
 }
 self_tip_text = {
     'en': 'Self tipping is not allowed.  Please use this bot to spread the ${0} to other {1} users!',
@@ -60,7 +62,8 @@ self_tip_text = {
     'ru': 'Делать тип самому себе не допускаются. Пожалуйста, используйте этот бот, чтобы распространять '
           '${0} другим пользователям {1}!',
     'sv': '',
-    'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${0} agli altri utenti {1}!'
+    'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${0} agli altri utenti {1}!',
+    'tr': 'Kendinize tip yollamaya izin verilmiyor. Lütfen bu botu diğer {1} kullanıcılarına ${0} dağıtmakta kullanın.'
 }
 
 receiver_tip_text = {
@@ -97,7 +100,10 @@ receiver_tip_text = {
     'sv': '',
     'it': '@{} ti ha inviato una mancia di {} {}! Rispondi a questo DM con !balance per vedere il tuo saldo. '
           'Se non hai registrato un account, invia una risposta con !register per cominciare, o !help per vedere una '
-          'lista dei comandi! Per saperne di più su {} visita {}'
+          'lista dei comandi! Per saperne di più su {} visita {}',
+    'tr': '@{} az önce size {} {} tip yolladı. Yeni bakiyenizi görmek için bu DM\'e  !balance koduyla cevap verin. '
+          'Eğer kayıtlı bir kullanıcı değilseniz, cevap olarak !register yazarak, ya da komut listesini görmek için '
+          '!help yazarak başlayabilirsiniz. Hakkında daha fazlası için {} at {}'
 }
 
 private_tip_text = {
@@ -121,7 +127,9 @@ private_tip_text = {
           '!тип в твите или ответе!',
     'sv': '',
     'it': 'Le mance private sono in manutenzione. Per inviare una mancia, usa la funzione {} in un tweet o '
-          'in una risposta!'
+          'in una risposta!',
+    'tr': 'Gizli Tip şu an bakımda. Tip yollamak için !tip fonksiyonunu bir tweette veya Telegram mesajı yanıtlarken '
+          'kullanın!'
 }
 
 wrong_format_text = {
@@ -147,7 +155,9 @@ wrong_format_text = {
           'списка команд и того, что они делают.',
     'sv': '',
     'it': 'Il comando da te inviato non è stato riconosciuto. Invia !help per una lista dei comandi e per '
-          'sapere cosa fanno.'
+          'sapere cosa fanno.',
+    'tr': 'Gönderdiğiniz komut ya da sözcük tanınamadı. Lütfen komut listesini ve yaptıklarını görmek için !help '
+          'yazıp gönderin.'
 }
 
 no_users_text = {
@@ -173,7 +183,9 @@ no_users_text = {
           'тип снова, используя формат {0} {1} 1234 @имя_пользователя',
     'sv': '',
     'it': 'Sembra che tu non abbia inserito nessuno cui dare la mancia, oppure abbia sbagliato a scrivere il suo nome '
-          'utente. Puoi riprovare usando il formato {0} {1} 1234 @nomeutente'
+          'utente. Puoi riprovare usando il formato {0} {1} 1234 @nomeutente',
+    'tr': 'Görünüşe göre kimseye tip yollamadınız, ya da birilerinin kullanıcı adını yanlış yazdınız.{0} {1} 1234 '
+          '@kullanıcıadı formatını yazarak tekrar tip göndermeyi deneyebilirsiniz'
 }
 
 multi_tip_success = {
@@ -199,7 +211,8 @@ multi_tip_success = {
           '{}explorer/account/{} ',
     'sv': '',
     'it': 'Hai inviato con successo le tue mance di {} ${}. Controlla il tuo account su '
-          '{}explorer/account/{}'
+          '{}explorer/account/{}',
+    'tr': 'Başarılı bir şekilde {} ${} tip yolladınız. Hesabınızı kontrol etmek için {}/account/{}'
 }
 
 tip_success = {
@@ -225,7 +238,8 @@ tip_success = {
           '{}explorer/block/{}',
     'sv': '',
     'it': 'Hai inviato con successo la tua mancia di {} ${}. Controlla questa transazione su '
-          '{}explorer/block/{}'
+          '{}explorer/block/{}',
+    'tr': 'Başarılı bir şekilde {} ${} tip yolladınız. Bu işlemi kontrol etmek için {}explorer/block/{}'
 }
 
 not_a_number_text = {
@@ -250,7 +264,9 @@ not_a_number_text = {
           'тип, используя формат {0} {1} 1234 @имя_пользователя',
     'sv': '',
     'it': 'Sembra che il valore della mancia inserito non sia un numero. Puoi riprovare usando il formato '
-          '{0} {1} 1234 @nomeutente'
+          '{0} {1} 1234 @nomeutente',
+    'tr': 'Görünüşe göre yazdığınız tip miktarı bir sayı değil. {0} {1} 1234 @kullanıcıadı formatını yazarak tekrar '
+          'tip göndermeyi deneyebilirsiniz.'
 }
 
 min_tip_text = {
@@ -269,7 +285,8 @@ min_tip_text = {
     'vt': '',
     'ru': 'Минимальная сумма тип составляет {} {}. Пожалуйста, обновите сумму тип и попробуйте снова.',
     'sv': '',
-    'it': 'La mancia minima è di {} {}. Aggiorna l\'importo della e riprova.'
+    'it': 'La mancia minima è di {} {}. Aggiorna l\'importo della e riprova.',
+    'tr': 'Minimum tip miktarı {} {} \'dur. Lütfen tip miktarınızı güncelleyerek tekrar deneyin.'
 }
 
 missing_user_message = {
@@ -296,7 +313,9 @@ missing_user_message = {
           'находятся на канале, попросите их отправить сообщение в чат, чтобы я мог добавить их.',
     'sv': '',
     'it': '{} non trovato. Per dare loro una mancia, devono essere membri del gruppo. Se sono nel gruppo, dì '
-          'loro di inviare un messaggio nella chat così potrò aggiungerli.'
+          'loro di inviare un messaggio nella chat così potrò aggiungerli.',
+    'tr': '{} kayıtlarımızda bulunamadı. Onlara tip yollayabilmek için kanalın üyesi olmalılar. Eğer kanaldaysalar, '
+          'kanala bir mesaj yazmalılar, bu şekilde onları listeleyebilirim.'
 }
 
 no_account_text = {
@@ -318,7 +337,8 @@ no_account_text = {
     'ru': 'У вас нет аккаунта с ботом. Пожалуйста, пришлите мне Личное Сообщение с !регистрация, чтобы создать '
           'учетную запись.',
     'sv': '',
-    'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.'
+    'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.',
+    'tr': 'Botta bir hesabınız yoktur. Lütfen bana DM atıp !register yazın, bu sayede hesabınızı açabilirim'
 }
 
 not_enough_text = {
@@ -344,7 +364,9 @@ not_enough_text = {
           'отправив мне Личное Сообщение с !баланс и повторите попытку.',
     'sv': '',
     'it': 'Non hai abbastanza {} per coprire questa mancia di {} {}. Controlla il tuo saldo inviandomi un '
-          'DM con !balance e riprova.'
+          'DM con !balance e riprova.',
+    'tr': '{} tip atmak için yeterli {} {} \'nuz bulunmamaktadır. Lütfen bakiyenizi kontrol etmek için bana DM '
+          'atıp !balance yazın ve tekrar deneyin.'
 }
 
 help_message = {
@@ -612,7 +634,35 @@ help_message = {
           + BULLET + ' !setlanguage: usato per cambiare la lingua predefinita del bot. Un elenco di lingue '
                      'disponibili è fornito nel comando! Languages. L\'uso corretto è "!setlanguage Russian" per '
                      'cambiare la lingua in russo.\n\n'
-          + BULLET + ' !languages: restituisce un elenco di lingue disponibili per la traduzione.'
+          + BULLET + ' !languages: restituisce un elenco di lingue disponibili per la traduzione.',
+    'tr': '{0} Tip Bot kullandığınız için teşekkürler! Aşağıda komutların listesini ve ne işe yaradıklarını '
+          'bulabilirsiniz.\n\n'
+          + BULLET + ' !help: Tip bot size DM ile liste halinde komutları ve fonksiyonlarını yazar. Eğer bir şeyi '
+                     'unutursanız, nasıl yapacağınıza dair ipucu için bu komutu kullanabilirsiniz.\n\n'
+          + BULLET + ' !register: Kullanıcı kimliğinizle bir hesap açar.  Bu sayede tiplerinizi saklayabilirsiniz. '
+                     'Daha sonra kişisel cüzdanınıza göndermeyi unutmayın, tip bot {0} için uzun süreli bir saklama '
+                     'yöntemi değildir.\n\n'
+          + BULLET + ' !balance: Bu komutla, kullanıcı adınızla ilişkilendirilmiş hesabınızdaki bakiyeyi '
+                     'görebilirsiniz.\n\n'
+          + BULLET + ' {4}: Tipler herkese açık tweet\'ler ve telegram grupları yoluyla gönderilebilir.  '
+                     'Twitter\'da: Tag {1} \'u bir tweette tagle ve mentionla {4} <miktar> <@kullanıcıadı>.  '
+                     'Örnek: Tag {1} {4} 1 @mitche50 koduyla @mitche50\'ye 1  {0} gönderebilirsiniz. '
+                     'Telegram grubunda ise {3} {4} <miktar> <@kullanıcıadı> yazarak gönderebilirsiniz.\n\n'
+          + BULLET + ' !privatetip: Şu anda etkin değil.  Bu komutla bir başka kullanıcıya DM yoluyla tip '
+                     'yollayabileceksiniz.  Eğer tip miktarınızın gizli olmasını istiyorsanız bu fonksiyonu kullanın. '
+                     'Kullanım şekli !privatetip @kullanıcıadı 1234\n\n'
+          + BULLET + ' !account: Kullanıcı adınızla ilişkili hesap numaranızı getirir. (Şu anda platforma özgü).  '
+                     'Bu komutu cüzdanınızdan, tip bota, {0} yollamak için kullanabilirsiniz.\n\n'
+          + BULLET + ' !withdraw: Normal kullanımı !withdraw {2} . Bu sizin tip hesabınızdaki tüm bakiyeyi adresi '
+                     'verilen  {0} hesabınıza gönderir. Opsiyonel: Gönderiniz için miktar belirleyebilirsiniz, '
+                     '!withdraw <miktar> <adres>. Örnek: !withdraw 1 {2} komutu ile 1  {0} {2} numaralı hesaba '
+                     'çekersiniz.\n\n'
+          + BULLET + ' !donate: Normal kullanımı !donate 1234. Bu sizin belirttiğiniz bağışı, geliştirme çalışmalarına '
+                     'kaynak sağlamak için {0} Tip Bot bağış hesabına gönderir.\n\n'
+          + BULLET + ' !setlanguage: Bu komut botun dil ayarlarını değiştirmeyi sağlar. !languages komutu ile mevcut '
+                     'dilleri liste halinde getirir.  Normal kullanımında "!setlanguage Russian" dili '
+                     'Rusça ya çevirir.\n\n'
+          + BULLET + ' !languages: Çeviri için uygun dilleri liste halinde getirir.'
 }
 account_register_text = {
     'en': 'You have successfully registered for an account.  Your account number is:',
@@ -629,7 +679,8 @@ account_register_text = {
     'vt': '',
     'ru': 'Вы успешно зарегистрировались для учетной записи. Ваш адрес счета:',
     'sv': '',
-    'it': 'Hai registrato un account con successo. Il numero del tuo account è:'
+    'it': 'Hai registrato un account con successo. Il numero del tuo account è:',
+    'tr': 'Başarılı bir şekilde kayıt oldunuz. Hesap numaranız:',
 }
 
 account_already_registered = {
@@ -647,7 +698,8 @@ account_already_registered = {
     'vt': '',
     'ru': 'Вы уже зарегистрировали свой аккаунт. Ваш адрес счета:',
     'sv': '',
-    'it': 'Hai già registrato un account. Il numero del tuo account è:'
+    'it': 'Hai già registrato un account. Il numero del tuo account è:',
+    'tr': 'Daha önce hesaba kayıt olmuştunuz. Hesap numaranız:'
 }
 
 account_create_text = {
@@ -665,7 +717,8 @@ account_create_text = {
     'vt': '',
     'ru': 'У вас не было учетной записи, поэтому я создал ее для вас. Ваш адрес счета:',
     'sv': '',
-    'it': 'Non hai ancora configurato un account, quindi ne ho fatto uno per te. Il numero del tuo account è:'
+    'it': 'Non hai ancora configurato un account, quindi ne ho fatto uno per te. Il numero del tuo account è:',
+    'tr': 'Henüz bir hesap açmamıştınız, o yüzden ben sizin için açtım. Hesap numaranız:'
 }
 
 account_text = {
@@ -683,7 +736,8 @@ account_text = {
     'vt': '',
     'ru': 'Ваш адрес счета:',
     'sv': '',
-    'it': 'Il numero del tuo account è:'
+    'it': 'Il numero del tuo account è:',
+    'tr': 'Hesap numaranız:'
 }
 
 withdraw_no_account_text = {
@@ -723,7 +777,8 @@ invalid_account_text = {
     'vt': '',
     'ru': 'Указанный вами номер счета недействителен. Пожалуйста, проверьте еще раз и отправьте запрос.',
     'sv': '',
-    'it': 'Il numero dell\'account da te fornito non è valido. Controllalo di nuovo e rinvia la tua richiesta.'
+    'it': 'Il numero dell\'account da te fornito non è valido. Controllalo di nuovo e rinvia la tua richiesta.',
+    'tr': 'Verdiğiniz hesap numarası geçerli değil. Lütfen iki kez kontrol edin ve isteğinizi tekrarlayın.'
 }
 
 no_balance_text = {
@@ -743,7 +798,8 @@ no_balance_text = {
     'ru': 'У вас 0 баланса на вашем счету. Пожалуйста, внесите депозит на ваш адрес {}, '
           'чтобы отправить больше тип!',
     'sv': '',
-    'it': 'Hai un saldo di 0 nel tuo account. Deposita nel tuo indirizzo {} per inviare altre mance!'
+    'it': 'Hai un saldo di 0 nel tuo account. Deposita nel tuo indirizzo {} per inviare altre mance!',
+    'tr': 'Hesap bakiyeniz 0\'dır. Daha fazla tip yollayabilmek için adresinize {} gönderim yapın.'
 }
 
 invalid_amount_text = {
@@ -768,7 +824,9 @@ invalid_amount_text = {
           '!вывод <адрес> или !вывод <сумма> <адрес>;',
     'sv': '',
     'it': 'Non hai inviato un numero da prelevare. Rinvia con il formato !withdraw <account> o '
-          '!withdraw <importo> <account>'
+          '!withdraw <importo> <account>',
+    'tr': 'Çekim için miktar belirtmediniz. Lütfen bu formatta tekrar gönderin  !withdraw <hesap> ya da '
+          '!withdraw <miktar> <hesap>'
 }
 
 not_enough_balance_text = {
@@ -789,7 +847,8 @@ not_enough_balance_text = {
     'vt': '',
     'ru': 'У вас не так много {} на вашем аккаунте. Чтобы вывести всю сумму, отправьте !вывод <адрес>',
     'sv': '',
-    'it': 'Non hai così tanti {} nel tuo account. Per prelevarne l\'intero importo, invia !withdraw <account>'
+    'it': 'Non hai così tanti {} nel tuo account. Per prelevarne l\'intero importo, invia !withdraw <account>',
+    'tr': 'Hesabınızda o kadar çok {} bulunmuyor. Tüm hesabı çekmek için, !withdraw <hesap> yazarak gönderin.'
 }
 
 withdraw_text = {
@@ -814,7 +873,8 @@ withdraw_text = {
           '{}explorer/block/{}',
     'sv': '',
     'it': 'Hai prelevato con successo {} {}! Puoi controllare la transazione su '
-          '{}explorer/block/{}'
+          '{}explorer/block/{}',
+    'tr': 'Başarılı bir şekilde {} {} çektiniz. Bu işlemi kontrol etmek için {}explorer/block/{}'
 }
 
 incorrect_withdraw_text = {
@@ -857,7 +917,10 @@ incorrect_withdraw_text = {
     'it': 'Non ho capito la tua richiesta di prelievo. Rinvia con !withdraw <opzionale:importo> <account>. '
           'Esempio, !withdraw 1 {0} preleverà 1 {1} inviandolo all\'account '
           '{0}. Inoltre, !withdraw {0} preleverà l\'intero saldo '
-          'inviandolo all\'account {0}.'
+          'inviandolo all\'account {0}.',
+    'tr': 'Çekim isteğinizi anlayamadım. Lütfen !withdraw <opsiyonel:miktar> <hesap> şeklinde tekrar gönderin. '
+          'Örnek , !withdraw 1 {0}  komutu 1 {1}  {0}  hesap numaralı hesaba aktarır.  Ayrıca, !withdraw {0} '
+          'komutu tüm bakiyenizi {0}  nolu hesaba aktarır.'
 }
 
 wrong_donate_text = {
@@ -875,7 +938,8 @@ wrong_donate_text = {
     'vt': '',
     'ru': 'Принимаются только цифровые суммы. Пожалуйста, отправьте как !донат 1234',
     'sv': '',
-    'it': 'Sono accettati solo importi numerici. Rinvia tramite !donate 1234'
+    'it': 'Sono accettati solo importi numerici. Rinvia tramite !donate 1234',
+    'tr': 'Sadece rakamla yazılan miktarlar kabul edilir. Lütfen !donate 1234 şeklinde tekrar yollayın'
 }
 
 large_donate_text = {
@@ -901,7 +965,9 @@ large_donate_text = {
           'или уменьшите сумму тип.',
     'sv': '',
     'it': 'Il tuo saldo è di soli {0} {1} e hai provato a inviare {2}. Aggiungi altri {1} al tuo '
-          'account, o diminuisci l\'importo della donazione.'
+          'account, o diminuisci l\'importo della donazione.',
+    'tr': 'Bakiyeniz sadece {0} {1} ve siz {2} yollamak istediniz. Lütfen hesabınıza daha fazla {1} ekleyin veya '
+          'bağış miktarınızı azaltın.'
 }
 
 small_donate_text = {
@@ -921,7 +987,8 @@ small_donate_text = {
     'ru': 'Минимальная сумма тип составляет {}. Пожалуйста, обновите сумму тип и '
           'отправьте повторно.',
     'sv': '',
-    'it': 'L\'importo minimo per la donazione è {}. Aggiorna l\'importo della donazione e rinvia.'
+    'it': 'L\'importo minimo per la donazione è {}. Aggiorna l\'importo della donazione e rinvia.',
+    'tr': 'Minimum bağış miktarı {} olarak belirlenmiştir. Bağış miktarınızı güncelleyin ve tekrar gönderin.'
 }
 
 donate_text = {
@@ -947,6 +1014,8 @@ donate_text = {
           'транзакцию по адресу {}explorer/block/{}',
     'sv': '',
     'it': 'Grazie della tua generosità! Hai inviato con successo {} {}! Puoi controllare la transazione su '
+          '{}explorer/block/{}',
+    'tr': 'Cömertliğiniz için teşekkürler! Başarılı bir şekilde {} {}! bağışladınız. Bu işlemi kontrol etmek için '
           '{}explorer/block/{}'
 }
 
@@ -965,7 +1034,8 @@ incorrect_donate_text = {
     'vt': '',
     'ru': 'Неверный синтаксис. Пожалуйста, используйте формат !донат 1234',
     'sv': '',
-    'it': 'Sintassi incorretta. Usa il formato !donate 1234'
+    'it': 'Sintassi incorretta. Usa il formato !donate 1234',
+    'tr': 'Yanlış komut. Lütfen !donate 1234 formatını kullanın.'
 }
 
 balance_text = {
@@ -993,7 +1063,9 @@ balance_text = {
           'В ожидании: {} {}',
     'sv': '',
     'it': 'Disponibile: {} {}\n'
-          'In sospeso: {} {}'
+          'In sospeso: {} {}',
+    'tr': 'Mevcut: {} {}\n'
+          'Bekleyen: {} {}'
 }
 
 language_change_success = {
@@ -1021,7 +1093,9 @@ language_change_success = {
           'Если вы хотите вернуться обратно, отправьте команду !выборязыка с новым языком!',
     'sv': '',
     'it': 'Hai aggiornato la lingua con successo. Ora i messaggi che riceverai dal bot saranno nella tua '
-          'nuova lingua. Nel caso volessi cambiarla di nuovo, rinvia il comando !setlanguage con la tua nuova lingua!'
+          'nuova lingua. Nel caso volessi cambiarla di nuovo, rinvia il comando !setlanguage con la tua nuova lingua!',
+    'tr': 'Başarılı bir şekilde dilinizi seçiniz. Artık bottan aldığınız cevaplar yeni dilinizle olacak. Tekrar '
+          'değiştirmek isterseniz !setlanguage komutuyla dilinizi değiştirebilirsiniz.'
 }
 
 missing_language = {
@@ -1044,7 +1118,8 @@ missing_language = {
     'ru': 'Этот язык не доступен для переводов, отправьте !списокязыков для списка языков и кодов.',
     'sv': '',
     'it': 'Questa lingua non è disponibile per le traduzioni, invia !languagelist per una lista delle '
-          'lingue e dei codici.'
+          'lingue e dei codici.',
+    'tr': 'Bu dil tercüme için uygun değil, lütfen dil listesini ve kodlarını görmek için !languagelist yazıp yollayın.'
 }
 
 language_list = (
@@ -1060,6 +1135,7 @@ language_list = (
     'Portuguese - Português\n'
     'Russian - русский\n'
     'Spanish - Español\n'
+    'Turkish - Türkçe\n'
     # 'Swedish - Svenska\n'
     # 'Thai - ไทย\n'
     # 'Vietnamese - Tiếng Việt\n'
@@ -1088,7 +1164,8 @@ balance_commands = {
     'vt': [],
     'ru': ['!баланс', '!бал', '!б', '/баланс', '/бал', '/б'],
     'sv': [],
-    'it': ['!saldo', '!sal', '!s', '/saldo', '/sal', '/s']
+    'it': ['!saldo', '!sal', '!s', '/saldo', '/sal', '/s'],
+    'tr': ['!bakiye', '!bak', '/bakiye', '/bak']
 }
 
 account_commands = {
@@ -1112,7 +1189,8 @@ account_commands = {
     'vt': [],
     'ru': ['!аккаунт', '!акк', '!а', '!депозит', '/аккаунт', '/акк', '/а', '/депозит'],
     'sv': [],
-    'it': ['!conto', '!con', '!c', '!deposita', '/conto', '/con', '/c', '/deposita']
+    'it': ['!conto', '!con', '!c', '!deposita', '/conto', '/con', '/c', '/deposita'],
+    'tr': ['!hesap', '!hes', '!yatırmak', '/hesap', '/hes', '/yatırmak']
 }
 
 help_commands = {
@@ -1136,7 +1214,8 @@ help_commands = {
     'vt': [],
     'ru': ['!помощь', '!п', '/помощь', '/п', '/старт'],
     'sv': [],
-    'it': ['!aiuto', '/aiuto', '/inizia']
+    'it': ['!aiuto', '/aiuto', '/inizia'],
+    'tr': ['!yardım', '!y', '/yardım', '/y', '/başla']
 }
 
 register_commands = {
@@ -1160,7 +1239,8 @@ register_commands = {
     'vt': [],
     'ru': ['!регистрация', '!рег', '!р', '/регистрация', '/рег', '/р'],
     'sv': [],
-    'it': ['!registra', '!reg', '/registra', '/reg']
+    'it': ['!registra', '!reg', '/registra', '/reg'],
+    'tr': ['!kayıt', '!kyt', '/kayıt', '/kyt']
 }
 
 withdraw_commands = {
@@ -1184,7 +1264,8 @@ withdraw_commands = {
     'vt': [],
     'ru': ['!вывод', '!в', '/вывод', '/в'],
     'sv': [],
-    'it': ['!preleva', '!p', '/preleva', '/p']
+    'it': ['!preleva', '!p', '/preleva', '/p'],
+    'tr': ['!çekmek', '!ç', '/çekmek', '/ç']
 }
 
 donate_commands = {
@@ -1208,7 +1289,8 @@ donate_commands = {
     'vt': [],
     'ru': ['!донат', '!д', '/донат', '/д'],
     'sv': [],
-    'it': ['!dona', '!d', '/dona', '/d']
+    'it': ['!dona', '!d', '/dona', '/d'],
+    'tr': ['!bağış', '/bağış']
 }
 
 nano_tip_commands = {
@@ -1234,7 +1316,8 @@ nano_tip_commands = {
     'vt': [],
     'ru': ['!тип', '!т', '/тип', '/т'],
     'sv': [],
-    'it': ['!mancia', '!m', '/mancia', '/m']
+    'it': ['!mancia', '!m', '/mancia', '/m'],
+    'tr': []
 }
 
 banano_tip_commands = {
@@ -1265,7 +1348,8 @@ private_tip_commands = {
     'vt': [],
     'ru': ['!приватныйтип', '!приват', '!пт', '/приватныйтип', '/приват', '/пт'],
     'sv': [],
-    'it': ['!manciaprivata', '!privata', '!pt', '/manciaprivata', '/privata', '/pt']
+    'it': ['!manciaprivata', '!privata', '!pt', '/manciaprivata', '/privata', '/pt'],
+    'tr': ['!özeltip', '!özel', '!öz', '/özeltip', '/özel', '/öz']
 }
 
 language_commands = [
@@ -1275,6 +1359,7 @@ language_commands = [
     '！設置語言', '！設語', '！設', '/設置語言', '/設語', '/設',
     '！设置语言', '！设语', '！设', '/设置语言', '/设语', '/设',
     '!impostalingua', '!lingua', '!il', '/impostalingua', '/lingua', '/il'
+    '!diliayarla', '!dilayar', '!dl', '/diliayarla', '/dilayar', '/dl'
 ]
 
 language_list_commands = [
@@ -1283,7 +1368,8 @@ language_list_commands = [
     '!языки', '!языки', '!списокязыков', '!я', '/языки', '/языки', '/списокязыков', '/я',
     '！語言', '！語', '！語言單', '！語', '/語言', '/語', '/語言單', '/語',
     '！语言', '！语', '！语言单', '！语', '/语言', '/语', '/语言单', '/语',
-    '!lingue', '!lingue', '!listalingue', '!l', '/lingue', '/lingue', '/listalingue', '/l'
+    '!lingue', '!lingue', '!listalingue', '!l', '/lingue', '/lingue', '/listalingue', '/l',
+    '!diller', '!dils', '!dillistesi', '/diller', '/dils', '/dillistesi'
 ]
 
 language_dict = {
@@ -1332,5 +1418,7 @@ language_dict = {
     'português': 'pt',
     'spanish': 'es',
     'es': 'es',
-    'español': 'es'
+    'español': 'es',
+    'turkish': 'tr',
+    'tr': 'tr'
 }
