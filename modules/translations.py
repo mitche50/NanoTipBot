@@ -1280,7 +1280,9 @@ balance_commands = {
     'ru': ['!баланс', '!бал', '!б', '/баланс', '/бал', '/б'],
     'sv': [],
     'it': ['!saldo', '!sal', '!s', '/saldo', '/sal', '/s'],
-    'tr': ['!bakiye', '!bak', '/bakiye', '/bak']
+    'tr': ['!bakiye', '!bak', '/bakiye', '/bak'],
+    'pt-br': [],
+    'bg': []
 }
 
 account_commands = {
@@ -1305,7 +1307,9 @@ account_commands = {
     'ru': ['!аккаунт', '!акк', '!а', '!депозит', '/аккаунт', '/акк', '/а', '/депозит'],
     'sv': [],
     'it': ['!conto', '!con', '!c', '!deposita', '/conto', '/con', '/c', '/deposita'],
-    'tr': ['!hesap', '!hes', '!yatırmak', '/hesap', '/hes', '/yatırmak']
+    'tr': ['!hesap', '!hes', '!yatırmak', '/hesap', '/hes', '/yatırmak'],
+    'pt-br': [],
+    'bg': []
 }
 
 help_commands = {
@@ -1330,7 +1334,9 @@ help_commands = {
     'ru': ['!помощь', '!п', '/помощь', '/п', '/старт'],
     'sv': [],
     'it': ['!aiuto', '/aiuto', '/inizia'],
-    'tr': ['!yardım', '!y', '/yardım', '/y', '/başla']
+    'tr': ['!yardım', '!y', '/yardım', '/y', '/başla'],
+    'pt-br': [],
+    'bg': []
 }
 
 register_commands = {
@@ -1355,7 +1361,9 @@ register_commands = {
     'ru': ['!регистрация', '!рег', '!р', '/регистрация', '/рег', '/р'],
     'sv': [],
     'it': ['!registra', '!reg', '/registra', '/reg'],
-    'tr': ['!kayıt', '!kyt', '/kayıt', '/kyt']
+    'tr': ['!kayıt', '!kyt', '/kayıt', '/kyt'],
+    'pt-br': [],
+    'bg': []
 }
 
 withdraw_commands = {
@@ -1380,7 +1388,9 @@ withdraw_commands = {
     'ru': ['!вывод', '!в', '/вывод', '/в'],
     'sv': [],
     'it': ['!preleva', '!p', '/preleva', '/p'],
-    'tr': ['!çekmek', '!ç', '/çekmek', '/ç']
+    'tr': ['!çekmek', '!ç', '/çekmek', '/ç'],
+    'pt-br': [],
+    'bg': []
 }
 
 donate_commands = {
@@ -1405,7 +1415,9 @@ donate_commands = {
     'ru': ['!донат', '!д', '/донат', '/д'],
     'sv': [],
     'it': ['!dona', '!d', '/dona', '/d'],
-    'tr': ['!bağış', '/bağış']
+    'tr': ['!bağış', '/bağış'],
+    'pt-br': [],
+    'bg': []
 }
 
 nano_tip_commands = {
@@ -1432,7 +1444,9 @@ nano_tip_commands = {
     'ru': ['!тип', '!т', '/тип', '/т'],
     'sv': [],
     'it': ['!mancia', '!m', '/mancia', '/m'],
-    'tr': []
+    'tr': [],
+    'pt-br': [],
+    'bg': []
 }
 
 banano_tip_commands = {
@@ -1464,7 +1478,9 @@ private_tip_commands = {
     'ru': ['!приватныйтип', '!приват', '!пт', '/приватныйтип', '/приват', '/пт'],
     'sv': [],
     'it': ['!manciaprivata', '!privata', '!pt', '/manciaprivata', '/privata', '/pt'],
-    'tr': ['!özeltip', '!özel', '!öz', '/özeltip', '/özel', '/öz']
+    'tr': ['!özeltip', '!özel', '!öz', '/özeltip', '/özel', '/öz'],
+    'pt-br': [],
+    'bg': []
 }
 
 language_commands = [
