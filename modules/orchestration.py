@@ -226,7 +226,8 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
-    elif message['dm_action'] in translations.auto_donate_commands:
+    elif message['dm_action'] in translations.auto_donate_commands['en'] or \
+            message['dm_action'] in translations.auto_donate_commands[message['language']]:
         new_pid = os.fork()
         if new_pid == 0:
             try:
