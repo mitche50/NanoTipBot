@@ -36,6 +36,7 @@ BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
 WORK_SERVER = config.get(CURRENCY, 'work_server')
 WORK_KEY = config.get(CURRENCY, 'work_key')
 TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
+MIN_TIP = config.get(CURRENCY, 'min_tip')
 
 
 # Connect to Twitter
@@ -193,9 +194,23 @@ def return_tips():
         sender_account_info = get_db_data(sender_account_call)
         sender_account = sender_account_info[0][0]
         # TODO: Add % donation on returned tips for server costs
-        # if amount > (CONVERT_MULTIPLIER[CURRENCY] / 1000)
+        donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
+                                   "WHERE user_id = {}".format(sender_id))
+        donation_percent = float(donation_raw[0][0] * .01)
 
-        send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
+        if amount * donation_percent >= MIN_TIP:
+            donation = amount * donation_percent
+            if CURRENCY == 'banano':
+                donation = round(donation)
+            else:
+                donation = round(donation, 4)
+
+            amount -= donation
+            donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
+            send_amount = int((amount - donation) * CONVERT_MULTIPLIER[CURRENCY])
+        else:
+            donation_amount = 0
+            send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
 
         receive_pending(receiver_account)
 
@@ -204,9 +219,18 @@ def return_tips():
             if work == '':
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                      destination="{}".format(sender_account), amount=send_amount)
+                if donation_amount > 0:
+                    donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
+                                             destination="{}".format(BOT_ACCOUNT), amount=donation_amount)
+                    logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
             else:
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                      destination="{}".format(sender_account), amount=send_amount, work=work)
+                if donation_amount > 0:
+                    donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
+                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=work)
+                    logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
+
             logging.info("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
         except nano.rpc.RPCException as e:
             logging.info("{}: Insufficient balance to return.  Descriptive error: {}".format(datetime.now(), e))
