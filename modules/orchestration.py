@@ -49,7 +49,11 @@ def parse_action(message):
     else:
         tip_commands = modules.translations.nano_tip_commands[message['language']]
         if message['language'] is not 'en':
-            tip_commands.append(modules.translations.nano_tip_commands['en'])
+            english_commands = modules.translations.nano_tip_commands['en']
+            for command in english_commands:
+                tip_commands.append(command)
+
+    logging.info('tip commands: {}'.format(tip_commands))
 
     if message['dm_action'] in translations.help_commands['en'] or \
             message['dm_action'] in translations.help_commands[message['language']]:
@@ -228,6 +232,7 @@ def parse_action(message):
 
     elif message['dm_action'] in translations.auto_donate_commands['en'] or \
             message['dm_action'] in translations.auto_donate_commands[message['language']]:
+        logging.info("auto donate command identified")
         new_pid = os.fork()
         if new_pid == 0:
             try:
@@ -287,9 +292,14 @@ def auto_donation_process(message):
     """
     Update the donation percentage on returned tips.
     """
-    logging.info("{}: Updating auto donation percentage")
+    logging.info("{}: Updating auto donation percentage".format(datetime.now()))
+    message['text'] = message['text'].split(' ')
+    logging.info(len(message['text']) >= 2)
+    logging.info(message['text'])
+    logging.info(message['text'][1])
     if len(message['text']) >= 2:
         try:
+            logging.info(message['text'][1])
             new_percent = float(message['text'][1])
         except ValueError:
             # send a message that the new percentage is not a number
@@ -297,9 +307,9 @@ def auto_donation_process(message):
                                    translations.auto_donate_notanum[message['language']],
                                    message['system'])
             return ''
-        if new_percent >= 0:
+        if new_percent >= 0 and new_percent <= 100:
             # update the donation percentage
-            auto_donate_call = ("UPDATE donation_info SET donation_percentage = %s "
+            auto_donate_call = ("UPDATE donation_info SET donation_percent = %s "
                                 "WHERE user_id = %s AND system = %s ")
             auto_donate_values = [message['sender_id'], int(new_percent), message['system']]
             modules.db.set_db_data(auto_donate_call, auto_donate_values)
@@ -307,8 +317,9 @@ def auto_donation_process(message):
                                    translations.auto_donate_success[message['language']].format(int(new_percent)),
                                    message['system'])
 
+
         else:
-            # send a message that the new percentage must be greater than or equal to zero
+            # send a message that the new percentage must be greater than or equal to zero, but less than or equal to 100
             modules.social.send_dm(message['sender_id'],
                                    translations.auto_donate_negative[message['language']],
                                    message['system'])

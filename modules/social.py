@@ -239,7 +239,11 @@ def check_message_action(message):
         else:
             tip_commands = modules.translations.nano_tip_commands[message['language']]
             if message['language'] is not 'en':
-                tip_commands.append(modules.translations.nano_tip_commands['en'])
+                english_commands = modules.translations.nano_tip_commands['en']
+                for command in english_commands:
+                    tip_commands.append(command)
+
+        logging.info("tip commands: {}".format(tip_commands))
 
         for command in tip_commands:
             if command in message['text']:

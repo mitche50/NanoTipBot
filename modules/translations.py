@@ -1275,20 +1275,20 @@ auto_donate_notanum = {
 }
 # 35
 auto_donate_negative = {
-    'en': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'es': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'nl': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'ja': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'zh-t': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'zh-s': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
-    'fr': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
-          'donation percentage.',
+    'en': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'es': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'nl': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'ja': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'zh-t': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'zh-s': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
+    'fr': 'The percentage you provided was a negative number.  Please resubmit with a positive number between 0 and 100'
+          ' to update your donation percentage.',
     'pt': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
           'donation percentage.',
     'th': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
