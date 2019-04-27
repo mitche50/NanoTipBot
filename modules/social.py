@@ -238,7 +238,7 @@ def check_message_action(message):
             tip_commands = modules.translations.banano_tip_commands['en']
         else:
             tip_commands = modules.translations.nano_tip_commands[message['language']]
-            if message['language'] is not 'en':
+            if message['language'] != 'en':
                 english_commands = modules.translations.nano_tip_commands['en']
                 for command in english_commands:
                     tip_commands.append(command)
@@ -271,8 +271,11 @@ def validate_tip_amount(message):
         tip_commands = modules.translations.banano_tip_commands['en']
     else:
         tip_commands = modules.translations.nano_tip_commands[message['language']]
-        if message['language'] is not 'en':
-            tip_commands.append(modules.translations.nano_tip_commands['en'])
+        if message['language'] != 'en':
+            english_commands = modules.translations.nano_tip_commands['en']
+            for command in english_commands:
+                logging.info("commad: {}".format(command))
+                tip_commands.append(command)
 
     logging.info("{}: in validate_tip_amount".format(datetime.now()))
     try:
