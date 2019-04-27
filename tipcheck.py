@@ -193,7 +193,7 @@ def return_tips():
         sender_account_call = "SELECT account FROM users WHERE user_id = {}".format(sender_id)
         sender_account_info = get_db_data(sender_account_call)
         sender_account = sender_account_info[0][0]
-        # TODO: Add % donation on returned tips for server costs
+        #TODO: verify if donation works
         donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                    "WHERE user_id = {}".format(sender_id))
         donation_percent = float(donation_raw[0][0] * .01)
