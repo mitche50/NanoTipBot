@@ -288,7 +288,7 @@ def auto_donation_process(message):
     Update the donation percentage on returned tips.
     """
     logging.info("{}: Updating auto donation percentage")
-    if len(message['text'] >= 2):
+    if len(message['text']) >= 2:
         try:
             new_percent = float(message['text'][1])
         except ValueError:
