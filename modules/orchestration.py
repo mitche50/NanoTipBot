@@ -226,6 +226,23 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
+    elif message['dm_action'] in translations.auto_donate_commands:
+        new_pid = os.fork()
+        if new_pid == 0:
+            try:
+                bot_status = config.get('main', 'bot_status')
+                if bot_status == 'maintenance':
+                    modules.social.send_dm(message['sender_id'],
+                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                           message['system'])
+                else:
+                    auto_donation_process(message)
+            except Exception as e:
+                logging.info("{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
+            os._exit(0)
+        else:
+            return '', HTTPStatus.OK
+
     else:
         new_pid = os.fork()
         if new_pid == 0:
@@ -263,6 +280,43 @@ def help_process(message):
                                                                                  tip_command),
                            message['system'])
     logging.info("{}: Help message sent!".format(datetime.now()))
+
+
+def auto_donation_process(message):
+    """
+    Update the donation percentage on returned tips.
+    """
+    logging.info("{}: Updating auto donation percentage")
+    if len(message['text'] >= 2):
+        try:
+            new_percent = float(message['text'][1])
+        except ValueError:
+            # send a message that the new percentage is not a number
+            modules.social.send_dm(message['sender_id'],
+                                   translations.auto_donate_notanum[message['language']],
+                                   message['system'])
+            return ''
+        if new_percent >= 0:
+            # update the donation percentage
+            auto_donate_call = ("UPDATE donation_info SET donation_percentage = %s "
+                                "WHERE user_id = %s AND system = %s ")
+            auto_donate_values = [message['sender_id'], int(new_percent), message['system']]
+            modules.db.set_db_data(auto_donate_call, auto_donate_values)
+            modules.social.send_dm(message['sender_id'],
+                                   translations.auto_donate_success[message['language']].format(int(new_percent)),
+                                   message['system'])
+
+        else:
+            # send a message that the new percentage must be greater than or equal to zero
+            modules.social.send_dm(message['sender_id'],
+                                   translations.auto_donate_negative[message['language']],
+                                   message['system'])
+
+    else:
+        # send a message that they didn't include a new percent to update to
+        modules.social.send_dm(message['sender_id'],
+                               translations.auto_donate_missing_num[message['language']],
+                               message['system'])
 
 
 def balance_process(message):

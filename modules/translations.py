@@ -1234,9 +1234,147 @@ missing_language = {
              'idiomas e códigos.',
     'bg': 'Този език не е достъпен за превод, моля, изпратете !languagelist за списък с езици и кодове.'
 }
+# 34
+auto_donate_notanum = {
+    'en': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'es': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'nl': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'ja': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'zh-t': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'zh-s': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'fr': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'pt': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'th': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'de': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'id': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'vt': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'ru': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'sv': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'it': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'tr': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'pt-br': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.',
+    'bg': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
+          'donation percentage.'
+}
+# 35
+auto_donate_negative = {
+    'en': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'es': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'nl': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'ja': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'zh-t': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'zh-s': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'fr': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'pt': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'th': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'de': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'id': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'vt': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'ru': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'sv': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'it': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'tr': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'pt-br': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.',
+    'bg': 'The percentage you provided was a negative number.  Please resubmit with a positive number to update your '
+          'donation percentage.'
+}
+# 36
+auto_donate_missing_num = {
+    'en': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'es': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'nl': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'ja': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'zh-t': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'zh-s': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'fr': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'pt': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'th': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'de': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'id': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'vt': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'ru': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'sv': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'it': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'tr': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'pt-br': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.',
+    'bg': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
+          'to update your donation percentage.'
+}
+# 37
+auto_donate_success = {
+    'en': 'You have successfully updated your donation percentage to {0}%.',
+    'es': 'You have successfully updated your donation percentage to {0}%.',
+    'nl': 'You have successfully updated your donation percentage to {0}%.',
+    'ja': 'You have successfully updated your donation percentage to {0}%.',
+    'zh-t': 'You have successfully updated your donation percentage to {0}%.',
+    'zh-s': 'You have successfully updated your donation percentage to {0}%.',
+    'fr': 'You have successfully updated your donation percentage to {0}%.',
+    'pt': 'You have successfully updated your donation percentage to {0}%.',
+    'th': 'You have successfully updated your donation percentage to {0}%.',
+    'de': 'You have successfully updated your donation percentage to {0}%.',
+    'id': 'You have successfully updated your donation percentage to {0}%.',
+    'vt': 'You have successfully updated your donation percentage to {0}%.',
+    'ru': 'You have successfully updated your donation percentage to {0}%.',
+    'sv': 'You have successfully updated your donation percentage to {0}%.',
+    'it': 'You have successfully updated your donation percentage to {0}%.',
+    'tr': 'You have successfully updated your donation percentage to {0}%.',
+    'pt-br': 'You have successfully updated your donation percentage to {0}%.',
+    'bg': 'You have successfully updated your donation percentage to {0}%.'
+}
 
 language_list = (
-    'Bulgarian - български език'
+    'Bulgarian - български език\n'
     'Chinese Simplified - 简体中文\n'
     'Chinese Traditional - 繁體中文\n'
     'Dutch - Nederlands\n'
@@ -1247,7 +1385,7 @@ language_list = (
     'Italian - Italiano\n'
     # 'Japanese - 日本語\n'
     'Portuguese - Português\n'
-    'Portuguese-BR - Português-BR'
+    'Portuguese-BR - Português-BR\n'
     'Russian - русский\n'
     'Spanish - Español\n'
     'Turkish - Türkçe\n'
@@ -1479,6 +1617,35 @@ private_tip_commands = {
     'sv': [],
     'it': ['!manciaprivata', '!privata', '!pt', '/manciaprivata', '/privata', '/pt'],
     'tr': ['!özeltip', '!özel', '!öz', '/özeltip', '/özel', '/öz'],
+    'pt-br': [],
+    'bg': []
+}
+
+auto_donate_commands = {
+    'en': ['!setdonation', '!sd', '/setdonation', '/sd'],
+    'es': [
+        # Users said they would prefer english commands
+    ],
+    'nl': [
+        # Users said they would prefer english commands
+    ],
+    'ja': [],
+    'zh-t': [],
+    'zh-s': [],
+    'fr': [
+        # Users said they would prefer english commands
+    ],
+    'pt': [],
+    'th': [],
+    'de': [],
+    'id': [
+        # Users said they would prefer english commands
+    ],
+    'vt': [],
+    'ru': [],
+    'sv': [],
+    'it': [],
+    'tr': [],
     'pt-br': [],
     'bg': []
 }
