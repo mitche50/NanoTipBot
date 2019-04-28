@@ -224,7 +224,6 @@ def check_message_action(message):
     """
     Check to see if there are any key action values mentioned in the tweet.
     """
-    logging.info("{}: in check_message_action.".format(datetime.now()))
     if message['system'] == 'telegram':
         try:
             check_for_ntb = message['text'].index("{}".format(BOT_NAME_TELEGRAM.lower()))
@@ -526,7 +525,6 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
                                                                       member_id))
     user_check_data = modules.db.get_db_data(check_user_call)
 
-    logging.info("checking if user exists")
     if not user_check_data:
         logging.info("{}: User {}-{} not found in DB, inserting".format(datetime.now(), chat_id, member_name))
         new_chat_member_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
