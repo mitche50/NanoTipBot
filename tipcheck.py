@@ -198,7 +198,7 @@ def return_tips():
                                    "WHERE user_id = {}".format(sender_id))
         donation_percent = Decimal(donation_raw[0][0] * .01)
 
-        if amount * donation_percent >= MIN_TIP:
+        if amount * donation_percent >= float(MIN_TIP):
             donation = amount * donation_percent
             if CURRENCY == 'banano':
                 donation = round(donation)
