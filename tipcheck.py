@@ -212,6 +212,9 @@ def return_tips():
             donation_amount = 0
             send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
 
+        logging.info("donation amount: {}".format(donation_amount))
+        logging.info("send_amount: {}".format(send_amount))
+
         receive_pending(receiver_account)
 
         work = get_pow(receiver_account)
@@ -227,8 +230,9 @@ def return_tips():
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                      destination="{}".format(sender_account), amount=send_amount, work=work)
                 if donation_amount > 0:
+                    donation_work = get_pow(receiver_account)
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
-                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=work)
+                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=donation_work)
                     logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
 
             logging.info("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
