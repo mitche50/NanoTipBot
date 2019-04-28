@@ -48,9 +48,11 @@ def parse_action(message):
         tip_commands = modules.translations.banano_tip_commands['en']
     else:
         tip_commands = modules.translations.nano_tip_commands[message['language']]
-        if message['language'] is not 'en':
+        logging.info("language: {}".format(message['language']))
+        if message['language'] != 'en':
             english_commands = modules.translations.nano_tip_commands['en']
             for command in english_commands:
+                logging.info("commad: {}".format(command))
                 tip_commands.append(command)
 
     logging.info('tip commands: {}'.format(tip_commands))
@@ -636,8 +638,11 @@ def tip_process(message, users_to_tip, request_json):
         tip_commands = modules.translations.banano_tip_commands['en']
     else:
         tip_commands = modules.translations.nano_tip_commands[message['language']]
-        if message['language'] is not 'en':
-            tip_commands.append(modules.translations.nano_tip_commands['en'])
+        if message['language'] != 'en':
+            english_commands = modules.translations.nano_tip_commands['en']
+            for command in english_commands:
+                logging.info("commad: {}".format(command))
+                tip_commands.append(command)
 
     message, users_to_tip = modules.social.set_tip_list(message, users_to_tip, request_json)
     if len(users_to_tip) < 1 and message['system'] != 'telegram':

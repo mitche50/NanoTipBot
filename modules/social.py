@@ -224,7 +224,6 @@ def check_message_action(message):
     """
     Check to see if there are any key action values mentioned in the tweet.
     """
-    logging.info("{}: in check_message_action.".format(datetime.now()))
     if message['system'] == 'telegram':
         try:
             check_for_ntb = message['text'].index("{}".format(BOT_NAME_TELEGRAM.lower()))
@@ -238,7 +237,7 @@ def check_message_action(message):
             tip_commands = modules.translations.banano_tip_commands['en']
         else:
             tip_commands = modules.translations.nano_tip_commands[message['language']]
-            if message['language'] is not 'en':
+            if message['language'] != 'en':
                 english_commands = modules.translations.nano_tip_commands['en']
                 for command in english_commands:
                     tip_commands.append(command)
@@ -271,8 +270,11 @@ def validate_tip_amount(message):
         tip_commands = modules.translations.banano_tip_commands['en']
     else:
         tip_commands = modules.translations.nano_tip_commands[message['language']]
-        if message['language'] is not 'en':
-            tip_commands.append(modules.translations.nano_tip_commands['en'])
+        if message['language'] != 'en':
+            english_commands = modules.translations.nano_tip_commands['en']
+            for command in english_commands:
+                logging.info("commad: {}".format(command))
+                tip_commands.append(command)
 
     logging.info("{}: in validate_tip_amount".format(datetime.now()))
     try:
@@ -523,7 +525,6 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
                                                                       member_id))
     user_check_data = modules.db.get_db_data(check_user_call)
 
-    logging.info("checking if user exists")
     if not user_check_data:
         logging.info("{}: User {}-{} not found in DB, inserting".format(datetime.now(), chat_id, member_name))
         new_chat_member_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "

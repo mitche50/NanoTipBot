@@ -88,12 +88,12 @@ def send_returned_notice_to_receivers():
     """
     Notify all unregistered users that their tips are being returned.
     """
-    unregistered_users_call = ("SELECT DISTINCT tip_bot.tip_list.receiver_id, tip_bot.tip_list.system FROM tip_bot.tip_list "
-                               "INNER JOIN tip_bot.users "
-                               "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                               "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
-                               "AND tip_bot.users.register = 0 "
-                               "AND tip_bot.tip_list.processed = 9;")
+    unregistered_users_call = ("SELECT DISTINCT tip_list.receiver_id, tip_list.system FROM tip_list "
+                               "INNER JOIN users "
+                               "ON tip_list.receiver_id = users.user_id "
+                               "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                               "AND users.register = 0 "
+                               "AND tip_list.processed = 9;")
     unregistered_users_data = get_db_data(unregistered_users_call)
 
     for user in unregistered_users_data:
@@ -117,12 +117,12 @@ def mark_notified(user_type):
         processed_num = 8
 
     notified_users_call = ("SELECT dm_id "
-                           "FROM tip_bot.tip_list "
+                           "FROM tip_list "
                            "WHERE processed = {}".format(processed_num))
     notified_users = get_db_data(notified_users_call)
 
     for id in notified_users:
-        notified_send_call = ("UPDATE tip_bot.tip_list "
+        notified_send_call = ("UPDATE tip_list "
                               "SET processed = %s "
                               "WHERE dm_id = %s")
         notified_send_values = [(processed_num - 1), id[0]]
@@ -133,23 +133,23 @@ def send_returned_notice_to_senders():
     """
     Notify all users who sent tips which were returned that their balance has been updated.
     """
-    sender_return_notice_call = ("SELECT tip_bot.tip_list.sender_id, tip_bot.tip_list.system, sum(tip_bot.tip_list.amount) "
-                                 "FROM tip_bot.tip_list "
-                                 "INNER JOIN tip_bot.users "
-                                 "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                                 "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
-                                 "AND tip_bot.users.register = 0 "
-                                 "AND tip_bot.tip_list.processed = 8 "
-                                 "GROUP BY tip_bot.tip_list.sender_id, tip_bot.tip_list.system;")
+    sender_return_notice_call = ("SELECT tip_list.sender_id, tip_list.system, sum(tip_list.amount) "
+                                 "FROM tip_list "
+                                 "INNER JOIN users "
+                                 "ON tip_list.receiver_id = users.user_id "
+                                 "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                                 "AND users.register = 0 "
+                                 "AND tip_list.processed = 8 "
+                                 "GROUP BY tip_list.sender_id, tip_list.system;")
     sender_return_list = get_db_data(sender_return_notice_call)
 
-    sender_return_names = ("SELECT tip_bot.tip_list.sender_id, tip_bot.tip_list.system, tip_bot.users.user_name "
-                           "FROM tip_bot.tip_list "
-                           "INNER JOIN tip_bot.users "
-                           "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                           "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
-                           "AND tip_bot.users.register = 0 "
-                           "AND tip_bot.tip_list.processed = 8;")
+    sender_return_names = ("SELECT tip_list.sender_id, tip_list.system, users.user_name "
+                           "FROM tip_list "
+                           "INNER JOIN users "
+                           "ON tip_list.receiver_id = users.user_id "
+                           "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                           "AND users.register = 0 "
+                           "AND tip_list.processed = 8;")
     sender_return_name_list = get_db_data(sender_return_names)
     return_dict = {}
 
@@ -172,14 +172,14 @@ def send_returned_notice_to_senders():
 
 
 def return_tips():
-    tips_to_return_call = ("SELECT tip_bot.tip_list.dm_id, tip_bot.tip_list.sender_id, "
-                           "tip_bot.users.account, tip_bot.tip_list.amount "
-                           "FROM tip_bot.tip_list "
-                           "INNER JOIN tip_bot.users "
-                           "ON tip_bot.tip_list.receiver_id = tip_bot.users.user_id "
-                           "WHERE DATE(tip_bot.tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
-                           "AND tip_bot.users.register = 0 "
-                           "AND tip_bot.tip_list.processed = 2;")
+    tips_to_return_call = ("SELECT tip_list.dm_id, tip_list.sender_id, "
+                           "users.account, tip_list.amount "
+                           "FROM tip_list "
+                           "INNER JOIN users "
+                           "ON tip_list.receiver_id = users.user_id "
+                           "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                           "AND users.register = 0 "
+                           "AND tip_list.processed = 2;")
     tip_list = get_db_data(tips_to_return_call)
 
     for tip in tip_list:
@@ -193,7 +193,7 @@ def return_tips():
         sender_account_call = "SELECT account FROM users WHERE user_id = {}".format(sender_id)
         sender_account_info = get_db_data(sender_account_call)
         sender_account = sender_account_info[0][0]
-        #TODO: verify if donation works
+
         donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                    "WHERE user_id = {}".format(sender_id))
         donation_percent = float(donation_raw[0][0] * .01)
@@ -234,7 +234,7 @@ def return_tips():
             logging.info("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
         except nano.rpc.RPCException as e:
             logging.info("{}: Insufficient balance to return.  Descriptive error: {}".format(datetime.now(), e))
-            insufficient_balance_call = ("UPDATE tip_bot.tip_list "
+            insufficient_balance_call = ("UPDATE tip_list "
                                          "SET processed = 6 "
                                          "WHERE dm_id = %s;")
             insufficient_balance_values = [transaction_id,]
@@ -244,7 +244,7 @@ def return_tips():
             logging.info("{}: Unexpected error: {}".format(datetime.now(), f))
             continue
 
-        update_tip_call = ("UPDATE tip_bot.tip_list "
+        update_tip_call = ("UPDATE tip_list "
                            "SET processed = 9 "
                            "WHERE dm_id = %s;")
         update_tip_values = [transaction_id,]
