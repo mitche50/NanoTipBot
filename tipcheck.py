@@ -196,7 +196,7 @@ def return_tips():
 
         donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                    "WHERE user_id = {}".format(sender_id))
-        donation_percent = float(donation_raw[0][0] * .01)
+        donation_percent = Decimal(donation_raw[0][0] * .01)
 
         if amount * donation_percent >= MIN_TIP:
             donation = amount * donation_percent
