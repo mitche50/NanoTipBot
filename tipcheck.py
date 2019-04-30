@@ -209,11 +209,13 @@ def return_tips():
             donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
             send_amount = int((amount - donation) * CONVERT_MULTIPLIER[CURRENCY])
         else:
+            donation = 0
             donation_amount = 0
             send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
 
-        logging.info("donation amount: {}".format(donation_amount))
-        logging.info("send_amount: {}".format(send_amount))
+        logging.info("donation percent: {}".format(donation_percent))
+        logging.info("donation amount: {} - {}".format(donation, donation_amount))
+        logging.info("send_amount: {} - {}".format(amount, send_amount))
 
         receive_pending(receiver_account)
 
