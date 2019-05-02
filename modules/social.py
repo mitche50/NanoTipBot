@@ -280,8 +280,7 @@ def validate_tip_amount(message):
     try:
         message['tip_amount'] = Decimal(message['text'][message['starting_point']])
     except Exception:
-        logging.info("{}: Tip amount was not a number: {}".format(datetime.now(),
-                                                                  message['text'][message['starting_point']]))
+        logging.info("{}: Tip amount was not a number".format(datetime.now()))
         if message['system'] == 'twitter':
             bot_name = BOT_NAME_TWITTER
         else:
