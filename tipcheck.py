@@ -196,9 +196,9 @@ def return_tips():
 
         donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                    "WHERE user_id = {}".format(sender_id))
-        donation_percent = float(donation_raw[0][0] * .01)
+        donation_percent = Decimal(donation_raw[0][0] * .01)
 
-        if amount * donation_percent >= MIN_TIP:
+        if amount * donation_percent >= float(MIN_TIP):
             donation = amount * donation_percent
             if CURRENCY == 'banano':
                 donation = round(donation)
@@ -209,8 +209,13 @@ def return_tips():
             donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
             send_amount = int((amount - donation) * CONVERT_MULTIPLIER[CURRENCY])
         else:
+            donation = 0
             donation_amount = 0
             send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
+
+        logging.info("donation percent: {}".format(donation_percent))
+        logging.info("donation amount: {} - {}".format(donation, donation_amount))
+        logging.info("send_amount: {} - {}".format(amount, send_amount))
 
         receive_pending(receiver_account)
 
@@ -227,8 +232,9 @@ def return_tips():
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                      destination="{}".format(sender_account), amount=send_amount, work=work)
                 if donation_amount > 0:
+                    donation_work = get_pow(receiver_account)
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
-                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=work)
+                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=donation_work)
                     logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
 
             logging.info("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
