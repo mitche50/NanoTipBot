@@ -90,7 +90,7 @@ def send_returned_notice_to_receivers():
     """
     unregistered_users_call = ("SELECT DISTINCT tip_list.receiver_id, tip_list.system FROM tip_list "
                                "INNER JOIN users "
-                               "ON tip_list.receiver_id = users.user_id "
+                               "ON tip_list.receiver_id = users.user_id AND tip_list.system = users.system "
                                "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                                "AND users.register = 0 "
                                "AND tip_list.processed = 9;")
@@ -136,7 +136,7 @@ def send_returned_notice_to_senders():
     sender_return_notice_call = ("SELECT tip_list.sender_id, tip_list.system, sum(tip_list.amount) "
                                  "FROM tip_list "
                                  "INNER JOIN users "
-                                 "ON tip_list.receiver_id = users.user_id "
+                                 "ON tip_list.receiver_id = users.user_id AND tip_list.system = users.system "
                                  "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                                  "AND users.register = 0 "
                                  "AND tip_list.processed = 8 "
@@ -146,7 +146,7 @@ def send_returned_notice_to_senders():
     sender_return_names = ("SELECT tip_list.sender_id, tip_list.system, users.user_name "
                            "FROM tip_list "
                            "INNER JOIN users "
-                           "ON tip_list.receiver_id = users.user_id "
+                           "ON tip_list.receiver_id = users.user_id AND tip_list.system = users.system "
                            "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                            "AND users.register = 0 "
                            "AND tip_list.processed = 8;")
@@ -206,7 +206,7 @@ def return_tips():
                            "users.account, tip_list.amount, tip_list.system "
                            "FROM tip_list "
                            "INNER JOIN users "
-                           "ON tip_list.receiver_id = users.user_id "
+                           "ON tip_list.receiver_id = users.user_id AND tip_list.system = users.system "
                            "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
                            "AND users.register = 0 "
                            "AND tip_list.processed = 2;")
