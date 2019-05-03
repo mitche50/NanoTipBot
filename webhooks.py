@@ -699,7 +699,8 @@ def twitter_event_received():
                                                translations.maintenance_text[message['language']],
                                                message['system'])
                     else:
-                        api.create_favorite(message['id'])
+                        # Favoriting has been removed due to possible issues with Twitter automation rules.
+                        # api.create_favorite(message['id'])
                         modules.orchestration.tip_process(message, users_to_tip, request_json)
                 except Exception as e:
                     logging.info("Exception: {}".format(e))
