@@ -161,19 +161,49 @@ def send_returned_notice_to_senders():
             return_dict[sender_comp].append(sender[2])
 
     for sender in sender_return_list:
+        donation_amount, send_amount = calculate_donation_amount(sender[2], sender[0], sender[1])
         sender_comp = str(sender[0]) + "-" + str(sender[1])
-        logging.info("sender return list = {}".format(return_dict[sender_comp]))
+        logging.info("send amount in Nano = {}".format(Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY]))))
         send_dm(sender[0], "You've had tips returned to your account due to the following list of users "
                            "not registering: {}.  Your account has been credited {} {}.  Continue spreading the "
-                           "love or withdraw to your wallet!".format(return_dict[sender_comp], sender[2], CURRENCY.upper()),
+                           "love or withdraw to your wallet!".format(return_dict[sender_comp],
+                                                                     Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY])),
+                                                                     CURRENCY.upper()),
                 sender[1])
 
     mark_notified("senders")
 
 
+def calculate_donation_amount(amount, sender_id, system):
+    donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
+                               "WHERE user_id = {} AND system = '{}'".format(sender_id, system))
+    donation_percent = Decimal(str(donation_raw[0][0] * .01))
+
+    if amount * donation_percent >= float(MIN_TIP):
+        donation = amount * donation_percent
+        if CURRENCY == 'banano':
+            donation = round(donation)
+        else:
+            donation = round(donation, 5)
+
+        amount -= donation
+        donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
+        send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
+    else:
+        donation = 0
+        donation_amount = 0
+        send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
+
+    logging.info("donation percent: {}".format(donation_percent))
+    logging.info("donation amount: {} - {}".format(donation, donation_amount))
+    logging.info("send_amount: {} - {}".format(amount, send_amount))
+
+    return donation_amount, send_amount
+
+
 def return_tips():
     tips_to_return_call = ("SELECT tip_list.dm_id, tip_list.sender_id, "
-                           "users.account, tip_list.amount "
+                           "users.account, tip_list.amount, tip_list.system "
                            "FROM tip_list "
                            "INNER JOIN users "
                            "ON tip_list.receiver_id = users.user_id "
@@ -187,35 +217,15 @@ def return_tips():
         sender_id = tip[1]
         receiver_account = tip[2]
         amount = Decimal(str(tip[3]))
+        system = tip[4]
 
         logging.info("{}: Returning tip {}".format(datetime.now(), transaction_id))
 
-        sender_account_call = "SELECT account FROM users WHERE user_id = {}".format(sender_id)
+        sender_account_call = "SELECT account FROM users WHERE user_id = {} AND system = '{}'".format(sender_id, system)
         sender_account_info = get_db_data(sender_account_call)
         sender_account = sender_account_info[0][0]
 
-        donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
-                                   "WHERE user_id = {}".format(sender_id))
-        donation_percent = Decimal(str(donation_raw[0][0] * .01))
-
-        if amount * donation_percent >= float(MIN_TIP):
-            donation = amount * donation_percent
-            if CURRENCY == 'banano':
-                donation = round(donation)
-            else:
-                donation = round(donation, 5)
-
-            amount -= donation
-            donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
-            send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
-        else:
-            donation = 0
-            donation_amount = 0
-            send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
-
-        logging.info("donation percent: {}".format(donation_percent))
-        logging.info("donation amount: {} - {}".format(donation, donation_amount))
-        logging.info("send_amount: {} - {}".format(amount, send_amount))
+        donation_amount, send_amount = calculate_donation_amount(amount, sender_id, system)
 
         receive_pending(receiver_account)
 
