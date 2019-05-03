@@ -186,7 +186,7 @@ def return_tips():
         transaction_id = tip[0]
         sender_id = tip[1]
         receiver_account = tip[2]
-        amount = Decimal(tip[3])
+        amount = Decimal(str(tip[3]))
 
         logging.info("{}: Returning tip {}".format(datetime.now(), transaction_id))
 
@@ -196,18 +196,18 @@ def return_tips():
 
         donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                    "WHERE user_id = {}".format(sender_id))
-        donation_percent = Decimal(donation_raw[0][0] * .01)
+        donation_percent = Decimal(str(donation_raw[0][0] * .01))
 
         if amount * donation_percent >= float(MIN_TIP):
             donation = amount * donation_percent
             if CURRENCY == 'banano':
                 donation = round(donation)
             else:
-                donation = round(donation, 4)
+                donation = round(donation, 5)
 
             amount -= donation
             donation_amount = int(donation * CONVERT_MULTIPLIER[CURRENCY])
-            send_amount = int((amount - donation) * CONVERT_MULTIPLIER[CURRENCY])
+            send_amount = int(amount * CONVERT_MULTIPLIER[CURRENCY])
         else:
             donation = 0
             donation_amount = 0
