@@ -313,7 +313,7 @@ def auto_donation_process(message):
             # update the donation percentage
             auto_donate_call = ("UPDATE donation_info SET donation_percent = %s "
                                 "WHERE user_id = %s AND system = %s ")
-            auto_donate_values = [message['sender_id'], int(new_percent), message['system']]
+            auto_donate_values = [int(new_percent), message['sender_id'], message['system']]
             modules.db.set_db_data(auto_donate_call, auto_donate_values)
             modules.social.send_dm(message['sender_id'],
                                    translations.auto_donate_success[message['language']].format(int(new_percent)),
