@@ -53,7 +53,7 @@ rpc = nano.rpc.Client(NODE_IP)
 telegram_bot = telegram.Bot(token=TELEGRAM_KEY)
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
+logging.basicConfig(handlers=[logging.FileHandler('{}/tipreturn.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 
