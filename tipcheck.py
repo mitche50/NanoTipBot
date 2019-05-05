@@ -243,7 +243,7 @@ def return_tips():
                 if donation_amount > 0:
                     donation_work = get_pow(receiver_account)
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
-                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=donation_work)
+                                             destination="{}".format(BOT_ACCOUNT), amount=donation_amount, work=donation_work)
                     logging.info("{}: Donation sent from account {} under hash: {}".format(datetime.now(), receiver_account,
                                                                                            donation_hash))
 

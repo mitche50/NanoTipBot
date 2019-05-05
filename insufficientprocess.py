@@ -100,7 +100,7 @@ def return_tips():
             else:
                 if donation_amount > 0:
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
-                                             destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=work)
+                                             destination="{}".format(BOT_ACCOUNT), amount="{}".format(donation_amount), work=work)
                     logging.info("{}: Donation sent from account {} under hash: {}".format(datetime.now(), receiver_account,
                                                                                            donation_hash))
 
@@ -112,9 +112,15 @@ def return_tips():
                                                                                                                                     e))
             insufficient_balance_check = rpc.account_balance(receiver_account)
             logging.info("Current balance: {}".format(insufficient_balance_check))
-            insufficient_balance_call = ("UPDATE tip_list "
-                                         "SET processed = 6 "
-                                         "WHERE dm_id = %s;")
+            if int(insufficient_balance_check['balance']) == 0:
+                insufficient_balance_call = ("UPDATE tip_list "
+                                             "SET processed = 9 "
+                                             "WHERE dm_id = %s;")
+            else:
+                insufficient_balance_call = ("UPDATE tip_list "
+                                             "SET processed = 6 "
+                                             "WHERE dm_id = %s;")
+
             insufficient_balance_values = [transaction_id,]
             set_db_data(insufficient_balance_call, insufficient_balance_values)
             continue
