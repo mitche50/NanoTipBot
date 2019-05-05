@@ -132,5 +132,5 @@ def return_tips():
             logging.info("{}: Error updating tip to returned: {}".format(datetime.now(), e))
 
 
-def main():
-    return_tips()
+logging.info("handling insufficient tips")
+return_tips()
