@@ -130,3 +130,7 @@ def return_tips():
             set_db_data(update_tip_call, update_tip_values)
         except Exception as e:
             logging.info("{}: Error updating tip to returned: {}".format(datetime.now(), e))
+
+
+def main():
+    return_tips()
