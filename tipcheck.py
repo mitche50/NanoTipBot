@@ -237,7 +237,8 @@ def return_tips():
                 if donation_amount > 0:
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                              destination="{}".format(BOT_ACCOUNT), amount=donation_amount)
-                    logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
+                    logging.info("{}: Donation sent from account {} under hash: {}".format(datetime.now(), receiver_account,
+                                                                                           donation_hash))
             else:
                 send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                      destination="{}".format(sender_account), amount=send_amount, work=work)
@@ -245,11 +246,18 @@ def return_tips():
                     donation_work = get_pow(receiver_account)
                     donation_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(receiver_account),
                                              destination="{}".format(BOT_ACCOUNT), amount=send_amount, work=donation_work)
-                    logging.info("{}: Donation sent under hash: {}".format(datetime.now(), donation_hash))
+                    logging.info("{}: Donation sent from account {} under hash: {}".format(datetime.now(), receiver_account,
+                                                                                           donation_hash))
 
             logging.info("{}: Tip returned under hash: {}".format(str(datetime.now()), send_hash))
         except nano.rpc.RPCException as e:
-            logging.info("{}: Insufficient balance to return.  Descriptive error: {}".format(datetime.now(), e))
+            logging.info("{}: Insufficient balance to return {} raw and {} donation from account {}.  Descriptive error: {}".format(datetime.now(),
+                                                                                                                                    send_amount,
+                                                                                                                                    donation_amount,
+                                                                                                                                    receiver_account,
+                                                                                                                                    e))
+            insufficient_balance_check = rpc.account_balance(receiver_account)
+            logging.info("Current balance: {}".format(insufficient_balance_check))
             insufficient_balance_call = ("UPDATE tip_list "
                                          "SET processed = 6 "
                                          "WHERE dm_id = %s;")
