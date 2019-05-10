@@ -181,17 +181,38 @@ def send_tip(message, users_to_tip, tip_index):
         logging.info("work: {}".format(work))
         if work == '':
             logging.info("{}: processed without work".format(datetime.now()))
-            message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
-                                            destination="{}".format(users_to_tip[tip_index]['receiver_account']),
-                                            amount="{}".format(int(message['tip_amount_raw'])),
-                                            id="tip-{}".format(message['tip_id']))
+            send_data = {
+                'action': 'send',
+                'wallet': WALLET,
+                'source': message['sender_account'],
+                'destination': users_to_tip[tip_index]['receiver_account'],
+                'amount': int(message['tip_amount_raw']),
+                'id': 'tip-{}'.format(message['tip_id'])
+            }
+            json_request = json.dumps(send_data)
+            r = requests.post('{}'.format(NODE_IP), data=json_request)
+            rx = r.json()
+            logging.info("send return: {}".format(rx))
+            message['send_hash'] = rx['block']
+
         else:
             logging.info("{}: processed with work: {}".format(datetime.now(), work))
-            message['send_hash'] = rpc.send(wallet="{}".format(WALLET), source="{}".format(message['sender_account']),
-                                            destination="{}".format(users_to_tip[tip_index]['receiver_account']),
-                                            amount="{}".format(int(message['tip_amount_raw'])),
-                                            work=work,
-                                            id="tip-{}".format(message['tip_id']))
+            send_data = {
+                'action': 'send',
+                'wallet': WALLET,
+                'source': message['sender_account'],
+                'destination': users_to_tip[tip_index]['receiver_account'],
+                'amount': int(message['tip_amount_raw']),
+                'id': 'tip-{}'.format(message['tip_id']),
+                'work': work
+            }
+            logging.info("send data: {}".format(send_data))
+            json_request = json.dumps(send_data)
+            r = requests.post('{}'.format(NODE_IP), data=json_request)
+            rx = r.json()
+            logging.info("send return: {}".format(rx))
+            message['send_hash'] = rx['block']
+
         # Update the DB
         message['text'] = strip_emoji(message['text'])
         modules.db.set_db_data_tip(message, users_to_tip, tip_index)
