@@ -693,10 +693,10 @@ def tip_process(message, users_to_tip, request_json):
                                    .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                            message['send_hash']), message['system'])
         except KeyError:
-            modules.social.send_reply(message, translations.tip_success['en']
+            modules.social.send_reply(message, translations.tip_success_dm['en']
                                       .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                               message['send_hash']))
-            modules.social.send_dm(message['sender_id'], translations.tip_success['en']
+            modules.social.send_dm(message['sender_id'], translations.tip_success_dm['en']
                                    .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                            message['send_hash']), message['system'])
 
