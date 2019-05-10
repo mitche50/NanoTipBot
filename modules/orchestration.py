@@ -246,7 +246,8 @@ def parse_action(message):
                 else:
                     auto_donation_process(message)
             except Exception as e:
-                logging.info("{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
+                logging.info(
+                    "{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
             os._exit(0)
         else:
             return '', HTTPStatus.OK
@@ -309,7 +310,7 @@ def auto_donation_process(message):
                                    translations.auto_donate_notanum[message['language']],
                                    message['system'])
             return ''
-        if new_percent >= 0 and new_percent <= 100:
+        if 0 <= new_percent <= 100:
             # update the donation percentage
             auto_donate_call = ("UPDATE donation_info SET donation_percent = %s "
                                 "WHERE user_id = %s AND system = %s ")
@@ -318,7 +319,6 @@ def auto_donation_process(message):
             modules.social.send_dm(message['sender_id'],
                                    translations.auto_donate_success[message['language']].format(int(new_percent)),
                                    message['system'])
-
 
         else:
             # send a message that the new percentage must be greater than or equal to zero, but less than or equal to 100
@@ -518,7 +518,8 @@ def withdraw_process(message):
                     withdraw_amount_raw = int(withdraw_amount * CONVERT_MULTIPLIER[CURRENCY])
                     if Decimal(withdraw_amount_raw) > Decimal(balance_return['balance']):
                         modules.social.send_dm(message['sender_id'],
-                                               translations.not_enough_balance_text[message['language']].format(CURRENCY),
+                                               translations.not_enough_balance_text[message['language']].format(
+                                                   CURRENCY),
                                                message['system'])
                         return
                 else:
@@ -667,20 +668,37 @@ def tip_process(message, users_to_tip, request_json):
             modules.social.send_reply(message, translations.multi_tip_success[message['language']]
                                       .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                               message['sender_account']))
+            modules.social.send_dm(message['sender_id'],
+                                   translations.multi_tip_success_dm[message['language']].format(
+                                       message['tip_amount_text'],
+                                       CURRENCY.upper(), EXPLORER,
+                                       message['sender_account']),
+                                   message['system'])
         except KeyError:
             modules.social.send_reply(message, translations.multi_tip_success['en']
                                       .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                               message['sender_account']))
+            modules.social.send_dm(message['sender_id'],
+                                   translations.multi_tip_success_dm['en'].format(message['tip_amount_text'],
+                                                                                  CURRENCY.upper(), EXPLORER,
+                                                                                  message['sender_account']),
+                                   message['system'])
 
     elif len(users_to_tip) == 1:
         try:
             modules.social.send_reply(message, translations.tip_success[message['language']]
                                       .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                               message['send_hash']))
+            modules.social.send_dm(message['sender_id'], translations.tip_success[message['language']]
+                                   .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                           message['send_hash']), message['system'])
         except KeyError:
             modules.social.send_reply(message, translations.tip_success['en']
                                       .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                               message['send_hash']))
+            modules.social.send_dm(message['sender_id'], translations.tip_success['en']
+                                   .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
+                                           message['send_hash']), message['system'])
 
 
 def language_process(message, new_language):

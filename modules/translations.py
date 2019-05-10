@@ -213,7 +213,7 @@ no_users_text = {
           'с командата {0} {1} 1234 @username'
 }
 # 8
-multi_tip_success = {
+multi_tip_success_dm = {
     'en': 'You have successfully sent your {0} ${1} tips.  '
           'Check your account at {2}explorer/account/{3}',
     'es': 'Has enviado exitosamente tus tips de {0} ${1}. Revisa tu cuenta en '
@@ -241,8 +241,28 @@ multi_tip_success = {
     'pt-br': 'Você enviou com sucesso suas {0} gorjetas em ${1}. Verifique sua conta em {2}explorer/account/{3}',
     'bg': 'Вие успешно изпратихте вашия {0} ${1} тип.  Проверете вашия акаунт на {2}explorer/account/{3}'
 }
+multi_tip_success = {
+    'en': 'You have successfully sent your {0} ${1} tips.',
+    'es': 'Has enviado exitosamente tus tips de {0} ${1}.',
+    'nl': 'Je hebt jouw {0} ${1} tips met succes verzonden.',
+    'ja': '',
+    'zh-t': '成功發送了{0} ${1} 的小費。',
+    'zh-s': '成功发送了{0} ${1} 的小费。',
+    'fr': 'Vous avez envoyé vos tips de {0} ${1} avec succès.',
+    'pt': 'As tuas tips de {0} ${1} cada foram enviadas.',
+    'th': '',
+    'de': '',
+    'id': 'Anda telah berhasil mengirim {0} ${1} tips Anda.',
+    'vt': '',
+    'ru': 'Вы успешно отправили свои {0} ${1} тип.',
+    'sv': '',
+    'it': 'Hai inviato con successo le tue mance di {0} ${1}.',
+    'tr': 'Başarılı bir şekilde {0} ${1} tip yolladınız.',
+    'pt-br': 'Você enviou com sucesso suas {0} gorjetas em ${1}.',
+    'bg': 'Вие успешно изпратихте вашия {0} ${1} тип.'
+}
 # 9
-tip_success = {
+tip_success_dm = {
     'en': 'You have successfully sent your {0} ${1} tip.  '
           'Check out this transaction at {2}explorer/block/{3}',
     'es': 'Has enviado exitosamente tu tip de {0} ${1}. Verifica esta transacción en '
@@ -269,6 +289,27 @@ tip_success = {
     'tr': 'Başarılı bir şekilde {0} ${1} tip yolladınız. Bu işlemi kontrol etmek için {2}explorer/block/{3}',
     'pt-br': 'Você enviou com sucesso suas {0} gorjetas em ${1}. Confira esta transação em {2}explorer/block/{3}',
     'bg': 'Вие успешно изпратихте вашия {0} ${1} тип.  Проверете транзакцията на {2}explorer/block/{3}'
+}
+
+tip_success = {
+    'en': 'You have successfully sent your {0} ${1} tip. Hash: {3}',
+    'es': 'Has enviado exitosamente tu tip de {0} ${1}. Hash: {3}',
+    'nl': 'Je hebt jouw {0} ${1} tip succesvol verzonden. Hash: {3}',
+    'ja': '',
+    'zh-t': '成功發送了{0} ${1} 的小費。您可以在 {2}explorer/block/{3} 查看這筆交易。',
+    'zh-s': '成功发送了{0} ${1} 的小费。您可以在 {2}explorer/block/{3} 查看这笔交易。',
+    'fr': 'Vous avez envoyé votre tip de {0} ${1} avec succès. Hash: {3}',
+    'pt': 'A tua tip de {0} ${1} foi enviada com sucesso. Hash: {3}',
+    'th': '',
+    'de': '',
+    'id': 'Anda telah berhasil mengirim tip {0} ${1} Anda. Hash: {3}',
+    'vt': '',
+    'ru': 'Вы успешно отправили свой {0} ${1} тип. Hash: {3}',
+    'sv': '',
+    'it': 'Hai inviato con successo la tua mancia di {0} ${1}. Hash: {3}',
+    'tr': 'Başarılı bir şekilde {0} ${1} tip yolladınız. Hash: {3}',
+    'pt-br': 'Você enviou com sucesso suas {0} gorjetas em ${1}. Hash: {3}',
+    'bg': 'Вие успешно изпратихте вашия {0} ${1} тип. Hash: {3}'
 }
 # 10
 not_a_number_text = {
