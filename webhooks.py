@@ -455,6 +455,9 @@ def telegram_event():
         if request_json['message']['chat']['type'] == 'private':
             logging.info("Direct message received in Telegram.  Processing.")
             message['sender_id'] = request_json['message']['from']['id']
+            bot_ids = ['1115793994024464384', '894722023', '966739513195335680', '624103005']
+            if message['sender_id'] in bot_ids:
+                return 'ok'
             try:
                 message['sender_screen_name'] = request_json['message']['from']['username']
             except KeyError:
@@ -638,10 +641,9 @@ def twitter_event_received():
         message_object = request_json['direct_message_events'][0].get('message_create', {})
 
         message['sender_id'] = message_object.get('sender_id')
-
-        if message['sender_id'] == BOT_ID_TWITTER:
-            logging.info("Message from bot ignored.")
-            return '', HTTPStatus.OK
+        bot_ids = ['1115793994024464384', '894722023', '966739513195335680', '624103005']
+        if message['sender_id'] in bot_ids:
+            return
 
         user_info = api.get_user(message['sender_id'])
         message['sender_screen_name'] = user_info.screen_name
