@@ -170,15 +170,18 @@ def send_tip(message, users_to_tip, tip_index):
             users_to_tip[tip_index]['receiver_account'] = receiver_account_data[0][0]
 
         # Send the tip
-        message['tip_id'] = "{}{}".format(message['id'], tip_index)
+        if message['system'] == 'telegram':
+            message['tip_id'] = "{}-{}-{}{}".format(message['system'], message['chat_id'], message['id'], tip_index)
+        else:
+            message['tip_id'] = "{}-{}{}".format(message['system'], message['id'], tip_index)
 
         work = get_pow(message['sender_account'])
-        logging.info("Sending Tip:")
-        logging.info("From: {}".format(message['sender_account']))
-        logging.info("To: {}".format(users_to_tip[tip_index]['receiver_account']))
-        logging.info("amount: {:f}".format(message['tip_amount_raw']))
-        logging.info("id: {}".format(message['tip_id']))
-        logging.info("work: {}".format(work))
+        logging.info("{}: Sending Tip:".format(datetime.now()))
+        logging.info("{}: From: {}".format(datetime.now(), message['sender_account']))
+        logging.info("{}: To: {}".format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
+        logging.info("{}: amount: {:f}".format(datetime.now(), message['tip_amount_raw']))
+        logging.info("{}: id: {}".format(datetime.now(), message['tip_id']))
+        logging.info("{}: work: {}".format(datetime.now(), work))
         if work == '':
             logging.info("{}: processed without work".format(datetime.now()))
             send_data = {
@@ -206,7 +209,7 @@ def send_tip(message, users_to_tip, tip_index):
                 'id': 'tip-{}'.format(message['tip_id']),
                 'work': work
             }
-            logging.info("send data: {}".format(send_data))
+            logging.info("{}: send data: {}".format(datetime.now(), send_data))
             json_request = json.dumps(send_data)
             r = requests.post('{}'.format(NODE_IP), data=json_request)
             rx = r.json()
