@@ -233,11 +233,12 @@ def send_tip(message, users_to_tip, tip_index):
             else:
                 users_to_tip[tip_index]['balance'] = str(users_to_tip[tip_index]['balance'])
 
-            # Send a DM to the receiver
-            modules.social.send_dm(users_to_tip[tip_index]['receiver_id'],
-                                   translations.receiver_tip_text[users_to_tip[tip_index]['receiver_language']]
-                                   .format(message['sender_screen_name'], message['tip_amount_text'],
-                                           CURRENCY.upper(), CURRENCY.upper(), URL), message['system'])
+            # Send a DM to the receiver.  Twitter is removed due to spam issues.
+            if message['system'] != 'twitter':
+                modules.social.send_dm(users_to_tip[tip_index]['receiver_id'],
+                                       translations.receiver_tip_text[users_to_tip[tip_index]['receiver_language']]
+                                       .format(message['sender_screen_name'], message['tip_amount_text'],
+                                               CURRENCY.upper(), CURRENCY.upper(), URL), message['system'])
 
         except Exception as e:
             logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
