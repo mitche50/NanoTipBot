@@ -291,7 +291,10 @@ def validate_tip_amount(message):
         return message
 
     if Decimal(message['tip_amount']) < Decimal(MIN_TIP):
-        send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP, CURRENCY.upper()))
+        try:
+            send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP, CURRENCY.upper()))
+        except Exception as e:
+            logging.info("{}: Error sending reply for a tip below the minimum.".format(datetime.now()))
 
         message['tip_amount'] = -1
         logging.info("{}: User tipped less than {} {}.".format(datetime.now(), MIN_TIP, CURRENCY.upper()))

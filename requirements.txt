@@ -1,5 +1,7 @@
 configparser
 requests
+redis
+rq
 python-telegram-bot
 pyqrcode
 tweepy
