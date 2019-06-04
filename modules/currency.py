@@ -112,6 +112,8 @@ def get_pow(sender_account):
             hash = rx['frontier']
         else:
             hash = sender_account
+
+        logging.info("{}: hash retrieved from account info: {}".format(datetime.now(), hash))
     except Exception as e:
         logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
