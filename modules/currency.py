@@ -130,6 +130,8 @@ def get_pow(sender_account):
         if 'work' in rx.keys():
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))
+        else:
+            logging.info("{}: work not in keys, response from server: {}".format(datetime.now(), rx))
     except Exception as e:
         logging.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
         pass
