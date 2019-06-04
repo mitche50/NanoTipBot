@@ -370,6 +370,7 @@ def balance_process(message):
                                            CURRENCY.upper()),
                                    message['system'])
             logging.info("{}: Balance Message Sent!".format(datetime.now()))
+            return ''
 
 
 def register_process(message):
