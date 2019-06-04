@@ -111,7 +111,11 @@ def get_pow(sender_account):
         if 'frontier' in rx.keys():
             hash = rx['frontier']
         else:
-            hash = sender_account
+            public_key_data = {'action': 'account_key', 'account': sender_account}
+            json_request = json.dumps(public_key_data)
+            r = requests.post('{}'.format(NODE_IP), data=json_request)
+            rx = r.json()
+            hash = rx['key']
 
         logging.info("{}: hash retrieved from account info: {}".format(datetime.now(), hash))
     except Exception as e:
