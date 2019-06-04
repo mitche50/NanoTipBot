@@ -104,9 +104,14 @@ def get_pow(sender_account):
     """
     logging.info("{}: in get_pow".format(datetime.now()))
     try:
-        account_info = rpc.account_info(account="{}".format(sender_account))
-        hash = account_info['frontier']
-        logging.info("{}: account: {} - frontier: {}".format(datetime.now(), sender_account, hash))
+        account_info_call = {'action': 'account_info', 'account': sender_account}
+        json_request = json.dumps(account_info_call)
+        r = requests.post('{}'.format(NODE_IP), data=json_request)
+        rx = r.json()
+        if 'frontier' in rx.keys():
+            hash = rx['frontier']
+        else:
+            hash = sender_account
     except Exception as e:
         logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
