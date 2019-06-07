@@ -69,6 +69,7 @@ EXPLORER = config.get('routes', '{}_explorer'.format(CURRENCY))
 # DB Data
 DB_SCHEMA = config.get(CURRENCY, 'schema')
 
+
 # Set up Flask routing
 app = Flask(__name__)
 
@@ -478,6 +479,14 @@ def telegram_event():
 
             logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
 
+            # Update DB with new DM
+            dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
+                              "VALUES (%s, 0, %s, %s, 'telegram')")
+            dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
+            err = modules.db.set_db_data(dm_insert_call, dm_insert_values)
+            if err is not None:
+                return 'ok'
+
             modules.orchestration.parse_action(message)
 
         elif (request_json['message']['chat']['type'] == 'supergroup' or
@@ -656,8 +665,8 @@ def twitter_event_received():
         logging.info("Processing direct message.")
 
         # Update DB with new DM
-        dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text) "
-                          "VALUES (%s, 0, %s, %s)")
+        dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
+                          "VALUES (%s, 0, %s, %s, 'twitter')")
         dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
         err = modules.db.set_db_data(dm_insert_call, dm_insert_values)
         if err is not None:
@@ -726,6 +735,7 @@ def twitter_event_received():
         follow_object = request_json['follow_events'][0]
         follow_source = follow_object.get('source', {})
         message['sender_id'] = follow_source.get('id')
+        modules.social.get_language(message)
 
         modules.orchestration.help_process(message)
 
@@ -743,5 +753,6 @@ def initdb_command():
 
 if __name__ == "__main__":
     modules.db.db_init()
+    logging.info("db initialized from wsgi")
     modules.social.telegram_set_webhook()
     app.run(host='0.0.0.0')

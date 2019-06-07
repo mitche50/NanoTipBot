@@ -279,6 +279,24 @@ def return_tips():
     send_returned_notice_to_senders()
 
 
+def return_unused_balance():
+    get_inactive_users = ("SELECT user_id, system, account "
+                          " FROM tip_bot.return_address "
+                          " WHERE last_action < DATE_SUB(now(), interval 60 day) "
+                          "     AND account IS NOT NULL;")
+    inactive_users = get_db_data(get_inactive_users)
+
+    for user in inactive_users:
+        print("user id: {}".format(user[0]))
+        print("user system: {}".format(user[1]))
+        print("return account: {}".format(user[2]))
+        get_tip_account = ("SELECT account FROM users "
+                           "WHERE user_id = {} AND system = '{}'".format(user[0], user[1]))
+        tip_account_data = get_db_data(get_tip_account)
+        tip_account = tip_account_data[0][0]
+        print("tip account: {}".format(tip_account))
+
+
 def main():
     # Check for users who need reminders
     unregistered_user_reminder(int(10), "Just a reminder that someone sent you a tip and you haven't registered your account yet!  Reply to this message with !register to do so, then !help to see all my commands!")
@@ -289,6 +307,8 @@ def main():
     return_tips()
 
     logging.info("{}: completed check for unregistered users.".format(datetime.now()))
+
+    return_unused_balance()
 
 
 main()

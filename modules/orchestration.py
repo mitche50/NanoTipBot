@@ -1,6 +1,8 @@
 import configparser
+import json
 import logging
 import os
+import requests
 from datetime import datetime
 from decimal import Decimal
 from http import HTTPStatus
@@ -43,6 +45,13 @@ rpc = nano.rpc.Client(NODE_IP)
 
 
 def parse_action(message):
+    # If the bot is in maintenance status, send a message and return.
+    bot_status = config.get('main', 'bot_status')
+    if bot_status == 'maintenance':
+        modules.social.send_dm(message['sender_id'],
+                               translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                               message['system'])
+        return ''
     # Set tip commands
     if CURRENCY == 'banano':
         tip_commands = modules.translations.banano_tip_commands['en']
@@ -75,13 +84,7 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    balance_process(message)
+                balance_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -94,13 +97,7 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    register_process(message)
+                register_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -128,13 +125,7 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    withdraw_process(message)
+                withdraw_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -147,13 +138,7 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    donate_process(message)
+                donate_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -192,21 +177,15 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                try:
+                    new_language = message['text'].split(' ')[1].lower()
+                    if new_language == 'chinese':
+                        new_language += ' ' + message['text'].split(' ')[2].lower()
+                    language_process(message, new_language)
+                except Exception as f:
+                    logging.info("{}: Error in language process: {}".format(datetime.now(), f))
+                    modules.social.send_dm(message['sender_id'], translations.missing_language[message['language']],
                                            message['system'])
-                else:
-                    try:
-                        new_language = message['text'].split(' ')[1].lower()
-                        if new_language == 'chinese':
-                            new_language += ' ' + message['text'].split(' ')[2].lower()
-                        language_process(message, new_language)
-                    except Exception as f:
-                        logging.info("{}: Error in language process: {}".format(datetime.now(), f))
-                        modules.social.send_dm(message['sender_id'], translations.missing_language[message['language']],
-                                               message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -218,13 +197,7 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    language_list_process(message)
+                language_list_process(message)
             except Exception as e:
                 logging.info("Exception: {}".format(e))
                 raise e
@@ -238,16 +211,24 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                bot_status = config.get('main', 'bot_status')
-                if bot_status == 'maintenance':
-                    modules.social.send_dm(message['sender_id'],
-                                           translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                           message['system'])
-                else:
-                    auto_donation_process(message)
+                auto_donation_process(message)
             except Exception as e:
                 logging.info(
                     "{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
+            os._exit(0)
+        else:
+            return '', HTTPStatus.OK
+
+    elif message['dm_action'] in translations.set_return_commands['en'] or \
+            message['dm_action'] in translations.set_return_commands[message['language']]:
+        logging.info("set return address command identified")
+        new_pid = os.fork()
+        if new_pid == 0:
+            try:
+                set_return_address_process(message)
+            except Exception as e:
+                logging.info(
+                    "{}: Exception in set_return_address_process section of parse_action: {}".format(datetime.now(), e))
             os._exit(0)
         else:
             return '', HTTPStatus.OK
@@ -702,6 +683,42 @@ def tip_process(message, users_to_tip, request_json):
                 modules.social.send_dm(message['sender_id'], translations.tip_success_dm['en']
                                        .format(message['tip_amount_text'], CURRENCY.upper(), EXPLORER,
                                                message['send_hash']), message['system'])
+
+
+def set_return_address_process(message):
+    """
+    Sets the return address for inactive accounts.
+    """
+    logging.info("return address process activated.")
+    if len(message['dm_array']) <= 1:
+        modules.social.send_dm(message['sender_id'],
+                               translations.set_return_invalid_account[message['language']],
+                               message['system'])
+        return
+    check_address_data = {'action': 'validate_account_number', 'account': message['dm_array'][1]}
+    json_request = json.dumps(check_address_data)
+    r = requests.post('{}'.format(NODE_IP), data=json_request)
+    rx = r.json()
+    logging.info("request return: {}".format(rx))
+    if rx['valid'] == '0':
+        modules.social.send_dm(message['sender_id'],
+                               translations.set_return_invalid_account[message['language']],
+                               message['system'])
+        return
+    else:
+        set_return_address_call = "UPDATE return_address SET account = %s WHERE system = %s AND user_id = %s "
+        set_return_address_values = [message['dm_array'][1], message['system'], message['sender_id']]
+        logging.info("set_return_address_call: {}".format(set_return_address_call))
+        logging.info("set_return_address_values: {}".format(set_return_address_values))
+        modules.db.set_db_data(set_return_address_call, set_return_address_values)
+        logging.info("{}: {} return address set for user {} as {}".format(datetime.now(),
+                                                                          message['system'],
+                                                                          message['sender_id'],
+                                                                          message['dm_array'][1]))
+        modules.social.send_dm(message['sender_id'],
+                               translations.set_return_success[message['language']].format(message['dm_array'][1]),
+                               message['system'])
+    return
 
 
 def language_process(message, new_language):

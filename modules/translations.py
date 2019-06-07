@@ -1413,6 +1413,48 @@ auto_donate_success = {
     'pt-br': 'You have successfully updated your donation percentage to {0}%.',
     'bg': 'You have successfully updated your donation percentage to {0}%.'
 }
+# 38
+set_return_invalid_account = {
+    'en': 'Error: Invalid account number.  Please resend with a valid account.',
+    'es': 'Error: Invalid account number.  Please resend with a valid account.',
+    'nl': 'Error: Invalid account number.  Please resend with a valid account.',
+    'ja': 'Error: Invalid account number.  Please resend with a valid account.',
+    'zh-t': 'Error: Invalid account number.  Please resend with a valid account.',
+    'zh-s': 'Error: Invalid account number.  Please resend with a valid account.',
+    'fr': 'Error: Invalid account number.  Please resend with a valid account.',
+    'pt': 'Error: Invalid account number.  Please resend with a valid account.',
+    'th': 'Error: Invalid account number.  Please resend with a valid account.',
+    'de': 'Error: Invalid account number.  Please resend with a valid account.',
+    'id': 'Error: Invalid account number.  Please resend with a valid account.',
+    'vt': 'Error: Invalid account number.  Please resend with a valid account.',
+    'ru': 'Error: Invalid account number.  Please resend with a valid account.',
+    'sv': 'Error: Invalid account number.  Please resend with a valid account.',
+    'it': 'Error: Invalid account number.  Please resend with a valid account.',
+    'tr': 'Error: Invalid account number.  Please resend with a valid account.',
+    'pt-br': 'Error: Invalid account number.  Please resend with a valid account.',
+    'bg': 'Error: Invalid account number.  Please resend with a valid account.'
+}
+# 39
+set_return_success = {
+    'en': 'You have successfully set your return address to {0}',
+    'es': 'You have successfully set your return address to {0}',
+    'nl': 'You have successfully set your return address to {0}',
+    'ja': 'You have successfully set your return address to {0}',
+    'zh-t': 'You have successfully set your return address to {0}',
+    'zh-s': 'You have successfully set your return address to {0}',
+    'fr': 'You have successfully set your return address to {0}',
+    'pt': 'You have successfully set your return address to {0}',
+    'th': 'You have successfully set your return address to {0}',
+    'de': 'You have successfully set your return address to {0}',
+    'id': 'You have successfully set your return address to {0}',
+    'vt': 'You have successfully set your return address to {0}',
+    'ru': 'You have successfully set your return address to {0}',
+    'sv': 'You have successfully set your return address to {0}',
+    'it': 'You have successfully set your return address to {0}',
+    'tr': 'You have successfully set your return address to {0}',
+    'pt-br': 'You have successfully set your return address to {0}',
+    'bg': 'You have successfully set your return address to {0}'
+}
 
 language_list = (
     'Bulgarian - български език\n'
@@ -1664,6 +1706,35 @@ private_tip_commands = {
 
 auto_donate_commands = {
     'en': ['!setdonation', '!sd', '/setdonation', '/sd'],
+    'es': [
+        # Users said they would prefer english commands
+    ],
+    'nl': [
+        # Users said they would prefer english commands
+    ],
+    'ja': [],
+    'zh-t': [],
+    'zh-s': [],
+    'fr': [
+        # Users said they would prefer english commands
+    ],
+    'pt': [],
+    'th': [],
+    'de': [],
+    'id': [
+        # Users said they would prefer english commands
+    ],
+    'vt': [],
+    'ru': [],
+    'sv': [],
+    'it': [],
+    'tr': [],
+    'pt-br': [],
+    'bg': []
+}
+
+set_return_commands = {
+    'en': ['!setreturn', '!sr', '/setreturn', '/sr'],
     'es': [
         # Users said they would prefer english commands
     ],

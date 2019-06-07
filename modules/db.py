@@ -32,6 +32,7 @@ def db_init():
         create_db()
     logging.info("db did exist: {}".format(DB_SCHEMA))
     create_tables()
+    create_triggers()
 
 
 def check_db_exist():
@@ -67,6 +68,44 @@ def check_table_exists(table_name):
     db_cursor.execute(sql)
     result = db_cursor.fetchall()
     return result
+
+def create_triggers():
+    db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
+                         charset="utf8mb4")
+    db_cursor = db.cursor()
+    db_cursor.execute("DROP TRIGGER IF EXISTS users_AFTER_INSERT;")
+    db_cursor.execute("DROP TRIGGER IF EXISTS tip_list_AFTER_INSERT;")
+    db_cursor.execute("DROP TRIGGER IF EXISTS dm_list_AFTER_INSERT;")
+    user_trigger = """
+                   CREATE TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW 
+                   BEGIN 
+                       INSERT INTO `languages` (`user_id`, `system`) 
+                       VALUES (NEW.`user_id`, NEW.`system`);
+                       INSERT INTO `return_address` (`user_id`, `system`, `last_action`) 
+                       VALUES (NEW.`user_id`, NEW.`system`, now());
+                   END
+                   """
+    tip_list_trigger = """
+                       CREATE DEFINER = CURRENT_USER TRIGGER `tip_list_AFTER_INSERT` AFTER INSERT ON `tip_list` FOR EACH ROW 
+                       BEGIN 
+                           UPDATE `return_address` SET `last_action` = now() 
+                           WHERE `user_id` = new.`sender_id` 
+                           AND `system` = new.`system`;
+                       END
+                       """
+    dm_list_trigger = """
+                      CREATE TRIGGER `dm_list_AFTER_INSERT` AFTER INSERT ON `dm_list` FOR EACH ROW 
+                      BEGIN 
+                          UPDATE `return_address` SET `last_action` = now() 
+                          WHERE `user_id` = new.`sender_id` 
+                          AND `system` = new.`system`;
+                      END;
+                      """
+
+    db_cursor.execute(user_trigger)
+    db_cursor.execute(tip_list_trigger)
+    db_cursor.execute(dm_list_trigger)
+    logging.info("Triggers set.")
 
 
 def create_tables():
@@ -161,24 +200,40 @@ def create_tables():
         if not check_exists:
             # create languages table
             sql = """
-            CREATE TABLE `languages` (
-              `user_id` bigint(255) NOT NULL,
-              `language_code` varchar(2) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'en',
-              `system` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
-              PRIMARY KEY (`user_id`),
-              UNIQUE KEY `user_id_UNIQUE` (`user_id`),
-              CONSTRAINT `user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-            """
+                   CREATE TABLE IF NOT EXISTS `languages` (
+                     `user_id` bigint(255) NOT NULL,
+                     `language_code` varchar(2) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'en',
+                     `system` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
+                     PRIMARY KEY (`user_id`),
+                     UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+                     CONSTRAINT `user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                   """
             db_cursor.execute(sql)
             logging.info("Checking if languages table was created: {}".format(
                 check_table_exists('languages')))
+
+        check_exists = check_table_exists('return_address')
+        if not check_exists:
+            # create return_address table
+            sql = """
+                  CREATE TABLE IF NOT EXISTS `return_address` (
+                    `user_id` bigint(255) NOT NULL,
+                    `system` varchar(45) NOT NULL,
+                    `account` varchar(100) DEFAULT NULL,
+                    `last_action` datetime DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (`user_id`,`system`)
+                  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+                   """
+            db_cursor.execute(sql)
+            logging.info("Checking if return_address table was created: {}".format(
+                check_table_exists('return_address')))
 
         check_exists = check_table_exists('spare_accounts')
         if not check_exists:
             # create spare_accounts table
             sql= """
-            CREATE TABLE `spare_accounts` (
+            CREATE TABLE IF NOT EXISTS `spare_accounts` (
              `account` varchar(100) NOT NULL,
              PRIMARY KEY (`account`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
