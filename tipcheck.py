@@ -3,13 +3,20 @@
 # DEPENDENCIES =========================================
 from datetime import datetime
 from decimal import Decimal
-from TwitterAPI import TwitterAPI
+
+import configparser
+import json
+import logging
+import nano
+import os
+import requests
 import telegram
+import tweepy
+from TwitterAPI import TwitterAPI
+
+from modules.currency import get_pow, receive_pending
 from modules.db import get_db_data, set_db_data
 from modules.social import send_dm
-from modules.currency import get_pow, receive_pending
-
-import nano, tweepy, configparser, logging, os
 
 # CONFIG CONSTANTS =====================================
 # Read config and parse constants
@@ -285,16 +292,46 @@ def return_unused_balance():
                           " WHERE last_action < DATE_SUB(now(), interval 60 day) "
                           "     AND account IS NOT NULL;")
     inactive_users = get_db_data(get_inactive_users)
+    logging.info("{}: Returning inactive balances for user list: {}".format(datetime.now(), inactive_users))
 
     for user in inactive_users:
-        print("user id: {}".format(user[0]))
-        print("user system: {}".format(user[1]))
-        print("return account: {}".format(user[2]))
         get_tip_account = ("SELECT account FROM users "
                            "WHERE user_id = {} AND system = '{}'".format(user[0], user[1]))
         tip_account_data = get_db_data(get_tip_account)
         tip_account = tip_account_data[0][0]
-        print("tip account: {}".format(tip_account))
+        print("Returning unused balance for user {} system {} account {} to ")
+        # check for any unreceived tips
+        receive_pending(tip_account)
+        # get balance of tip account
+        balance_data = {'action': 'account_balance', 'account': tip_account}
+        json_request = json.dumps(balance_data)
+        r = requests.post('{}'.format(NODE_IP), data=json_request)
+        rx = r.json()
+        balance_raw = rx['balance']
+        balance = Decimal(balance_raw) / CONVERT_MULTIPLIER[CURRENCY]
+        # send from tip account to return account
+        if Decimal(balance) > 0:
+            donation_amount, send_amount = calculate_donation_amount(Decimal(balance), user[0], user[1])
+            work = get_pow(tip_account)
+            donation_hash = rpc.send(wallet=WALLET, source=tip_account, destination=BOT_ACCOUNT, work=work, amount=donation_amount)
+            work = get_pow(tip_account)
+            inactive_hash = rpc.send(wallet=WALLET, source=tip_account, destination=user[2], work=work, amount=send_amount)
+            logging.info(
+                "{}: Inactive user {} on {} had their funds returned to their recovery address {} under hash {}".format(
+                    datetime.now(),
+                    user[0],
+                    user[1],
+                    user[2],
+                    inactive_hash))
+            logging.info(
+                "{}: Inactive user {} on {} donated under hash {}".format(
+                    datetime.now(),
+                    user[0],
+                    user[1],
+                    user[2],
+                    donation_hash))
+        else:
+            logging.info("{}: Balance for user {} on {} was 0".format(datetime.now(), user[0], user[1]))
 
 
 def main():
