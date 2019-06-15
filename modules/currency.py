@@ -32,6 +32,7 @@ WALLET = config.get(CURRENCY, 'wallet')
 NODE_IP = config.get(CURRENCY, 'node_ip')
 WORK_SERVER = config.get(CURRENCY, 'work_server')
 WORK_KEY = config.get(CURRENCY, 'work_key')
+WORK_USER = config.get(CURRENCY, 'work_user')
 RE_EMOJI = re.compile('[\U00010000-\U0010ffff\U000026A1]', flags=re.UNICODE)
 TELEGRAM_KEY = config.get(CURRENCY, 'telegram_key')
 URL = config.get('routes', '{}_url'.format(CURRENCY))
@@ -125,12 +126,15 @@ def get_pow(sender_account):
     work = ''
     try:
         if CURRENCY == 'nano':
-            work_data = {'hash': hash, 'key': WORK_KEY, 'account': sender_account}
+            work_data = {'hash': hash, 'api_key': WORK_KEY, 'account': sender_account, 'user': WORK_USER}
         else:
             work_data = {'action': 'work_generate', 'hash': hash}
+        logging.info("{}: work_data: {}".format(datetime.now(), work_data))
         json_request = json.dumps(work_data)
+        logging.info("{}: json work_data: {}".format(datetime.now(), json_request))
         r = requests.post('{}'.format(WORK_SERVER), data=json_request)
         rx = r.json()
+        logging.info("{}: json response: {}".format(datetime.now(), rx))
         if 'work' in rx.keys():
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))
@@ -336,12 +340,12 @@ def get_fiat_price(fiat, crypto_currency):
 
 def generate_accounts():
     accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
-    if CURRENCY == 'nano':
-        logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
-        work_data = {'accounts': accounts, 'key': WORK_KEY}
-        json_request = json.dumps(work_data)
-        r = requests.post('{}'.format(WORK_SERVER), data=json_request)
-        rx = r.json()
-        logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
+    # if CURRENCY == 'nano':
+    #     logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
+    #     work_data = {'accounts': accounts, 'key': WORK_KEY}
+    #     json_request = json.dumps(work_data)
+    #     r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+    #     rx = r.json()
+    #     logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
 
     return accounts
