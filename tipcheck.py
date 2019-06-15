@@ -103,12 +103,12 @@ def send_returned_notice_to_receivers():
                                "AND tip_list.processed = 9;")
     unregistered_users_data = get_db_data(unregistered_users_call)
 
-    for user in unregistered_users_data:
-        send_dm(user[0], "You had tips that were sent 30 or more days ago, and you haven't registered your account. "
-                         "These tips were returned to the sender so they can continue to spread {} to others. "
-                         "If you would like to keep any future tips, please register to prevent any more returns!"
-                .format(CURRENCY.title()),
-                user[1])
+    # for user in unregistered_users_data:
+    #     send_dm(user[0], "You had tips that were sent 30 or more days ago, and you haven't registered your account. "
+    #                      "These tips were returned to the sender so they can continue to spread {} to others. "
+    #                      "If you would like to keep any future tips, please register to prevent any more returns!"
+    #             .format(CURRENCY.title()),
+    #             user[1])
 
     mark_notified("receivers")
 
@@ -167,16 +167,16 @@ def send_returned_notice_to_senders():
         else:
             return_dict[sender_comp].append(sender[2])
 
-    for sender in sender_return_list:
-        donation_amount, send_amount = calculate_donation_amount(sender[2], sender[0], sender[1])
-        sender_comp = str(sender[0]) + "-" + str(sender[1])
-        logging.info("send amount in Nano = {}".format(Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY]))))
-        send_dm(sender[0], "You've had tips returned to your account due to the following list of users "
-                           "not registering: {}.  Your account has been credited {} {}.  Continue spreading the "
-                           "love or withdraw to your wallet!".format(return_dict[sender_comp],
-                                                                     Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY])),
-                                                                     CURRENCY.upper()),
-                sender[1])
+    # for sender in sender_return_list:
+    #     donation_amount, send_amount = calculate_donation_amount(sender[2], sender[0], sender[1])
+    #     sender_comp = str(sender[0]) + "-" + str(sender[1])
+    #     logging.info("send amount in Nano = {}".format(Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY]))))
+    #     send_dm(sender[0], "You've had tips returned to your account due to the following list of users "
+    #                        "not registering: {}.  Your account has been credited {} {}.  Continue spreading the "
+    #                        "love or withdraw to your wallet!".format(return_dict[sender_comp],
+    #                                                                  Decimal(str(send_amount / CONVERT_MULTIPLIER[CURRENCY])),
+    #                                                                  CURRENCY.upper()),
+    #             sender[1])
 
     mark_notified("senders")
 
@@ -335,10 +335,10 @@ def return_unused_balance():
 
 
 def main():
-    # Check for users who need reminders
-    unregistered_user_reminder(int(10), "Just a reminder that someone sent you a tip and you haven't registered your account yet!  Reply to this message with !register to do so, then !help to see all my commands!")
-    unregistered_user_reminder(int(20), "You still have not registered your account.  If you do not register within 30 days, your tip will be returned.  Please respond with !register to complete your registration, or !help to see my commands!")
-    unregistered_user_reminder(int(29), "This is your final notice!  If you do not register your account before tomorrow, your tips will be sent back to the users that tipped you!")
+    # Check for users who need reminders - removed to prevent suspension in the future.
+    # unregistered_user_reminder(int(10), "Just a reminder that someone sent you a tip and you haven't registered your account yet!  Reply to this message with !register to do so, then !help to see all my commands!")
+    # unregistered_user_reminder(int(20), "You still have not registered your account.  If you do not register within 30 days, your tip will be returned.  Please respond with !register to complete your registration, or !help to see my commands!")
+    # unregistered_user_reminder(int(29), "This is your final notice!  If you do not register your account before tomorrow, your tips will be sent back to the users that tipped you!")
 
     # Send back the tip to users not registered in 30 days
     return_tips()
