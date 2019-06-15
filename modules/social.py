@@ -117,6 +117,10 @@ def send_dm(receiver, message, system):
     """
     Send the provided message to the provided receiver
     """
+    if receiver == BOT_ID_TWITTER:
+        logging.info("{}: Bot should not be messaging itself.".format(datetime.now()))
+        return
+
     if system == 'twitter':
         data = {
             'event': {
