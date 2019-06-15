@@ -92,7 +92,7 @@
       <br><br>
       <h4 style="text-align:center">Commands</h4>
       <br>
-      <h5>DM Commands:  The below commands are handled through sending a DM to @{{ bot_name_twitter|title }} on Twitter or @{{ currency|title }}TipperBot on Telegram.  You can click the link next to the command to send a DM to the Twitter bot.</h5>
+      <h5>DM Commands:  The below commands are handled through sending a DM to {{ bot_name_twitter|title }} on Twitter or {{ bot_name_telegram|title }} on Telegram.  You can click the link next to the command to send a DM to the Twitter bot.</h5>
       <br>
       <ul>
         <li><a href="https://twitter.com/messages/compose?recipient_id={{ bot_id }}&text=!help">!help</a>: The tip bot will respond to your DM with a list of commands and their functions.  If you forget something, use this to get a hint of how to do it!</li>
@@ -108,7 +108,7 @@
       <h5>Tweet / Group Message Commands: Tips are sent through public tweets, retweets, and messages in Telegram groups.  These are processed in real time.</h5>
       <br>
       <ul>
-        <li><a href="https://twitter.com/home?status=@{{ bot_name_twitter }}+{{ tip_command }}+">{{ tip_command }}</a>: Send a tip of a specified amount to a user on Twitter or Telegram.
+        <li><a href="https://twitter.com/home?status={{ bot_name_twitter }}+{{ tip_command }}+">{{ tip_command }}</a>: Send a tip of a specified amount to a user on Twitter or Telegram.
             <ul>
                 <li>Twitter Example: <code>{{ bot_name_twitter }} {{ tip_command }} 1.01 @mitche50</code> will send a 1.01 {{ currency|upper }} tip to user @mitche50.</li>
                 <li>Telegram Example: <code>{{ bot_name_telegram }} {{ tip_command }} 2.22 @mitche50</code> will send a 2.22 {{ currency|upper }} tip to user @mitche50</li>
