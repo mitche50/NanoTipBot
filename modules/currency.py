@@ -294,14 +294,14 @@ def get_fiat_conversion(symbol, crypto_currency, fiat_amount):
     fiat = convert_symbol_to_fiat(symbol)
     if fiat == 'UNSUPPORTED':
         return -1
-    fiat = fiat.upper()
-    crypto_currency = crypto_currency.upper()
-    post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
+    fiat = fiat.lower()
+    crypto_currency = crypto_currency.lower()
+    post_url = 'https://api.coingecko.com/api/v3/coins/{}'.format(crypto_currency)
     try:
         # Retrieve price conversion from API
         response = requests.get(post_url)
         response_json = json.loads(response.text)
-        price = Decimal(response_json['{}'.format(fiat)])
+        price = Decimal(response_json['market_data']['current_price'][fiat])
         # Find value of 0.01 in the retrieved crypto
         penny_value = Decimal(0.01) / price
         # Find precise amount of the fiat amount in crypto
