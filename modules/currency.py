@@ -287,10 +287,13 @@ def strip_emoji(text):
     return RE_EMOJI.sub(r'', text)
 
 
-def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
+def get_fiat_conversion(symbol, crypto_currency, fiat_amount):
     """
     Get the current fiat price conversion for the provided fiat:crypto pair
     """
+    fiat = convert_symbol_to_fiat(symbol)
+    if fiat == 'UNSUPPORTED':
+        return -1
     fiat = fiat.upper()
     crypto_currency = crypto_currency.upper()
     post_url = 'https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}'.format(crypto_currency, fiat)
@@ -319,6 +322,17 @@ def get_fiat_conversion(fiat, crypto_currency, fiat_amount):
         logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
         logging.info("{}: {}".format(datetime.now(), e))
         raise e
+
+
+def convert_symbol_to_fiat(symbol):
+    if symbol == '$':
+        return 'USD'
+    elif symbol == '€':
+        return 'EUR'
+    elif symbol == '£':
+        return 'GBP'
+    else:
+        return 'UNSUPPORTED'
 
 
 def get_fiat_price(fiat, crypto_currency):

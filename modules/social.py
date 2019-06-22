@@ -282,7 +282,16 @@ def validate_tip_amount(message):
 
     logging.info("{}: in validate_tip_amount".format(datetime.now()))
     try:
-        message['tip_amount'] = Decimal(message['text'][message['starting_point']])
+        if not message['text'][message['starting_point']][0].isdigit() and message['text'][message['starting_point']][0] != '.':
+            symbol = message['text'][message['starting_point']][0]
+            fiat_amount = message['text'][message['starting_point']][1:]
+            message['tip_amount'] = Decimal(modules.currency.get_fiat_conversion(symbol, CURRENCY, fiat_amount))
+
+            if message['tip_amount'] == -1:
+                send_reply(message, translations.unsupported_fiat[message['language']])
+                return message
+        else:
+            message['tip_amount'] = Decimal(message['text'][message['starting_point']])
     except Exception:
         logging.info("{}: Tip amount was not a number".format(datetime.now()))
         if message['system'] == 'twitter':

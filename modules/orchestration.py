@@ -164,7 +164,16 @@ def parse_action(message):
         new_pid = os.fork()
         if new_pid == 0:
             try:
-                modules.social.send_dm(message['sender_id'], translations.private_tip_text[message['language']],
+                if CURRENCY == 'banano':
+                    tip_command = modules.translations.banano_tip_commands['en'][0]
+                else:
+                    if len(modules.translations.nano_tip_commands[message['language']]) > 0:
+                        tip_command = modules.translations.nano_tip_commands[message['language']][0]
+                    else:
+                        tip_command = modules.translations.nano_tip_commands['en'][0]
+
+                modules.social.send_dm(message['sender_id'],
+                                       translations.private_tip_text[message['language']].format(tip_command),
                                        message['system'])
             except Exception as e:
                 logging.info("Exception: {}".format(e))
