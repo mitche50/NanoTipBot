@@ -330,6 +330,18 @@ def validate_tip_amount(message):
     return message
 
 
+def check_invalid_chars(user):
+    """
+    Check user for invalid ending characters
+    """
+    invalid_ending_chars = ['.', '!', '?', ',']
+
+    if user[-1:] in invalid_ending_chars:
+        return user[:-1]
+
+    return user
+
+
 def set_tip_list(message, users_to_tip, request_json):
     """
     Loop through the message starting after the tip amount and identify any users that were tagged for a tip.  Add the
@@ -340,7 +352,6 @@ def set_tip_list(message, users_to_tip, request_json):
     # Identify the first user to string multi tips.  Once a non-user is mentioned, end the user list
 
     first_user_flag = False
-    invalid_ending_chars = ['.', '!', '?', ',']
 
     if message['system'] == 'twitter':
         for t_index in range(message['starting_point'] + 1, len(message['text'])):
@@ -352,8 +363,7 @@ def set_tip_list(message, users_to_tip, request_json):
                     "@" + str(message['sender_screen_name']).lower())):
                 if not first_user_flag:
                     first_user_flag = True
-                if message['text'][t_index][-1:] in invalid_ending_chars:
-                    message['text'][t_index] = message['text'][t_index][:-1]
+                message['text'][t_index] = check_invalid_chars(message['text'][t_index])
                 try:
                     user_info = api.get_user(message['text'][t_index])
                 except tweepy.TweepError as e:
@@ -407,6 +417,7 @@ def set_tip_list(message, users_to_tip, request_json):
                 if len(message['text'][t_index]) > 0:
                     if str(message['text'][t_index][0]) == "@" and str(message['text'][t_index]).lower() != (
                             "@" + str(message['sender_screen_name']).lower()):
+                        message['text'][t_index] = check_invalid_chars(message['text'][t_index])
                         check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
                                            "WHERE chat_id = {} and member_name = '{}'".format(message['chat_id'],
                                                                                               message['text'][t_index][1:]))
