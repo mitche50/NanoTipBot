@@ -69,6 +69,7 @@ def check_table_exists(table_name):
     result = db_cursor.fetchall()
     return result
 
+
 def create_triggers():
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8mb4")
@@ -246,7 +247,7 @@ def create_tables():
         db_cursor.close()
         db.close()
     except Exception as e:
-            logging.info("Error creating tables for DB: {}".format(e))
+        logging.info("Error creating tables for DB: {}".format(e))
 
 
 def get_db_data(db_call):

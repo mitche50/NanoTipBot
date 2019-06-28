@@ -340,6 +340,7 @@ def set_tip_list(message, users_to_tip, request_json):
     # Identify the first user to string multi tips.  Once a non-user is mentioned, end the user list
 
     first_user_flag = False
+    invalid_ending_chars = ['.', '!', '?', ',']
 
     if message['system'] == 'twitter':
         for t_index in range(message['starting_point'] + 1, len(message['text'])):
@@ -351,6 +352,8 @@ def set_tip_list(message, users_to_tip, request_json):
                     "@" + str(message['sender_screen_name']).lower())):
                 if not first_user_flag:
                     first_user_flag = True
+                if message['text'][t_index][-1:] in invalid_ending_chars:
+                    message['text'][t_index] = message['text'][t_index][:-1]
                 try:
                     user_info = api.get_user(message['text'][t_index])
                 except tweepy.TweepError as e:
