@@ -99,6 +99,42 @@ def receive_pending(sender_account):
     return
 
 
+def receive_pending_debug(sender_account, message):
+    """
+    Check to see if the account has any pending blocks and process them
+    """
+    try:
+        logging.info("{}: in receive pending".format(datetime.now()))
+        pending_data = {'action': 'pending', 'account': sender_account, 'include_active': 'true'}
+        pending_data_json = json.dumps(pending_data)
+        r = requests.post(NODE_IP, data=pending_data_json)
+        pending_blocks = r.json()
+        logging.info("{}: {} - pending blocks: {}".format(datetime.now(), message['tip_id'], pending_blocks['blocks']))
+        if len(pending_blocks['blocks']) > 0:
+            try:
+                for block in pending_blocks['blocks']:
+                    work = get_pow_debug(message)
+                    if work == '':
+                        logging.info("{}: {} -  processing without pow".format(datetime.now(), message['tip_id']))
+                        receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                        'block': block}
+                    else:
+                        logging.info("{}: {} -  processing with pow".format(datetime.now(), message['tip_id']))
+                        receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
+                                        'block': block, 'work': work}
+                    receive_json = json.dumps(receive_data)
+                    requests.post('{}'.format(NODE_IP), data=receive_json)
+                    logging.info("{}: {} - block {} received".format(datetime.now(), message['tip_id'], block))
+            except Exception as e:
+                logging.info("Exception: {}".format(e))
+                raise e
+    except Exception as e:
+        logging.info("{}: {} - Receive Pending Error: {}".format(datetime.now(), message['tip_id'], e))
+        raise e
+
+    return
+
+
 def get_pow(sender_account):
     """
     Retrieves the frontier (hash of previous transaction) of the provided account and generates work for the next block.
@@ -109,7 +145,7 @@ def get_pow(sender_account):
         json_request = json.dumps(account_info_call)
         r = requests.post('{}'.format(NODE_IP), data=json_request)
         rx = r.json()
-        if 'frontier' in rx.keys():
+        if 'frontier' in rx:
             hash = rx['frontier']
         else:
             public_key_data = {'action': 'account_key', 'account': sender_account}
@@ -135,13 +171,61 @@ def get_pow(sender_account):
         r = requests.post('{}'.format(WORK_SERVER), data=json_request)
         rx = r.json()
         logging.info("{}: json response: {}".format(datetime.now(), rx))
-        if 'work' in rx.keys():
+        if 'work' in rx:
             work = rx['work']
             logging.info("{}: Work generated: {}".format(datetime.now(), work))
         else:
             logging.info("{}: work not in keys, response from server: {}".format(datetime.now(), rx))
     except Exception as e:
         logging.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
+        pass
+
+    return work
+
+
+def get_pow_debug(message):
+    """
+    Retrieves the frontier (hash of previous transaction) of the provided account and generates work for the next block.
+    """
+    logging.info("{}: in get_pow".format(datetime.now()))
+    try:
+        account_info_call = {'action': 'account_info', 'account': message['sender_account']}
+        json_request = json.dumps(account_info_call)
+        r = requests.post('{}'.format(NODE_IP), data=json_request)
+        rx = r.json()
+        if 'frontier' in rx:
+            hash = rx['frontier']
+        else:
+            public_key_data = {'action': 'account_key', 'account': message['sender_account']}
+            json_request = json.dumps(public_key_data)
+            r = requests.post('{}'.format(NODE_IP), data=json_request)
+            rx = r.json()
+            hash = rx['key']
+
+        logging.info("{}: {} - hash retrieved from account info: {}".format(datetime.now(), message['tip_id'], hash))
+    except Exception as e:
+        logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
+        return ''
+
+    work = ''
+    try:
+        if CURRENCY == 'nano':
+            work_data = {'hash': hash, 'api_key': WORK_KEY, 'account': message['sender_account'], 'user': WORK_USER}
+        else:
+            work_data = {'action': 'work_generate', 'hash': hash}
+        logging.info("{}: {} - work_data: {}".format(datetime.now(), message['tip_id'], work_data))
+        json_request = json.dumps(work_data)
+        r = requests.post('{}'.format(WORK_SERVER), data=json_request)
+        rx = r.json()
+        logging.info("{}: {} - json response: {}".format(datetime.now(), message['tip_id'], rx))
+        if 'work' in rx:
+            work = rx['work']
+            logging.info("{}: {} - Work generated: {}".format(datetime.now(), message['tip_id'], work))
+        else:
+            logging.info("{}: {} - work not in keys, response from server: {}".format(datetime.now(), message['tip_id'],
+                                                                                      rx))
+    except Exception as e:
+        logging.info("{}: {} - ERROR GENERATING WORK: {}".format(datetime.now(), message['tip_id'], e))
         pass
 
     return work
@@ -192,13 +276,13 @@ def send_tip(message, users_to_tip, tip_index):
         else:
             message['tip_id'] = "{}-{}{}".format(message['system'], message['id'], tip_index)
 
-        work = get_pow(message['sender_account'])
-        logging.info("{}: Sending Tip:".format(datetime.now()))
-        logging.info("{}: From: {}".format(datetime.now(), message['sender_account']))
-        logging.info("{}: To: {}".format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
-        logging.info("{}: amount: {:f}".format(datetime.now(), message['tip_amount_raw']))
-        logging.info("{}: id: {}".format(datetime.now(), message['tip_id']))
-        logging.info("{}: work: {}".format(datetime.now(), work))
+        # work = get_pow(message['sender_account'])
+        work = get_pow_debug(message)
+        logging.info("{}: {} - Sending Tip:".format(datetime.now(), message['tip_id']))
+        logging.info("{}: {} - From: {}".format(datetime.now(), message['tip_id'], message['sender_account']))
+        logging.info("{}: {} - To: {}".format(datetime.now(), message['tip_id'], users_to_tip[tip_index]['receiver_account']))
+        logging.info("{}: {} - amount: {:f}".format(datetime.now(), message['tip_id'], message['tip_amount_raw']))
+        logging.info("{}: {} - work: {}".format(datetime.now(), message['tip_id'], work))
         if work == '':
             logging.info("{}: processed without work".format(datetime.now()))
             send_data = {
@@ -212,8 +296,14 @@ def send_tip(message, users_to_tip, tip_index):
             json_request = json.dumps(send_data)
             r = requests.post('{}'.format(NODE_IP), data=json_request)
             rx = r.json()
-            logging.info("send return: {}".format(rx))
-            message['send_hash'] = rx['block']
+            logging.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
+            if 'block' in rx:
+                message['send_hash'] = rx['block']
+            else:
+                modules.social.send_reply(message, 'There was an error processing one of your tips.  '
+                                                   'Please reach out to the admin with this code: {}'
+                                          .format(message['tip_id']))
+                return
 
         else:
             logging.info("{}: processed with work: {}".format(datetime.now(), work))
@@ -230,8 +320,14 @@ def send_tip(message, users_to_tip, tip_index):
             json_request = json.dumps(send_data)
             r = requests.post('{}'.format(NODE_IP), data=json_request)
             rx = r.json()
-            logging.info("send return: {}".format(rx))
-            message['send_hash'] = rx['block']
+            logging.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
+            if 'block' in rx:
+                message['send_hash'] = rx['block']
+            else:
+                modules.social.send_reply(message, 'There was an error processing one of your tips.  '
+                                                   'Please reach out to the admin with this code: {}'
+                                          .format(message['tip_id']))
+                return
 
         # Update the DB
         message['text'] = strip_emoji(message['text'])
