@@ -184,6 +184,7 @@ def send_returned_notice_to_senders():
 def calculate_donation_amount(amount, sender_id, system):
     donation_raw = get_db_data("SELECT donation_percent FROM donation_info "
                                "WHERE user_id = {} AND system = '{}'".format(sender_id, system))
+    logging.info("{}: donation amount check call: {}".format(datetime.now(), donation_raw))
     donation_percent = Decimal(str(donation_raw[0][0] * .01))
 
     if amount * donation_percent >= float(MIN_TIP):
