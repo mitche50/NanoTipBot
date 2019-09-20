@@ -207,10 +207,7 @@ def get_pow_debug(message):
 
     work = ''
     try:
-        if CURRENCY == 'nano':
-            work_data = {'hash': hash, 'api_key': WORK_KEY, 'account': message['sender_account'], 'user': WORK_USER}
-        else:
-            work_data = {'action': 'work_generate', 'hash': hash}
+        work_data = {'hash': hash, 'api_key': WORK_KEY, 'user': WORK_USER}
         logging.info("{}: {} - work_data: {}".format(datetime.now(), message['tip_id'], work_data))
         json_request = json.dumps(work_data)
         r = requests.post('{}'.format(WORK_SERVER), data=json_request)
