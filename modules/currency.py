@@ -161,10 +161,8 @@ def get_pow(sender_account):
 
     work = ''
     try:
-        if CURRENCY == 'nano':
-            work_data = {'hash': hash, 'api_key': WORK_KEY, 'account': sender_account, 'user': WORK_USER}
-        else:
-            work_data = {'action': 'work_generate', 'hash': hash}
+        work_data = {'hash': hash, 'api_key': WORK_KEY, 'user': WORK_USER}
+
         logging.info("{}: work_data: {}".format(datetime.now(), work_data))
         json_request = json.dumps(work_data)
         logging.info("{}: json work_data: {}".format(datetime.now(), json_request))
