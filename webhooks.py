@@ -343,7 +343,7 @@ def get_user_address_twitter(username):
 def get_user_address_telegram(username):
     # Returns the address of the provided username
     address_call = ("SELECT account FROM users "
-                   "WHERE user_name = %s AND system = 'telegram'")
+                   "WHERE user_id = %s AND system = 'telegram'")
     address_values = [username,]
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
