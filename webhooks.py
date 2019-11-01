@@ -363,8 +363,8 @@ def get_all_users_telegram():
     address_values = []
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
-        if address_return[0][0] is not None:
-            return address_return[0][0]
+        if address_return is not None:
+            return address_return
         else:
             return "Error retrieving addresses on telegram"
     except Exception as e:
@@ -379,8 +379,8 @@ def get_all_users_twitter():
     address_values = []
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
-        if address_return[0][0] is not None:
-            return address_return[0][0]
+        if address_return is not None:
+            return address_return
         else:
             return "Error retrieving addresses on twitter"
     except Exception as e:
