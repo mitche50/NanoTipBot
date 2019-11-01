@@ -355,6 +355,38 @@ def get_user_address_telegram(username):
         return e
 
 
+@app.route('/users/telegram', methods=["GET"])
+def get_all_users_telegram():
+    # Returns the address of the provided username
+    address_call = ("SELECT user_id, user_name, account FROM users "
+                   "WHERE system = 'telegram'")
+    address_values = []
+    address_return = modules.db.get_db_data_new(address_call, address_values)
+    try:
+        if address_return[0][0] is not None:
+            return address_return[0][0]
+        else:
+            return "Error retrieving addresses on telegram"
+    except Exception as e:
+        return e
+
+
+@app.route('/users/twitter', methods=["GET"])
+def get_all_users_twitter():
+    # Returns the address of the provided username
+    address_call = ("SELECT user_id, user_name, account FROM users "
+                   "WHERE system = 'twitter'")
+    address_values = []
+    address_return = modules.db.get_db_data_new(address_call, address_values)
+    try:
+        if address_return[0][0] is not None:
+            return address_return[0][0]
+        else:
+            return "Error retrieving addresses on twitter"
+    except Exception as e:
+        return e
+
+
 @app.route(TWITTER_BANANO_URI, methods=["GET"])
 @app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
