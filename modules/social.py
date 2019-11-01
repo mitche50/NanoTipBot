@@ -292,6 +292,10 @@ def validate_tip_amount(message):
                 return message
         else:
             message['tip_amount'] = Decimal(message['text'][message['starting_point']])
+    except IndexError as e:
+        logging.info("{}: Index out of range". format(datetime.now()))
+        message['tip_amount'] = -1
+        return message
     except Exception:
         logging.info("{}: Tip amount was not a number".format(datetime.now()))
         if message['system'] == 'twitter':
