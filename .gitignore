@@ -1,0 +1,11 @@
+venv
+bananoqr
+.vscode
+.idea
+__pycache__
+/templates/config.php
+*.log
+*.ini
+*.pyc
+db_migrate.py
+subscribe.py

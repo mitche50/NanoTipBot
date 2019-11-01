@@ -84,6 +84,8 @@ def create_triggers():
                        VALUES (NEW.`user_id`, NEW.`system`);
                        INSERT INTO `return_address` (`user_id`, `system`, `last_action`) 
                        VALUES (NEW.`user_id`, NEW.`system`, now());
+                       INSERT INTO `donation_info` (`user_id`, `system`)
+                       VALUES (NEW.`user_id`, NEW.`system`);
                    END
                    """
     tip_list_trigger = """

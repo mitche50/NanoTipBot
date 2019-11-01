@@ -323,6 +323,38 @@ def index():
                            tip_command=tip_command)
 
 
+@app.route('/users/twitter/<username>', methods=["GET"])
+def get_user_address_twitter(username):
+    # Returns the address of the provided username
+    address_call = ("SELECT account FROM users "
+                   "WHERE user_name = %s AND system = 'twitter'")
+    address_values = [username,]
+    address_return = modules.db.get_db_data_new(address_call, address_values)
+    try:
+        if address_return[0][0] is not None:
+            return address_return[0][0]
+        else:
+            return "Account not found for user {} on twitter".format(username)
+    except Exception as e:
+        return e
+
+
+@app.route('/users/telegram/<username>', methods=["GET"])
+def get_user_address_telegram(username):
+    # Returns the address of the provided username
+    address_call = ("SELECT account FROM users "
+                   "WHERE user_id = %s AND system = 'telegram'")
+    address_values = [username,]
+    address_return = modules.db.get_db_data_new(address_call, address_values)
+    try:
+        if address_return[0][0] is not None:
+            return address_return[0][0]
+        else:
+            return "Account not found for user {} on telegram".format(username)
+    except Exception as e:
+        return e
+
+
 @app.route(TWITTER_BANANO_URI, methods=["GET"])
 @app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
