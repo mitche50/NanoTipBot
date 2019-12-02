@@ -155,7 +155,7 @@ def deep_link_test():
 
     if amount is None:
         uri = "nano://{}".format(address)
-        return render_template('uriformatter.html', uri=uri, address=address)
+        return render_template('uriformatter.html', uri=uri, address=address, currency=CURRENCY)
 
     else:
         logging.info(amount)
