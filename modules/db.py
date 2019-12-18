@@ -127,6 +127,7 @@ def create_tables():
               `account` varchar(100) NOT NULL,
               `register` tinyint(1) NOT NULL DEFAULT '0',
               `created_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              `mute` tinyint(1) NOT NULL DEFAULT '0',
               PRIMARY KEY (`user_id`),
               UNIQUE KEY `user_id_UNIQUE` (`user_id`),
               UNIQUE KEY `account_UNIQUE` (`account`)

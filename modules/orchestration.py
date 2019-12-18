@@ -79,6 +79,32 @@ def parse_action(message):
         else:
             return '', HTTPStatus.OK
 
+    if message['dm_action'] in translations.set_mute_commands['en'] or \
+            message['dm_action'] in translations.set_mute_commands[message['language']]:
+        new_pid = os.fork()
+        if new_pid == 0:
+            try:
+                mute_process(message, 1)
+            except Exception as e:
+                logging.info("Exception: {}".format(e))
+                raise e
+            os._exit(0)
+        else:
+            return '', HTTPStatus.OK
+
+    if message['dm_action'] in translations.set_unmute_commands['en'] or \
+            message['dm_action'] in translations.set_unmute_commands[message['language']]:
+        new_pid = os.fork()
+        if new_pid == 0:
+            try:
+                mute_process(message, 0)
+            except Exception as e:
+                logging.info("Exception: {}".format(e))
+                raise e
+            os._exit(0)
+        else:
+            return '', HTTPStatus.OK
+
     elif message['dm_action'] in translations.balance_commands['en'] or \
             message['dm_action'] in translations.balance_commands[message['language']]:
         new_pid = os.fork()
@@ -321,6 +347,32 @@ def auto_donation_process(message):
         modules.social.send_dm(message['sender_id'],
                                translations.auto_donate_missing_num[message['language']],
                                message['system'])
+
+
+def mute_process(message, mute_value):
+    """
+    Update user's mute preferences to prevent or resume messaging / replies.
+    """
+    logging.info("{}: in mute process".format(datetime.now()))
+    account_check_call = ("SELECT mute FROM users WHERE user_id = {} AND users.system = '{}'"
+                          .format(message['sender_id'], message['system']))
+    data = modules.db.get_db_data(account_check_call)
+    if not data:
+        # Create an account for the user
+        sender_account = modules.db.get_spare_account()
+        account_create_call = ("INSERT INTO users (user_id, system, user_name, account, register, mute) "
+                               "VALUES(%s, %s, %s, %s, 1, %s)")
+        account_create_values = [message['sender_id'], message['system'], message['sender_screen_name'], sender_account, mute_value]
+        modules.db.set_db_data(account_create_call, account_create_values)
+    else:
+        mute_call = ("UPDATE users SET mute = %s WHERE user_id = %s AND system = %s")
+        mute_values = [mute_value, message['sender_id'], message['system']]
+        modules.db.set_db_data(mute_call, mute_values)
+    
+    if mute_value == 1:
+        modules.social.send_dm(message['sender_id'], translations.mute[message['language']], message['system'])
+    else:
+        modules.social.send_dm(message['sender_id'], translations.unmute[message['language']], message['system'])
 
 
 def balance_process(message):

@@ -113,12 +113,32 @@ def get_receiver_language(user_id, system):
         return 'en'
 
 
+def check_mute(user_id, system):
+    """
+    Check to see if the bot is muted by the message receiver
+    """
+    get_mute_call = ("SELECT mute FROM users WHERE user_id = %s "
+                     "AND system = %s")
+    mute_values = [user_id, system]
+    mute_return = modules.db.get_db_data_new(get_mute_call, mute_values)
+
+    try:
+        return False if mute_return[0][0] == 0 else True
+    except Exception as e:
+        logging.info("{}: No mute value found - returning False".format(datetime.now()))
+        return False
+
+
 def send_dm(receiver, message, system):
     """
     Send the provided message to the provided receiver
     """
     if receiver == BOT_ID_TWITTER:
         logging.info("{}: Bot should not be messaging itself.".format(datetime.now()))
+        return
+
+    if check_mute(receiver, system):
+        logging.info("{}: User has muted bot.".format(datetime.now()))
         return
 
     if system == 'twitter':
@@ -148,6 +168,10 @@ def send_dm(receiver, message, system):
 
 
 def send_img(receiver, path, message, system):
+
+    if check_mute(receiver, system):
+        logging.info("{}: User has muted bot.".format(datetime.now()))
+        return
 
     if system == 'twitter':
         file = open(path, 'rb')
@@ -541,6 +565,10 @@ def validate_total_tip_amount(message):
 
 
 def send_reply(message, text):
+    if check_mute(message['sender_id'], message['system']):
+        logging.info("{}: User has muted bot.".format(datetime.now()))
+        return
+    
     if message['system'] == 'twitter':
         text = '@{} '.format(message['sender_screen_name']) + text
         try:
@@ -594,6 +622,10 @@ def send_account_message(account_text, message, account):
     """
     Send a message to the user with their account information.  If twitter, include a QR code for scanning.
     """
+
+    if check_mute(message['sender_id'], message['system']):
+        logging.info("{}: User has muted bot.".format(datetime.now()))
+        return
 
     if message['system'] == 'twitter' or message['system'] == 'telegram':
         get_qr_code(message['sender_id'], account, message['system'])

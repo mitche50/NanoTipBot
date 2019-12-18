@@ -1660,6 +1660,51 @@ unsupported_fiat = {
     'fa': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.'
 }
 
+# 41
+mute = {
+    'en': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'es': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'nl': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'ja': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'zh-t': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'zh-s': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'fr': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'pt': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'th': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'de': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'id': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'vt': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'ru': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'sv': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'it': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'tr': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'pt-br': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'bg': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'fa': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.'
+}
+
+unmute = {
+    'en': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'es': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'nl': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'ja': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'zh-t': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'zh-s': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'fr': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'pt': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'th': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'de': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'id': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'vt': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'ru': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'sv': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'it': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'tr': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'pt-br': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'bg': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'fa': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute'
+}
+
 language_list = (
     'Bulgarian - български език\n'
     'Chinese Simplified - 简体中文\n'
@@ -1949,6 +1994,66 @@ auto_donate_commands = {
 
 set_return_commands = {
     'en': ['!setreturn', '!sr', '/setreturn', '/sr'],
+    'es': [
+        # Users said they would prefer english commands
+    ],
+    'nl': [
+        # Users said they would prefer english commands
+    ],
+    'ja': [],
+    'zh-t': [],
+    'zh-s': [],
+    'fr': [
+        # Users said they would prefer english commands
+    ],
+    'pt': [],
+    'th': [],
+    'de': [],
+    'id': [
+        # Users said they would prefer english commands
+    ],
+    'vt': [],
+    'ru': [],
+    'sv': [],
+    'it': [],
+    'tr': [],
+    'pt-br': [],
+    'bg': [],
+    'fa': []
+}
+
+set_mute_commands = {
+    'en': ['!mute', '/mute'],
+    'es': [
+        # Users said they would prefer english commands
+    ],
+    'nl': [
+        # Users said they would prefer english commands
+    ],
+    'ja': [],
+    'zh-t': [],
+    'zh-s': [],
+    'fr': [
+        # Users said they would prefer english commands
+    ],
+    'pt': [],
+    'th': [],
+    'de': [],
+    'id': [
+        # Users said they would prefer english commands
+    ],
+    'vt': [],
+    'ru': [],
+    'sv': [],
+    'it': [],
+    'tr': [],
+    'pt-br': [],
+    'bg': [],
+    'fa': []
+}
+
+set_unmute_commands = {
+    'en': ['!unmute', '/unmute'],
     'es': [
         # Users said they would prefer english commands
     ],
