@@ -443,8 +443,8 @@ def set_tip_list(message, users_to_tip, request_json):
                     logging.info("users identified, regular text breaking the loop: {}".format(message['text'][t_index][0]))
                     break
                 if len(message['text'][t_index]) > 0:
-                    if str(message['text'][t_index][0]) == "@" and len(message['text'][t_index]) > 1 and message['text'][t_index][1] != ' ' 
-                            and str(message['text'][t_index]).lower() != ("@" + str(message['sender_screen_name']).lower()):
+                    if (str(message['text'][t_index][0]) == "@" and len(message['text'][t_index]) > 1 and message['text'][t_index][1] != ' ' 
+                            and str(message['text'][t_index]).lower() != ("@" + str(message['sender_screen_name']).lower())):
                         message['text'][t_index] = check_invalid_chars(message['text'][t_index])
                         check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
                                            "WHERE chat_id = {} and member_name = '{}'".format(message['chat_id'],
