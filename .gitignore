@@ -9,3 +9,4 @@ __pycache__
 *.pyc
 db_migrate.py
 subscribe.py
+test.py

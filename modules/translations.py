@@ -26,33 +26,33 @@ maintenance_text = {
 }
 # 2
 redirect_tip_text = {
-    'en': 'Tips are processed through public messages now.  Please send in the format {0} {1} 1 @user1.',
+    'en': 'Tips are processed through public messages now.  Please send in the format {0} {1} 5 @user1.',
     'es': 'Los tips ahora están siendo procesados a través de mensajes públicos. Por favor, envíalos con el formato '
-          '{0} {1} 1 @usuario1.',
-    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {0} {1} 1 '
+          '{0} {1} 5 @usuario1.',
+    'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {0} {1} 5 '
           '@gebruikersnaam.',
     'ja': '',
     'zh-t': '現在小費只可以通過公開消息傳遞。請用這個格式 “{0} {1} <金額> @<用戶名>”',
     'zh-s': '现在小费只可以通过公开消息传递。请用这个格式 “{0} {1} <金额> @<用户名>”',
     'fr': 'Les tips sont dès à présent traités via message public. Veuillez les envoyer sous le format {0} '
-          '{1} 1 @utilisateur1',
+          '{1} 5 @utilisateur1',
     'pt': 'Agora, as tips são enviadas através de mensagens públicas. Por favor utiliza o seguinte formato '
-          '{0} {1} 1 @utilizador1',
+          '{0} {1} 5 @utilizador1',
     'th': '',
     'de': '',
-    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {0} {1} 1 @user1.',
+    'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {0} {1} 5 @user1.',
     'vt': '',
     'ru': 'Типы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате {0} '
-          '{1} 1 @имя_пользователя1.',
+          '{1} 5 @имя_пользователя1.',
     'sv': '',
     'it': 'Ora le mance vengono processate attraverso messaggi pubblici. Inviale nel formato {0} '
-          '{1} 1 @utente1.',
-    'tr': 'Tipler herkese açık mesajlarla işleme konuluyor. Lütfen gönderi formatınız {0} {1} 1 @kullanıcı1 olsun.',
+          '{1} 5 @utente1.',
+    'tr': 'Tipler herkese açık mesajlarla işleme konuluyor. Lütfen gönderi formatınız {0} {1} 5 @kullanıcı1 olsun.',
     'pt-br': 'Gorjetas são processadas por meio de mensagens públicas agora. Por favor, utilize o comando {0} {1} '
-             '1 @usuário1.',
-    'bg': '"Подпомагането" се обработва вече чрез публични съобщения. Моля, изпратете във формат {0} {1} 1 @user1.',
+             '5 @usuário1.',
+    'bg': '"Подпомагането" се обработва вече чрез публични съобщения. Моля, изпратете във формат {0} {1} 5 @user1.',
     'fa': 'انعام ها از طریق پیام های عمومی پردازش می‌شوند. لطفا انعام خود را با این فرمت ارسال نمائید:\n'
-          '{0} {1} 1 @user1.'
+          '{0} {1} 5 @user1.'
 }
 # 3
 self_tip_text = {
@@ -522,7 +522,7 @@ help_message = {
           + BULLET + '!balance: This returns the balance of the account linked with your user ID.\n\n'
           + BULLET + '{4}: Tips are sent through public tweets or in Telegram groups.\n'
                      ' On Twitter: Tag {1} in a tweet and mention {4} <amount> <@username>.\n'
-                     ' Example: {1} {4} 1 @mitche50 would send a 1 {0} tip to user @mitche50.\n'
+                     ' Example: {1} {4} 5 @mitche50 would send a 5 {0} tip to user @mitche50.\n'
                      ' On Telegram send {3} {4} <amount> <@username> to tip in the group.\n\n'
           + BULLET + ' !privatetip: Currently disabled.  This will send a tip to another user through DM.  If you '
                      'would like your tip amount to be private, use this function!  Proper usage is !privatetip '
@@ -549,7 +549,7 @@ help_message = {
           + BULLET + ' !balance: Te muestra el saldo de la cuenta vinculada con tu ID de usuario.\n\n'
           + BULLET + ' {4}: Los tips se envían a través de tweets públicos o en grupos de Telegram.\n'
                      'En Twitter: Etiqueta a {1} en un tweet y menciona {4} <monto> <@usuario>. Ejemplo: '
-                     '{1} {4} 1 @mitche50 enviaría un tip de 1 {0} al usuario @mitche50.\n'
+                     '{1} {4} 5 @mitche50 enviaría un tip de 5 {0} al usuario @mitche50.\n'
                      'En Telegram: Envía {3} {4} <monto> <@usuario> para realizar un tip en el grupo.\n\n'
           + BULLET + ' !privatetip: Actualmente deshabilitado. Esto enviará un tip a otro usuario a través de un'
                      ' mensaje directo. Si deseas que la cantidad de tu tip sea privada, ¡usa esta función! El uso '
@@ -571,7 +571,7 @@ help_message = {
           + BULLET + ' !register: Gegistreert jouw gebruikers-ID voor een account dat hieraan is gekoppeld. Dit wordt gebruikt om jouw tips op te slaan. Zorg ervoor dat je jouw saldo regelmatig naar een privé-account verstuurt, want de Tip Bot is niet bedoeld als lange termijn opslag voor jouw {0}.\n\n'
           + BULLET + ' !balance: Hiermee wordt het saldo van jouw persoonlijke Tip Bot account getoond.\n\n'
           + BULLET + ' {4}: Tips worden verzonden via openbare tweets of in Telegram-groepen.'
-                     'Op Twitter: Tag {1} in een tweet en vermeld {4} <aantal> <@gebruikersnaam>. Voorbeeld: {1} {4} 1 @mitche50 stuurt een 1 {0}-tip naar gebruiker @mitche50.'
+                     'Op Twitter: Tag {1} in een tweet en vermeld {4} <aantal> <@gebruikersnaam>. Voorbeeld: {1} {4} 5 @mitche50 stuurt een 5 {0}-tip naar gebruiker @mitche50.'
                      'Op Telegram stuur {3} {4} <aantal> <@gebruikersnaam> om iemand een ​​tip te geven in de groep.\n\n'
           + BULLET + ' !privatetip: Momenteel uitgeschakeld. Hiermee wordt via DM een tip naar een andere gebruiker verzonden. Als je wilt dat jouw tipbedrag privé is, gebruik dan deze functie! Correct gebruik is !privatetip @gebruikersnaam 1234\n\n'
           + BULLET + ' !account: Toont het accountnummer dat gekoppeld is aan jouw gebruikers-ID (momenteel uniek voor het platform). Je kan dit adres gebruiken om er meer {0} op te storten, zodat je een tip kan sturen vanuit jouw persoonlijke account.\n\n'
@@ -587,7 +587,7 @@ help_message = {
             + BULLET + ' ！註冊：註冊跟您用戶名相連的賬戶。這是用來儲存您的小費的。別忘了把小費提取到一個私人錢包裡，因為小費助手並不是一個用來長期保管{0}的設備。\n\n'
             + BULLET + ' ！餘額：此指令可匯報連著您用戶名的賬戶餘額。\n\n'
             + BULLET + ' {4}：小費通過發推或電報群聊天傳送。\n'
-                       '在推特上：發推時點名{1}然後輸入 “{4} <金額> @<用戶名>”。比如：“{1} {4} 1 @mitche50” 會給用戶 @mitche50 1 {0}的小費。\n'
+                       '在推特上：發推時點名{1}然後輸入 “{4} <金額> @<用戶名>”。比如：“{1} {4} 5 @mitche50” 會給用戶 @mitche50 5 {0}的小費。\n'
                        '在電報上發 “{3} {4} <金額> @<用戶名>” 來在群裡賞小費。\n\n'
             + BULLET + ' ！私賞：目前不能使用。這會用私信給另一個用戶小費。如果您想私密地給小費，請用這個指令。正確用法是 “！私賞 @<用戶名> <金額>”。\n\n'
             + BULLET + ' ！賬戶：匯報和平台用戶名相連的賬戶號碼（目前每個平台的賬戶都不一樣）。您可以用個人錢包給此賬戶充值更多的{0}。\n\n'
@@ -604,7 +604,7 @@ help_message = {
             + BULLET + ' ！余额：此指令可汇报连着您用户名的账户余额。\n\n'
             + BULLET + ' {4}：小费通过发推或电报群聊天传送。\n'
                        '在推特上：发推时点名{1}然后输入 “{4} <金额> @<用户名>”。\n'
-                       '比如：“{1} {4} 1 @mitche50” 会给用户 @mitche50 1 {0}的小费。\n'
+                       '比如：“{1} {4} 5 @mitche50” 会给用户 @mitche50 5 {0}的小费。\n'
                        '在电报上发 “{3} {4} <金额> @<用户名>” 来在群里赏小费。\n\n'
             + BULLET + ' ！私赏：目前不能使用。这会用私信赏给另一个用户小费。如果您想私密地赏小费，请用这个指令。正确用法是 '
                        '“！私赏 @<用户名> <金额>”。\n\n'
@@ -628,7 +628,7 @@ help_message = {
           + BULLET + ' !balance: Vous indique le solde de votre compte lié à votre identifiant utilisateur.\n\n'
           + BULLET + '{4}: Les tips sont envoyés via les tweets publics ou au sein de groupes Telegram.\n'
                      'Sur Twitter: Taggez {1} dans un tweet et indiquer {4} <montant> <@utilisateur>. '
-                     'Exemple: {1} {4} 1 @mitche50 enverrait un tip de 1 {0} à l\'utilisateur @mitche50.\n'
+                     'Exemple: {1} {4} 5 @mitche50 enverrait un tip de 5 {0} à l\'utilisateur @mitche50.\n'
                      'Sur Telegram, envoyez {3} {4} <montant> <@utilisateur> afin d\'envoyer un tip dans le groupe.\n\n'
           + BULLET + ' !privatetip: Désactivé pour l\'instant. Ceci enverra un tip à un autre utilisateur via message '
                      'privé. Si vous désirez que le montant de votre tip soit privé, utilisez cette fonction! '
@@ -656,7 +656,7 @@ help_message = {
           + BULLET + ' !balance: Mostra o saldo do utilizador.\n\n'
           + BULLET + ' {4}: As tips são gorjetas enviadas através de tweets públicos ou em grupos do Telegram.\n'
                      'No Twitter, faz tag do {1} num tweet e utiliza o comando {4} <valor> <@utilizador>. '
-                     'Por exemplo: {1} {4} 1 @mitche50.\n'
+                     'Por exemplo: {1} {4} 5 @mitche50.\n'
                      'No Telegram, envia {3} {4} <valor> <@utilizador> no grupo.\n\n'
           + BULLET + ' !privatetip: De momento encontra-se desativado. Permite enviar uma tip a outro utilizador '
                      'através de mensagens privadas. Para utilizar, o formato é !privatetip <@utilizador> <valor>\n\n'
@@ -685,7 +685,7 @@ help_message = {
                      'pengguna Anda.\n\n'
           + BULLET + ' {4}: Tip dikirim melalui tweet publik atau dalam grup Telegram.\n'
                      'Di Twitter: Beri tag {1} dalam tweet dan sebutkan {4} <amount> <@username>. '
-                     'Contoh: {1} {4} 1 @mitche50 akan mengirim tip 1 {0} ke pengguna @mitche50.\n'
+                     'Contoh: {1} {4} 5 @mitche50 akan mengirim tip 5 {0} ke pengguna @mitche50.\n'
                      'Di Telegram, kirim {3} {4} <amount> <@username> untuk memberi tip di grup.\n\n'
           + BULLET + ' !privatetip: Saat ini dinonaktifkan. Ini akan mengirim tip ke pengguna lain melalui DM. Jika '
                      'Anda ingin jumlah tip Anda menjadi pribadi, gunakan fungsi ini! Penggunaan yang benar '
@@ -714,7 +714,7 @@ help_message = {
           + BULLET + ' !баланс: показывает баланс учетной записи, связанной с вашим идентификатором пользователя.\n\n'
           + BULLET + ' {4}: Тип отправляются через публичные твиты или в группах Telegram.\n'
                      'В Твиттере: Отметьте {1} в твиттере и упомяните {4} <сумма> <@имя_пользователя>. '
-                     'Пример: {1} {4} 1 @mitche50 будет отправлено 1 {0} тип пользователю @mitche50.\n'
+                     'Пример: {1} {4} 5 @mitche50 будет отправлено 5 {0} тип пользователю @mitche50.\n'
                      'В Telegram отправьте {3} {4} <сумма> <@имя_пользователя> , чтобы сделать тип в группе.\n\n'
           + BULLET + ' !приватныйтип: В настоящее время отключен. Это отправит тип другому пользователю через DM. '
                      'Если вы хотите, чтобы сумма тип была конфиденциальной, используйте эту функцию! '
@@ -743,7 +743,7 @@ help_message = {
           + BULLET + ' !balance: Mostra il saldo dell\'account collegato al tuo ID utente.\n\n'
           + BULLET + ' {4}: Le mance vengono inviate attraverso tweets pubblici o nei gruppi Telegram.\n'
                      'Su Twitter: Menziona {1} in un tweet e usa {4} <importo> <@nomeutente>.\n'
-                     'Esempio: {1} {4} 1 @mitche50 invierà una mancia di 1 {0} all\'utente @mitche50.\n'
+                     'Esempio: {1} {4} 5 @mitche50 invierà una mancia di 5 {0} all\'utente @mitche50.\n'
                      'Su Telegram invia {3} {4} <importo> <@nomeutente> per dare una mancia nel gruppo.\n\n'
           + BULLET + ' !privatetip: Attualmente disabilitata. Questo invierà una mancia ad un altro utente tramite '
                      'DM. Se vuoi che l\'importo della tua mancia rimanga privato, usa questa funzione! L\'uso '
@@ -772,7 +772,7 @@ help_message = {
                      'görebilirsiniz.\n\n'
           + BULLET + ' {4}: Tipler herkese açık tweet\'ler ve telegram grupları yoluyla gönderilebilir.\n'
                      'Twitter\'da: Tag {1} \'u bir tweette tagle ve mentionla {4} <miktar> <@kullanıcıadı>.\n'
-                     'Örnek: Tag {1} {4} 1 @mitche50 koduyla @mitche50\'ye 1  {0} gönderebilirsiniz.\n'
+                     'Örnek: Tag {1} {4} 5 @mitche50 koduyla @mitche50\'ye 5  {0} gönderebilirsiniz.\n'
                      'Telegram grubunda ise {3} {4} <miktar> <@kullanıcıadı> yazarak gönderebilirsiniz.\n\n'
           + BULLET + ' !privatetip: Şu anda etkin değil.  Bu komutla bir başka kullanıcıya DM yoluyla tip '
                      'yollayabileceksiniz.  Eğer tip miktarınızın gizli olmasını istiyorsanız bu fonksiyonu kullanın. '
@@ -798,7 +798,7 @@ help_message = {
              + BULLET + ' !balance: Retorna o saldo da conta vinculada a sua ID de usuário.\n\n'
              + BULLET + ' !tip: As gorjetas são enviadas por meio de tweets públicos ou em grupos no Telegram.\n'
                         'No Twitter: Marque {1} em um tweet e mencione {4} <valor> <@nome_do_usuário>.\n'
-                        'Exemplo: {1} {4} 1 @mitche50 enviaria uma gorjeta de 1 {0} para o usuário @mitche50.\n'
+                        'Exemplo: {1} {4} 5 @mitche50 enviaria uma gorjeta de 5 {0} para o usuário @mitche50.\n'
                         'No Telegram envie {3} {4} <valor> <@nome_do_usuário> para dar uma gorjeta no grupo.\n\n'
              + BULLET + ' !privatetip: Atualmente desativado. Isto irá enviar uma gorjeta para outro usuário através '
                         'do DM. Se você quiser que seu valor de gorjeta seja privado, use esta função! O uso adequado '
@@ -826,7 +826,7 @@ help_message = {
           + BULLET + ' !balance: Връща баланса на сметката, свързана с потребителското ви ID.\n\n'
           + BULLET + ' {4}: "Подпомагането" се изпраща чрез публични туити или в Telegram групи.\n'
                      'В Twitter: Тагнете {1} в туит и напишете {4} <сумаt> <@username>.\n'
-                     'Пример: {1} {4} 1 @mitche50 ще изпрати 1 {0} на потребител @mitche50.\n'
+                     'Пример: {1} {4} 5 @mitche50 ще изпрати 5 {0} на потребител @mitche50.\n'
                      'В Телеграм напишете {3} {4} <сума> <@username> за да типнете в групата.\n\n'
           + BULLET + ' !privatetip: В момента деактивиран. Това ще изпрати тип на друг потребител чрез DM.  Ако '
                      'желаете вашата сума на типа да е лична, използвайте тази функция!  Правилно използване е '
@@ -864,8 +864,8 @@ help_message = {
                      'را در یک توئیت تگ کنید و نوع انعام، مقدار و نام کاربری فرد گیرنده را ذکر کنید:\n'
                      '{4} <amount> <@username>.\n'
                      'به طور مثال:\n'
-                     '{1} {4} 1 @mitche50\n'
-                     ' مقدار 1 واحد {0} را به کاربر\n'
+                     '{1} {4} 5 @mitche50\n'
+                     ' مقدار 5 واحد {0} را به کاربر\n'
                      '@mitche50\n'
                      'ارسال می‌کند.\n'
                      'در تلگرام: برای انعام دادن در گروه\n'

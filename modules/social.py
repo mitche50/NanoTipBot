@@ -354,6 +354,12 @@ def validate_tip_amount(message):
         message['tip_amount_text'] = "0{}".format(str(message['tip_amount']))
     else:
         message['tip_amount_text'] = str(message['tip_amount'])
+    
+    # remove any trailing 0's if decimal is 0.  This is to prevent confusion from someone tipping
+    # 1.000 and making users think they received 1000 nano/banano
+    if '.' in message['tip_amount_text']:
+        if int(message['tip_amount_text'][message['tip_amount_text'].index('.') + 1:]) == 0:
+            message['tip_amount_text'] = message['tip_amount_text'][:message['tip_amount_text'].index('.')]
 
     return message
 
