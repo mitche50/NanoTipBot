@@ -337,7 +337,10 @@ def get_user_address_twitter(username):
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
         if address_return[0][0] is not None:
-            return address_return[0][0]
+            json_response = {
+                "account": address_return[0][0]
+            }
+            return json.dumps(json_response), 200
         else:
             return "Account not found for user {} on twitter".format(username)
     except Exception as e:
@@ -373,7 +376,10 @@ def get_user_address_telegram(username):
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
         if address_return[0][0] is not None:
-            return address_return[0][0]
+            json_response = {
+                "account": address_return[0][0]
+            }
+            return json.dumps(json_response), 200
         else:
             return "Account not found for user {} on telegram".format(username)
     except Exception as e:
@@ -387,9 +393,16 @@ def get_all_users_telegram():
                    "WHERE system = 'telegram'")
     address_values = []
     address_return = modules.db.get_db_data_new(address_call, address_values)
+    json_response = []
     try:
         if address_return is not None:
-            return "{}".format(address_return)
+            for user in address_return:
+                json_response.append({
+                    "user_id": user[0],
+                    "user_name": user[1],
+                    "account": user[2]
+                })
+            return json.dumps(json_response), 200
         else:
             return "Error retrieving addresses on telegram"
     except Exception as e:
