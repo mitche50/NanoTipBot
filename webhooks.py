@@ -403,9 +403,16 @@ def get_all_users_twitter():
                    "WHERE system = 'twitter'")
     address_values = []
     address_return = modules.db.get_db_data_new(address_call, address_values)
+    json_response = []
     try:
         if address_return is not None:
-            return "{}".format(address_return)
+            for user in address_return:
+                json_response.append({
+                    "user_id": user[0],
+                    "user_name": user[1],
+                    "account": user[2]
+                })
+            return json.dumps(json_response), 200
         else:
             return "Error retrieving addresses on twitter"
     except Exception as e:
