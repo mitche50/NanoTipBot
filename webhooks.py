@@ -343,6 +343,21 @@ def get_user_address_twitter(username):
     except Exception as e:
         return e
 
+@app.route('/users/<address>', methods=["GET"])
+def get_user_from_address(username):
+    # Returns the user info of the provided address
+    address_call = ("SELECT user_id, system, user_name FROM users "
+                   "WHERE user_name = %s AND system = 'twitter'")
+    address_values = [username,]
+    address_return = modules.db.get_db_data_new(address_call, address_values)
+    try:
+        if address_return[0][0] is not None:    
+            return address_return[0][0]
+        else:
+            return "There is no user tied to address {}".format(username)
+    except Exception as e:
+        return e
+
 
 @app.route('/users/telegram/<username>', methods=["GET"])
 def get_user_address_telegram(username):
