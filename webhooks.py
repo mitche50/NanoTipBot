@@ -402,7 +402,7 @@ def get_all_users_telegram():
                     "user_name": user[1],
                     "account": user[2]
                 })
-            response = flask.jsonify(json_response)
+            response = jsonify(json_response)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response, 200
         else:
