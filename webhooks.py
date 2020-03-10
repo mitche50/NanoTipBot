@@ -357,7 +357,7 @@ def get_user_from_address(address):
                 'system': address_return[0][1],
                 'user_name': address_return[0][2]
             }
-            return json_response
+            return json.dumps(json_response), 200
         else:
             return "There is no user tied to address {}".format(address)
     except Exception as e:
