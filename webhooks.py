@@ -351,7 +351,8 @@ def get_user_from_address(address):
     address_values = [address,]
     address_return = modules.db.get_db_data_new(address_call, address_values)
     try:
-        if address_return[0] is not None:    
+        if address_return[0] is not None:
+            logging.info("Address return: {}".format(address_return))
             return address_return[0]
         else:
             return "There is no user tied to address {}".format(address)
