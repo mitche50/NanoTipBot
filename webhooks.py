@@ -402,7 +402,9 @@ def get_all_users_telegram():
                     "user_name": user[1],
                     "account": user[2]
                 })
-            return json.dumps(json_response), 200
+            response = flask.jsonify(json_response)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
         else:
             return "Error retrieving addresses on telegram"
     except Exception as e:
