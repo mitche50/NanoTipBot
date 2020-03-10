@@ -13,7 +13,7 @@ import nano
 import requests
 import telegram
 import tweepy
-from flask import Flask, render_template, request, Response, redirect
+from flask import Flask, render_template, request, Response, redirect, jsonify
 from flask_weasyprint import HTML, render_pdf
 
 import modules.currency
