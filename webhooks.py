@@ -340,7 +340,9 @@ def get_user_address_twitter(username):
             json_response = {
                 "account": address_return[0][0]
             }
-            return json.dumps(json_response), 200
+            response = jsonify(json_response)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
         else:
             return "Account not found for user {} on twitter".format(username)
     except Exception as e:
@@ -360,7 +362,9 @@ def get_user_from_address(address):
                 'system': address_return[0][1],
                 'user_name': address_return[0][2]
             }
-            return json.dumps(json_response), 200
+            response = jsonify(json_response)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
         else:
             return "There is no user tied to address {}".format(address)
     except Exception as e:
@@ -379,7 +383,9 @@ def get_user_address_telegram(username):
             json_response = {
                 "account": address_return[0][0]
             }
-            return json.dumps(json_response), 200
+            response = jsonify(json_response)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
         else:
             return "Account not found for user {} on telegram".format(username)
     except Exception as e:
@@ -427,7 +433,9 @@ def get_all_users_twitter():
                     "user_name": user[1],
                     "account": user[2]
                 })
-            return json.dumps(json_response), 200
+            response = jsonify(json_response)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response, 200
         else:
             return "Error retrieving addresses on twitter"
     except Exception as e:
