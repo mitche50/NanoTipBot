@@ -357,9 +357,12 @@ def validate_tip_amount(message):
     
     # remove any trailing 0's if decimal is 0.  This is to prevent confusion from someone tipping
     # 1.000 and making users think they received 1000 nano/banano
-    if '.' in message['tip_amount_text']:
-        if int(message['tip_amount_text'][message['tip_amount_text'].index('.') + 1:]) == 0:
-            message['tip_amount_text'] = message['tip_amount_text'][:message['tip_amount_text'].index('.')]
+    try:
+        if '.' in message['tip_amount_text']:
+            if int(message['tip_amount_text'][message['tip_amount_text'].index('.') + 1:]) == 0:
+                message['tip_amount_text'] = message['tip_amount_text'][:message['tip_amount_text'].index('.')]
+    except Exception as e:
+        logging.info("{}: Error in removing trailing zeroes - ignoring {}".format(datetime.now(), e))
 
     return message
 

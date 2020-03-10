@@ -190,7 +190,12 @@ def linkgenerator():
 @app.route('/tutorial')
 @app.route('/tutorial.html')
 def tutorial():
-    return render_template('tutorial.html', currency=CURRENCY, bot_id=BOT_ID_TWITTER)
+    if CURRENCY == 'banano':
+        tip_command = '!ban'
+    else:
+        tip_command = '!tip'
+
+    return render_template('tutorial.html', currency=CURRENCY, bot_id=BOT_ID_TWITTER, bot_name_twitter=BOT_NAME_TWITTER, tip_command=tip_command)
 
 
 @app.route('/about')
@@ -544,12 +549,12 @@ def telegram_event():
             logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
 
             # Update DB with new DM
-            dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
-                              "VALUES (%s, 0, %s, %s, 'telegram')")
-            dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
-            err = modules.db.set_db_data(dm_insert_call, dm_insert_values)
-            if err is not None:
-                return 'ok'
+            # dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
+            #                   "VALUES (%s, 0, %s, %s, 'telegram')")
+            # dm_insert_values = [message['dm_id'], message['sender_id'], message['text']]
+            # err = modules.db.set_db_data(dm_insert_call, dm_insert_values)
+            # if err is not None:
+            #     return 'ok'
 
             modules.orchestration.parse_action(message)
 
