@@ -747,7 +747,7 @@ def twitter_event_received():
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
     try:
-        logger.info("hash comparison: {}".format(hmac.compare_digest(auth_header, compare_auth)))
+        hash_comparison = hmac.compare_digest(auth_header, compare_auth)
     except Exception as e:
         if request.headers.getlist("X-Forwarded-For"):
             ip = request.headers.getlist("X-Forwarded-For")[0]
@@ -756,7 +756,7 @@ def twitter_event_received():
         logger.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
         return 'You are not allowed to access this webhook.', HTTPStatus.BAD_REQUEST
 
-    if not hmac.compare_digest(auth_header, compare_auth):
+    if not hash_comparison:
         if request.headers.getlist("X-Forwarded-For"):
             ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
