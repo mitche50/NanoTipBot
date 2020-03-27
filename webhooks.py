@@ -811,7 +811,9 @@ def twitter_event_received():
         """
 
         tweet_object = request_json['tweet_create_events'][0]
-        logger.info("{}: Tweet received: {}".format(datetime.now(), tweet_object))
+        logger.info("{}: Tweet received: From - {} - Text - {}".format(datetime.now(), 
+                                                                       tweet_object.get('user', {}).get('screen_name'),
+                                                                       tweet_object.get('text')))
 
         message = modules.social.set_message_info(tweet_object, message)
         if message['id'] is None:
