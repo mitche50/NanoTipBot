@@ -3,14 +3,20 @@ import logging
 import os
 from datetime import datetime
 from decimal import *
+from logging.handlers import TimedRotatingFileHandler
 
 import modules.currency
 
 import MySQLdb
 
-# Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
-                    level=logging.INFO)
+# Set logging info
+logger = logging.getLogger("db_log")
+logger.setLevel(logging.INFO)
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-db.log'.format(os.getcwd(), datetime.now()),
+                                   when="d",
+                                   interval=1,
+                                   backupCount=5)
+logger.addHandler(handler)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
@@ -28,9 +34,9 @@ DB_SCHEMA = config.get(CURRENCY, 'schema')
 
 def db_init():
     if not check_db_exist():
-        logging.info("db didn't exist: {}".format(DB_SCHEMA))
+        logger.info("db didn't exist: {}".format(DB_SCHEMA))
         create_db()
-    logging.info("db did exist: {}".format(DB_SCHEMA))
+    logger.info("db did exist: {}".format(DB_SCHEMA))
     create_tables()
     create_triggers()
 
@@ -38,7 +44,7 @@ def db_init():
 def check_db_exist():
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, use_unicode=True,
                          charset="utf8mb4")
-    logging.info("Checking if schema exists: {}".format(DB_SCHEMA))
+    logger.info("Checking if schema exists: {}".format(DB_SCHEMA))
     sql = "SHOW DATABASES LIKE '{}'".format(DB_SCHEMA)
     db_cursor = db.cursor()
     exists = db_cursor.execute(sql)
@@ -57,7 +63,7 @@ def create_db():
     db.commit()
     db_cursor.close()
     db.close()
-    logging.info('Created database')
+    logger.info('Created database')
 
 
 def check_table_exists(table_name):
@@ -108,7 +114,7 @@ def create_triggers():
     db_cursor.execute(user_trigger)
     db_cursor.execute(tip_list_trigger)
     db_cursor.execute(dm_list_trigger)
-    logging.info("Triggers set.")
+    logger.info("Triggers set.")
 
 
 def create_tables():
@@ -135,7 +141,7 @@ def create_tables():
             """
 
             db_cursor.execute(sql)
-            logging.info("Checking if users table was created: {}".format(
+            logger.info("Checking if users table was created: {}".format(
                 check_table_exists('users')))
 
         check_exists = check_table_exists('telegram_chat_members')
@@ -152,7 +158,7 @@ def create_tables():
             """
 
             db_cursor.execute(sql)
-            logging.info("Checking if telegram_chat_members table was created: {}".format(
+            logger.info("Checking if telegram_chat_members table was created: {}".format(
                 check_table_exists('telegram_chat_members')))
 
         check_exists = check_table_exists('tip_list')
@@ -174,7 +180,7 @@ def create_tables():
             """
 
             db_cursor.execute(sql)
-            logging.info("Checking if tip_list table was created: {}".format(
+            logger.info("Checking if tip_list table was created: {}".format(
                 check_table_exists('tip_list')))
 
         check_exists = check_table_exists('dm_list')
@@ -197,7 +203,7 @@ def create_tables():
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
             """
             db_cursor.execute(sql)
-            logging.info("Checking if tip_list table was created: {}".format(
+            logger.info("Checking if tip_list table was created: {}".format(
                 check_table_exists('tip_list')))
 
         check_exists = check_table_exists('languages')
@@ -214,7 +220,7 @@ def create_tables():
                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                    """
             db_cursor.execute(sql)
-            logging.info("Checking if languages table was created: {}".format(
+            logger.info("Checking if languages table was created: {}".format(
                 check_table_exists('languages')))
 
         check_exists = check_table_exists('return_address')
@@ -230,7 +236,7 @@ def create_tables():
                   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
                    """
             db_cursor.execute(sql)
-            logging.info("Checking if return_address table was created: {}".format(
+            logger.info("Checking if return_address table was created: {}".format(
                 check_table_exists('return_address')))
 
         check_exists = check_table_exists('spare_accounts')
@@ -243,14 +249,14 @@ def create_tables():
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
             """
             db_cursor.execute(sql)
-            logging.info("Checking if spare_accounts table was created: {}".format(
+            logger.info("Checking if spare_accounts table was created: {}".format(
                 check_table_exists('spare_accounts')))
 
         db.commit()
         db_cursor.close()
         db.close()
     except Exception as e:
-        logging.info("Error creating tables for DB: {}".format(e))
+        logger.info("Error creating tables for DB: {}".format(e))
 
 
 def get_db_data(db_call):
@@ -293,11 +299,11 @@ def set_db_data(db_call, values):
         db.commit()
         db_cursor.close()
         db.close()
-        logging.info("{}: record inserted into DB".format(datetime.now()))
+        logger.info("{}: record inserted into DB".format(datetime.now()))
         return None
     except MySQLdb.ProgrammingError as e:
-        logging.info("{}: Exception entering data into database".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
+        logger.info("{}: Exception entering data into database".format(datetime.now()))
+        logger.info("{}: {}".format(datetime.now(), e))
         return e
 
 
@@ -305,7 +311,7 @@ def set_db_data_tip(message, users_to_tip, t_index):
     """
     Special case to update DB information to include tip data
     """
-    logging.info("{}: inserting tip into DB.".format(datetime.now()))
+    logger.info("{}: inserting tip into DB.".format(datetime.now()))
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8mb4")
     try:
@@ -320,8 +326,8 @@ def set_db_data_tip(message, users_to_tip, t_index):
         db_cursor.close()
         db.close()
     except Exception as e:
-        logging.info("{}: Exception in set_db_data_tip".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
+        logger.info("{}: Exception in set_db_data_tip".format(datetime.now()))
+        logger.info("{}: {}".format(datetime.now(), e))
         raise e
 
 
@@ -338,13 +344,13 @@ def set_spare_accounts(accounts):
             else:
                 insert_accounts_call += ", (%s)"
         insert_accounts_call += ';'
-        logging.info("insert accounts call: {}".format(insert_accounts_call))
+        logger.info("insert accounts call: {}".format(insert_accounts_call))
         set_db_data(insert_accounts_call, accounts)
 
     except Exception as e:
-        logging.info("Error inserting spare accounts: {}".format(e))
+        logger.info("Error inserting spare accounts: {}".format(e))
 
-    logging.info("New accounts set in DB.")
+    logger.info("New accounts set in DB.")
 
 
 def get_spare_account():
@@ -353,7 +359,6 @@ def get_spare_account():
     """
     check_accounts_call = "SELECT count(account) FROM {}.spare_accounts;".format(DB_SCHEMA)
     check_accounts_return = get_db_data(check_accounts_call)
-    logging.info("")
     if int(check_accounts_return[0][0]) <= 5:
         accounts = modules.currency.generate_accounts()
         set_spare_accounts(accounts)
