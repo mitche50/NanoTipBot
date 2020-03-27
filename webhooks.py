@@ -24,12 +24,13 @@ import modules.social
 import modules.translations as translations
 
 # Set Log File
+logger = logging.getLogger("main_log")
+logger.setLevel(logging.INFO)
 handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-main.log'.format(os.getcwd(), datetime.now()),
                                    when="d",
                                    interval=1,
                                    backupCount=5)
-logging.basicConfig(handlers=handler,
-                    level=logging.INFO)
+logger.addHandler(handler)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
@@ -163,9 +164,9 @@ def deep_link_test():
         return render_template('uriformatter.html', uri=uri, address=address, currency=CURRENCY)
 
     else:
-        logging.info(amount)
+        logger.info(amount)
         amount_raw = int(Decimal(amount) * CONVERT_MULTIPLIER[CURRENCY])
-        logging.info("amount_raw = {}".format(int(amount_raw)))
+        logger.info("amount_raw = {}".format(int(amount_raw)))
         uri = "nano://{}?amount={}".format(address, amount_raw)
         return render_template('uriformatter.html', uri=uri, address=address, amount=Decimal(amount),
                                amount_raw=amount_raw, currency=CURRENCY)
@@ -176,8 +177,8 @@ def noappredirect():
     address = request.args.get('address')
     amount_raw = request.args.get('amount')
 
-    logging.info("amount: {}".format(amount_raw))
-    logging.info("amount = none: {}".format((amount_raw is None)))
+    logger.info("amount: {}".format(amount_raw))
+    logger.info("amount = none: {}".format((amount_raw is None)))
 
     if amount_raw is None or amount_raw == 'None' or amount_raw == '':
         return render_template('noappredirect.html', address=address, amount=0, amount_raw=0)
@@ -260,8 +261,8 @@ def tippers():
 
     tipper_table = modules.db.get_db_data(tippers_call)
     top_tipper = modules.db.get_db_data(largest_tip)
-    logging.info("tipper_call: {}".format(tippers_call))
-    logging.info("largest_tip: {}".format(largest_tip))
+    logger.info("tipper_call: {}".format(tippers_call))
+    logger.info("largest_tip: {}".format(largest_tip))
     top_tipper_date = top_tipper[0][4].date()
     return render_template('tippers.html', tipper_table=tipper_table, top_tipper=top_tipper,
                            top_tipper_date=top_tipper_date, currency=CURRENCY, explorer=EXPLORER)
@@ -493,7 +494,7 @@ def get_twitter_account(screen_name):
             response.headers['Content-Type'] = 'application/json'
             return response, HTTPStatus.OK
         else:
-            logging.info('{}: No user found.'.format(datetime.now()))
+            logger.info('{}: No user found.'.format(datetime.now()))
             account_dict = {
                 'user_id': None,
                 'account': None,
@@ -506,7 +507,7 @@ def get_twitter_account(screen_name):
             response.headers['Content-Type'] = 'application/json'
             return response, HTTPStatus.OK
     except Exception as e:
-        logging.info('{}: ERROR in get_twitter_account(webhooks.py): {}'.format(datetime.now(), e))
+        logger.info('{}: ERROR in get_twitter_account(webhooks.py): {}'.format(datetime.now(), e))
         account_dict = {
             'user_id': None,
             'account': None,
@@ -535,7 +536,7 @@ def refresh_balance(account):
 
         return response, HTTPStatus.OK
     except Exception as e:
-        logging.info("{}: ERROR in refresh_balance (webhooks.py): {}".format(datetime.now, e))
+        logger.info("{}: ERROR in refresh_balance (webhooks.py): {}".format(datetime.now, e))
         return e, HTTPStatus.BAD_REQUEST
 
 
@@ -578,7 +579,7 @@ def telegram_event():
     request_json = request.get_json()
     if 'message' in request_json.keys():
         if request_json['message']['chat']['type'] == 'private':
-            logging.info("Direct message received in Telegram.  Processing.")
+            logger.info("Direct message received in Telegram.  Processing.")
             message['sender_id'] = request_json['message']['from']['id']
             bot_ids = ['1115793994024464384', '894722023', '966739513195335680', '624103005']
             if message['sender_id'] in bot_ids:
@@ -595,13 +596,13 @@ def telegram_event():
             try:
                 message['text'] = request_json['message']['text']
             except KeyError:
-                logging.info("error in DM processing: {}".format(request_json))
+                logger.info("error in DM processing: {}".format(request_json))
                 return ''
             message['dm_array'] = message['text'].split(" ")
             message['dm_action'] = message['dm_array'][0].lower()
             modules.social.get_language(message)
 
-            logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
+            logger.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
 
             # Update DB with new DM
             # dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
@@ -650,10 +651,10 @@ def telegram_event():
                 if message['tip_amount'] <= 0:
                     return '', HTTPStatus.OK
 
-                logging.info("Got past initial checks.")
-                logging.info("message: {}".format(message))
-                logging.info("bot_id_telegram: {}".format(BOT_ID_TELEGRAM))
-                logging.info("sender id: {}".format(message['sender_id']))
+                logger.info("Got past initial checks.")
+                logger.info("message: {}".format(message))
+                logger.info("bot_id_telegram: {}".format(BOT_ID_TELEGRAM))
+                logger.info("sender id: {}".format(message['sender_id']))
 
                 if message['action'] != -1 and str(message['sender_id']) != str(BOT_ID_TELEGRAM):
                     new_pid = os.fork()
@@ -667,14 +668,14 @@ def telegram_event():
                             else:
                                 modules.orchestration.tip_process(message, users_to_tip, request_json)
                         except Exception as e:
-                            logging.info("Exception: {}".format(e))
+                            logger.info("Exception: {}".format(e))
                             raise e
 
                         os._exit(0)
                     else:
                         return '', HTTPStatus.OK
             elif 'new_chat_member' in request_json['message']:
-                logging.info("new member joined chat, adding to DB")
+                logger.info("new member joined chat, adding to DB")
                 chat_id = request_json['message']['chat']['id']
                 chat_name = request_json['message']['chat']['title']
                 member_id = request_json['message']['new_chat_member']['id']
@@ -699,7 +700,7 @@ def telegram_event():
                     member_name = request_json['message']['left_chat_member']['username']
                 else:
                     member_name = None
-                logging.info("member {}-{} left chat {}-{}, removing from DB.".format(member_id, member_name, chat_id,
+                logger.info("member {}-{} left chat {}-{}, removing from DB.".format(member_id, member_name, chat_id,
                                                                                       chat_name))
 
                 remove_member_call = ("DELETE FROM telegram_chat_members "
@@ -714,7 +715,7 @@ def telegram_event():
                 chat_name = request_json['message']['chat']['title']
                 member_id = request_json['message']['from']['id']
                 member_name = request_json['message']['from']['username']
-                logging.info("member {} created chat {}, inserting creator into DB.".format(member_name, chat_name))
+                logger.info("member {} created chat {}, inserting creator into DB.".format(member_name, chat_name))
                 new_chat_call = ("INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
                                  "VALUES (%s, %s, %s, %s)")
                 new_chat_values = [chat_id, chat_name, member_id, member_name]
@@ -723,7 +724,7 @@ def telegram_event():
                     return 'ok'
 
         else:
-            logging.info("request: {}".format(request_json))
+            logger.info("request: {}".format(request_json))
     return 'ok'
 
 
@@ -746,13 +747,13 @@ def twitter_event_received():
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
     try:
-        logging.info("hash comparison: {}".format(hmac.compare_digest(auth_header, compare_auth)))
+        logger.info("hash comparison: {}".format(hmac.compare_digest(auth_header, compare_auth)))
     except Exception as e:
         if request.headers.getlist("X-Forwarded-For"):
             ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
             ip = request.remote_addr
-        logging.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
+        logger.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
         return 'You are not allowed to access this webhook.', HTTPStatus.BAD_REQUEST
 
     if not hmac.compare_digest(auth_header, compare_auth):
@@ -760,7 +761,7 @@ def twitter_event_received():
             ip = request.headers.getlist("X-Forwarded-For")[0]
         else:
             ip = request.remote_addr
-        logging.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
+        logger.info("auth header not provided, probable malicious access attempt from IP: {}".format(ip))
         return 'You are not allowed to access this webhook.', HTTPStatus.BAD_REQUEST
 
     if 'direct_message_events' in request_json.keys():
@@ -786,7 +787,7 @@ def twitter_event_received():
         message['dm_action'] = message['dm_array'][0].lower()
         modules.social.get_language(message)
 
-        logging.info("Processing direct message.")
+        logger.info("Processing direct message.")
 
         # Update DB with new DM
         dm_insert_call = ("INSERT INTO dm_list (dm_id, processed, sender_id, dm_text, system) "
@@ -796,7 +797,7 @@ def twitter_event_received():
         if err is not None:
             return 'ok'
 
-        logging.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
+        logger.info("{}: action identified: {}".format(datetime.now(), message['dm_action']))
         # Check for action on DM
         modules.orchestration.parse_action(message)
 
@@ -810,7 +811,7 @@ def twitter_event_received():
         """
 
         tweet_object = request_json['tweet_create_events'][0]
-        logging.info("{}: Tweet received: {}".format(datetime.now(), tweet_object))
+        logger.info("{}: Tweet received: {}".format(datetime.now(), tweet_object))
 
         message = modules.social.set_message_info(tweet_object, message)
         if message['id'] is None:
@@ -818,7 +819,7 @@ def twitter_event_received():
 
         message = modules.social.check_message_action(message)
         if message['action'] is None:
-            logging.info("{}: Mention of nano tip bot without a !tip command.".format(datetime.now()))
+            logger.info("{}: Mention of nano tip bot without a !tip command.".format(datetime.now()))
             return '', HTTPStatus.OK
 
         message = modules.social.validate_tip_amount(message)
@@ -839,7 +840,7 @@ def twitter_event_received():
                         # api.create_favorite(message['id'])
                         modules.orchestration.tip_process(message, users_to_tip, request_json)
                 except Exception as e:
-                    logging.info("Exception: {}".format(e))
+                    logger.info("Exception: {}".format(e))
                     raise e
 
                 os._exit(0)
@@ -847,7 +848,7 @@ def twitter_event_received():
                 return '', HTTPStatus.OK
 
         elif str(message['sender_id']) == str(BOT_ID_TWITTER):
-            logging.info("{}: TipBot sent a message.".format(datetime.now()))
+            logger.info("{}: TipBot sent a message.".format(datetime.now()))
 
         return '', HTTPStatus.OK
 
@@ -855,7 +856,7 @@ def twitter_event_received():
         """
         New user followed the bot.  Send a welcome message.
         """
-        logging.info("{}: New user followed, sending help message.".format(datetime.now()))
+        logger.info("{}: New user followed, sending help message.".format(datetime.now()))
         request_json = request.get_json()
         follow_object = request_json['follow_events'][0]
         follow_source = follow_object.get('source', {})
@@ -878,6 +879,6 @@ def initdb_command():
 
 if __name__ == "__main__":
     modules.db.db_init()
-    logging.info("db initialized from wsgi")
+    logger.info("db initialized from wsgi")
     modules.social.telegram_set_webhook()
     app.run(host='0.0.0.0')

@@ -6,7 +6,6 @@ import requests
 from datetime import datetime
 from decimal import Decimal
 from http import HTTPStatus
-from logging.handlers import TimedRotatingFileHandler
 
 import nano
 
@@ -16,11 +15,7 @@ import modules.social
 import modules.translations as translations
 
 # Set Log File
-handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-orchestration.log'.format(os.getcwd(), datetime.now()),
-                                   when="d",
-                                   interval=1,
-                                   backupCount=5)
-logging.basicConfig(handlers=handler, 
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants

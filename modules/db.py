@@ -3,18 +3,13 @@ import logging
 import os
 from datetime import datetime
 from decimal import *
-from logging.handlers import TimedRotatingFileHandler
 
 import modules.currency
 
 import MySQLdb
 
 # Set Log File
-handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-db.log'.format(os.getcwd(), datetime.now()),
-                                   when="d",
-                                   interval=1,
-                                   backupCount=5)
-logging.basicConfig(handlers=handler, 
+logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
                     level=logging.INFO)
 
 # Read config and parse constants
