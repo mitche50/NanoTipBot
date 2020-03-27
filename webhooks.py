@@ -8,6 +8,7 @@ import logging
 import os
 from datetime import timedelta, datetime
 from http import HTTPStatus
+from logging.handlers import TimedRotatingFileHandler
 
 import nano
 import requests
@@ -23,7 +24,11 @@ import modules.social
 import modules.translations as translations
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('webhooks.log', 'a', 'utf-8')],
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-main.log'.format(os.getcwd(), datetime.now()),
+                                   when="d",
+                                   interval=1,
+                                   backupCount=5)
+logging.basicConfig(handlers=handler,
                     level=logging.INFO)
 
 # Read config and parse constants
@@ -805,6 +810,7 @@ def twitter_event_received():
         """
 
         tweet_object = request_json['tweet_create_events'][0]
+        logging.info("{}: Tweet received: {}".format(datetime.now(), tweet_object))
 
         message = modules.social.set_message_info(tweet_object, message)
         if message['id'] is None:

@@ -4,6 +4,7 @@ import logging
 import os
 from datetime import datetime
 from decimal import Decimal
+from logging.handlers import TimedRotatingFileHandler
 
 import nano
 import pyqrcode
@@ -17,7 +18,11 @@ import modules.orchestration
 import modules.translations as translations
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-social.log'.format(os.getcwd(), datetime.now()),
+                                   when="d",
+                                   interval=1,
+                                   backupCount=5)
+logging.basicConfig(handlers=handler,
                     level=logging.INFO)
 
 # Read config and parse constants
