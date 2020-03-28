@@ -25,12 +25,19 @@ import modules.translations as translations
 
 # Set Log File
 logger = logging.getLogger("main_log")
+tweet_log = logging.getLogger("tweet_log")
+tweet_log.setLevel(logging.INFO)
 logger.setLevel(logging.INFO)
 handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-main.log'.format(os.getcwd(), datetime.now()),
                                    when="d",
                                    interval=1,
                                    backupCount=5)
+tweet_handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-tweet.log'.format(os.getcwd(), datetime.now()),
+                                         when="d",
+                                         interval=1,
+                                         backupCount=5)
 logger.addHandler(handler)
+tweet_log.addHandler(tweet_handler)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
@@ -744,6 +751,8 @@ def twitter_event_received():
         digestmod=hashlib.sha256
     )
 
+    tweet_log.info("{}: Message received from twitter: {}".format(datetime.now(), request_json))
+
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
     try:
@@ -811,9 +820,9 @@ def twitter_event_received():
         """
 
         tweet_object = request_json['tweet_create_events'][0]
-        logger.info("{}: Tweet received: From - {} - Text - {}".format(datetime.now(), 
-                                                                       tweet_object.get('user', {}).get('screen_name'),
-                                                                       tweet_object.get('text')))
+        # tweet_log.info("{}: Tweet received: From - {} - Text - {}".format(datetime.now(), 
+        #                                                                tweet_object.get('user', {}).get('screen_name'),
+        #                                                                tweet_object.get('text')))
 
         message = modules.social.set_message_info(tweet_object, message)
         if message['id'] is None:
