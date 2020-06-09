@@ -10,7 +10,7 @@ maintenance_text = {
     'fr': 'Le tip bot est en maintenance. Veuillez suivre {0} sur Twitter pour plus d\'informations.',
     'pt': 'O tip bot encontra-se em manutenção. {0} no Twitter para mais informações.',
     'th': '',
-    'de': '',
+    'de': 'Der Tip Bot wird zur Zeit gewartet. Check {0} auf Twitter für weitere Infos.',
     'id': 'Bot tip dalam pemeliharaan. Periksa {0} di Twitter untuk informasi lebih lanjut.',
     'vt': '',
     'ru': 'Тип бот находится на обслуживании. Проверьте {0} в Twitter для получения дополнительной '
@@ -39,7 +39,7 @@ redirect_tip_text = {
     'pt': 'Agora, as tips são enviadas através de mensagens públicas. Por favor utiliza o seguinte formato '
           '{0} {1} 5 @utilizador1',
     'th': '',
-    'de': '',
+    'de': 'Tips werden jetzt über öffentliche Nachrichten verarbeitet. Bitte benutze dieses Format {0} {1} 5 @user1.',
     'id': 'Tip diproses melalui pesan publik sekarang. Silahkan kirim dalam format {0} {1} 5 @user1.',
     'vt': '',
     'ru': 'Типы теперь обрабатываются через публичные сообщения. Пожалуйста, отправьте в формате {0} '
@@ -68,7 +68,7 @@ self_tip_text = {
     'pt': 'Não é permitido enviar tips a si próprio. Por favor utiliza este bot para difundir e partilhar ${0} '
           'com outros usuários do {1}!',
     'th': '',
-    'de': '',
+    'de': 'Sich selbst zu tippen ist nicht erlaubt. Bitte benutze den Bot, um anderen {1} Usern ${0} zu schicken!',
     'id': 'Tidak boleh self tipping. Silakan gunakan bot ini untuk menyebarkan ${0} ke pengguna {1} lain!',
     'vt': '',
     'ru': 'Делать тип самому себе не допускаются. Пожалуйста, используйте этот бот, чтобы распространять '
@@ -107,7 +107,9 @@ receiver_tip_text = {
           'verificares o teu saldo. Se ainda não estás registado, responde com !register para começar, ou !help '
           'para uma lista de comandos. Aprende mais sobre o {3} em {4}',
     'th': '',
-    'de': '',
+    'de': '@{0} hat Dir gerade einen {1} {2} Tip geschickt! Antworte auf diese DM mit !balance um Deinen neuen Kontostand zu sehen.  '
+		  'Falls Du noch kein Konto registriert hast, schicke bitte eine Antwort mit dem Inhalt !register , um loszulegen, '
+          'oder !help um die Liste aller Befehle ui sehen!  Um mehr über {3} zu erfahren, besuche {4}',
     'id': '@{0} baru saja mengirimi Anda {1} tip {2}! Balas DM ini dengan !balance untuk melihat saldo baru Anda. '
           'Jika Anda belum mendaftarkan akun, kirim balasan dengan !register untuk memulai, atau !help untuk melihat '
           'daftar perintah! Pelajari lebih lanjut tentang {3} di {4}',
@@ -155,7 +157,7 @@ private_tip_text = {
     'pt': 'A funcionalidade de tips privadas está em manutenção. Para enviar uma tip, utiliza o comando {0} num '
           'tweet ou numa resposta.',
     'th': '',
-    'de': '',
+    'de': 'Die Funktion Private Tips befindet sich in Wartung. Um Deinen Tip zu senden, benutze den {0} Befehl in einem Tweet oder einer Antwort!',
     'id': 'Tip pribadi sedang dalam perbaikan. Untuk mengirim tip Anda, gunakan fungsi {0} dalam tweet atau balasan!',
     'vt': '',
     'ru': 'Приватный тип находится на обслуживании. Чтобы отправить свой тип, используйте функцию '
@@ -187,7 +189,8 @@ wrong_format_text = {
     'pt': 'Esse comando é desconhecido ou a sintaxe está errada. Responde !help para uma lista de comandos '
           'disponíveis e como utilizá-los.',
     'th': '',
-    'de': '',
+    'de': 'Befehl oder Syntax nicht erkannt. Bitte benutze den Befehl !help , um die Liste und Funktion aller '
+          'Befehle anzusehen.',
     'id': 'Perintah atau sintaks yang anda kirim tidak dikenali. Silakan kirim !help untuk daftar perintah dan apa '
           'saja fungsinya.',
     'vt': '',
@@ -221,7 +224,8 @@ no_users_text = {
     'pt': 'Parece que não especificaste nenhum utilizador na tip, ou esse utilizador não existe. Podes tentar '
           'enviar uma tip novamente com o seguinte formato {0} {1} 1234 @utilizador',
     'th': '',
-    'de': '',
+    'de': 'Es scheint, als hättest Du keinen Empfänger angegeben oder seinen Namen falsch geschrieben. '
+          'Probiere es noch einmal im Format {0} {1} 1234 @Benutzername',
     'id': 'Sepertinya Anda tidak memasukkan siapapun untuk memberi tip, atau Anda salah mengetik nama pengguna '
           'seseorang. Anda dapat mencoba memberi tip lagi menggunakan format {0} {1} 1234 @username',
     'vt': '',
@@ -256,7 +260,8 @@ multi_tip_success_dm = {
     'pt': 'As tuas tips de {0} ${1} cada foram enviadas. Verifica a tua conta em '
           '{2}explorer/account/{3}',
     'th': '',
-    'de': '',
+    'de': 'Du hast Deine {0} ${1} Tips erfolgreich geschickt. '
+          'Überprüfe Deinen Kontostand {2}explorer/account/{3}',
     'id': 'Anda telah berhasil mengirim {0} ${1} tips Anda. Periksa akun Anda di '
           '{2}explorer/account/{3}',
     'vt': '',
@@ -283,7 +288,7 @@ multi_tip_success = {
     'fr': 'Vous avez envoyé vos tips de {0} ${1} avec succès.',
     'pt': 'As tuas tips de {0} ${1} cada foram enviadas.',
     'th': '',
-    'de': '',
+    'de': 'Du hast Deine {0} ${1} Tips erfolgreich geschickt. ',
     'id': 'Anda telah berhasil mengirim {0} ${1} tips Anda.',
     'vt': '',
     'ru': 'Вы успешно отправили свои {0} ${1} тип.',
@@ -311,7 +316,7 @@ tip_success_dm = {
     'pt': 'A tua tip de {0} ${1} foi enviada com sucesso. Verifica esta transação em '
           '{2}explorer/block/{3}',
     'th': '',
-    'de': '',
+    'de': 'Du hast Deinen {0} ${1} Tip erfolgreich geschickt. ',
     'id': 'Anda telah berhasil mengirim tip {0} ${1} Anda. Lihat transaksi ini di '
           '{2}explorer/block/{3}',
     'vt': '',
@@ -339,7 +344,7 @@ tip_success = {
     'fr': 'Vous avez envoyé votre tip de {0} ${1} avec succès. Hash: {3}',
     'pt': 'A tua tip de {0} ${1} foi enviada com sucesso. Hash: {3}',
     'th': '',
-    'de': '',
+    'de': 'Du hast  Deinen {0} ${1} Tip erfolgreich geschickt. Hash: ',
     'id': 'Anda telah berhasil mengirim tip {0} ${1} Anda. Hash: {3}',
     'vt': '',
     'ru': 'Вы успешно отправили свой {0} ${1} тип. Hash: {3}',
@@ -366,7 +371,8 @@ not_a_number_text = {
           'tip avec le format {0} {1} 1234 @utilisateur',
     'pt': 'Parece que o valor da tip não é um número. Tenta novamente utilizando o formato {0} {1} 1234 @utilizador',
     'th': '',
-    'de': '',
+    'de': 'Es scheint, als hättest Du keine Zahl angegeben. Probiere es . '
+          'noch einmal im Format {0} {1} 1234 @Benutzername',
     'id': 'Sepertinya nilai yang Anda masukkan ke tip bukan angka. Anda dapat mencoba memberi tip lagi menggunakan '
           'format {0} {1} 1234 @username',
     'vt': '',
@@ -396,7 +402,7 @@ min_tip_text = {
     'fr': 'Le montant de tip minimum est {0} {1}. Veuillez changer le montant de votre tip et réessayez.',
     'pt': 'O valor mínimo por cada tip é {0} {1}. Por favor corrige o valor e tenta novamente.',
     'th': '',
-    'de': '',
+    'de': 'Der Mindestbetrag ist {0} {1}. Probiere es noch einmal mit einem gültigen Betrag',
     'id': 'Jumlah tip minimum adalah {0} {1}. Harap perbarui jumlah tip Anda dan coba lagi.',
     'vt': '',
     'ru': 'Минимальная сумма тип составляет {0} {1}. Пожалуйста, обновите сумму тип и попробуйте снова.',
@@ -426,7 +432,8 @@ missing_user_message = {
           'canal. Se ele já se encontra no canal, terá de enviar uma mensagem pública no chat para o bot '
           'poder adicioná-lo.',
     'th': '',
-    'de': '',
+    'de': 'Empfänger {0} wurde nicht in meiner Datenbank gefunden.  Um ihm einen Tip zu schicken, muss er Mitglied im Kanal sein. '
+          'Wenn er nicht im Kanal ist, bitte ihn darum, eine Nachricht in den Chat zu schicken, damit ich ihn hinzufügen kann.',
     'id': '{0} tidak ditemukan dalam catatan kami. Untuk memberi tip, mereka harus menjadi anggota saluran. Jika ada '
           'di saluran, minta mereka mengirim pesan di obrolan sehingga saya dapat menambahkannya.',
     'vt': '',
@@ -458,7 +465,7 @@ no_account_text = {
           'pour vous inscrire.',
     'pt': 'Ainda não tens uma conta registada com o tip bot. Envia-me uma mensagem direta com !register para começar.',
     'th': '',
-    'de': '',
+    'de': 'Du hast noch kein Konto beim Tip Bot. Bitte schicke mit eine DM mit !register um eins anzulegen.',
     'id': 'Anda tidak memiliki akun dengan bot. Silakan kirim DM kepada saya dengan !register untuk mengatur '
           'sebuah akun.',
     'vt': '',
@@ -489,7 +496,8 @@ not_enough_text = {
     'pt': 'Não tens saldo suficiente para esta tip de {1} {0}. Por favor verifica o teu saldo enviando-me uma '
           'mensagem com !balance e tenta novamente.',
     'th': '',
-    'de': '',
+    'de': 'Du hast nicht genug {0} für diesen {1} {0} Tip.  '
+          'Bitte schicke mir eine DM mit !balance, um Deinen Kontostand zu prüfen und probiere es noch einmal.',
     'id': 'Anda tidak memiliki cukup {0} untuk mengirim {1} tip {0} ini. Silakan periksa saldo Anda dengan '
           'mengirimkan DM kepada saya dengan !balance dan coba lagi.',
     'vt': '',
@@ -673,7 +681,31 @@ help_message = {
                      'idioma para o russo.\n\n'
           + BULLET + ' !languages: retorna uma lista de idiomas disponíveis para tradução.',
     'th': '',
-    'de': '',
+    'de': 'Vielen Dank für die Benutzung des {0} Tip Bot! Im Folgenden sishst Du die Liste aller Befehle und Beschreibung der Funktionen:\n\n'
+          + BULLET + '!help: Der Tip Bot antwortet mit dieser Liste aller Befehle und Beschreibung der Funktionen.\n\n'
+          + BULLET + ' !register: Registriert für Deine Benutzerkennung ein Konto und verknüpft die beiden. Dieses Konto dienst dazu,'
+                     ' Deine Tips zu speichern. Bitte übertrage Dein Guthaben regelmässig in ein privates Wallet, denn der Tip Bot ist nicht' be a '
+                     ' zur Langzeitlagerung von {0} gedacht.\n\n'
+          + BULLET + '!balance: Ermittelt das Guthaben Deines Tip Bot Kontos.\n\n'
+          + BULLET + '{4}: Tips werden mit öffentlichen Tweets oder in Telegram Gruppen gesendet.\n'
+                     ' Auf Twitter: Markiere {1} in einem Tweet und nenne {4} <Betrag> <@Username>.\n'
+                     ' Beispiel: {1} {4} 5 @mitche50 sendet einen 5 {0} Tip an den User @mitche50.\n'
+                     ' In Telegram schicke {3} {4} <amount> <@username> um in der Gruppe zu tippen.\n\n'
+          + BULLET + ' !privatetip: Derzeit abgeschaltet.  Dies würde einen Tip per DM an einen anderen USer schicken.' 
+                     'Wenn Du einen Tip nicht öffentlich schicken möchtest, benutze diese Funktion! Richtige Benutzung: '
+                     '!privatetip @username 1234\n\n'
+          + BULLET + ' !account: Schickt Dir die an Deine User ID gebundene Konto-Adresse (zur Zeit eindeutig pro '
+                     'Plattform). Du kannst diese Benutzen, um zusätzliche {0} von Deinem persönlichen Wallet zu schicken.\n\n'
+          + BULLET + '!withdraw: Richtige Benutzung ist !withdraw {2}. Dies wird Dir das gesamte Guthaben Deines Tip Bot Accounts'
+                     ' an die angegebene {0} Adresse schicken. Optional kannst Du eine bestimmten Betrag durch '
+                     '!withdraw <Betrag> <Adresse> schicken.  Beispiel: !withdraw 1 {2} würde '
+                     '1 {0} zur Adresse {2} schicken.\n\n'
+          + BULLET + ' !donate: Richtige Benutzung: !donate 1234. Dies schickt einen {0} Tip in Höhe von 1234 '
+                     'zur Tip Bot Spenden-Adresse schicken , um die Weiterentwicklung des Bots zu unterstützen.\n\n'
+          + BULLET + ' !setlanguage: Wird genutzt, um die Standardsprache des Bots zu setzen.  Die Liste aller verfügbaren Sprachen'
+                     ' ist mit dem Befehl !languages abrufbar. Benutzung: "!setlanguage german" ändert die Sprache '
+                     'nach Deutsch.\n\n'
+          + BULLET + ' !languages: Zeigt alle verfügbarem Sprachen an',
     'id': 'Terima kasih telah menggunakan {0} Tip Bot! Di bawah ini adalah daftar perintah, dan deskripsi tentang apa '
           'yang akan Bot lakukan:\n\n'
           + BULLET + ' !help: Bot tip akan merespons DM Anda dengan daftar perintah dan fungsinya. Jika Anda lupa '
@@ -917,7 +949,7 @@ account_text = {
     'fr': 'Le numéro de votre compte est:',
     'pt': 'A tua conta é:',
     'th': '',
-    'de': '',
+    'de': 'Deine Accountnummer ist: ',
     'id': 'Nomor akun Anda adalah:',
     'vt': '',
     'ru': 'Ваш адрес счета:',
@@ -946,7 +978,8 @@ balance_text = {
     'pt': 'Disponível: {0} {1}\n'
           'Pendente: {2} {1}',
     'th': '',
-    'de': '',
+    'de': 'Verfügbar: {0} {1}\n'
+          'Ausstehend: {2} {1}',
     'id': 'Tersedia: {0} {1}\n'
           'Tertunda: {2} {1}',
     'vt': '',
@@ -975,7 +1008,7 @@ account_register_text = {
     'fr': 'Vous vous êtes inscrit avec succès. Votre numéro de votre compte est:',
     'pt': 'Registaste uma conta com sucesso. A tua conta é:',
     'th': '',
-    'de': '',
+    'de': 'Du hast erfolgreich einen Account registriert. Deine Accountnummer ist:',
     'id': 'Anda telah berhasil membuat akun baru. Nomor akun Anda adalah:',
     'vt': '',
     'ru': 'Вы успешно зарегистрировались для учетной записи. Ваш адрес счета:',
@@ -997,7 +1030,7 @@ account_already_registered = {
     'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
     'pt': 'Já te encontras registado. A tua conta é:',
     'th': '',
-    'de': '',
+    'de': 'Du hast bereits einen Account registriert. Deine Accountnummer ist: ',
     'id': 'Anda sudah mendaftarkan akun Anda. Nomor akun Anda adalah:',
     'vt': '',
     'ru': 'Вы уже зарегистрировали свой аккаунт. Ваш адрес счета:',
@@ -1019,7 +1052,7 @@ account_create_text = {
     'fr': 'Vous êtes déjà inscrit. Votre numéro de votre compte est:',
     'pt': 'Ainda não tinhas uma conta, por isso criei uma para ti. A conta é:',
     'th': '',
-    'de': '',
+    'de': 'Du hattest keinen Account registriert. Ich habe dies für Dich erledigt. Deine Accountnummer ist:',
     'id': 'Anda belum memiliki akun yang diatur, jadi saya mengaturnya untuk Anda. Nomor akun Anda adalah:',
     'vt': '',
     'ru': 'У вас не было учетной записи, поэтому я создал ее для вас. Ваш адрес счета:',
@@ -1042,7 +1075,7 @@ invalid_account_text = {
           'réessayer votre requête.',
     'pt': 'A conta especificada não é válida. Por favor verifica e volta a enviar.',
     'th': '',
-    'de': '',
+    'de': 'Die angegebene Accountnummer ist ungültig. Bitte prüfe Deine Angaben und versuche es erneut.',
     'id': 'Nomor akun yang Anda berikan tidak valid. Periksa ulang dan kirim ulang permintaan Anda.',
     'vt': '',
     'ru': 'Указанный вами номер счета недействителен. Пожалуйста, проверьте еще раз и отправьте запрос.',
@@ -1065,7 +1098,7 @@ no_balance_text = {
           'pouvoir envoyer plus de tips!',
     'pt': 'Não tens saldo na tua conta, por favor deposita na conta {0} para enviar mais tips!',
     'th': '',
-    'de': '',
+    'de': 'Du hast kein Guthaben mehr auf dem Bot-Konto. Bitte zahle {0} ein, um weitere Tips zu schicken!',
     'id': 'Anda memiliki saldo 0 di akun Anda. Harap setorkan ke alamat Anda {0} untuk mengirim tip lainnya!',
     'vt': '',
     'ru': 'У вас 0 баланса на вашем счету. Пожалуйста, внесите депозит на ваш адрес {0}, '
@@ -1094,7 +1127,8 @@ invalid_amount_text = {
           '!withdraw <compte> ou !withdraw <montant> <compte>',
     'pt': 'Não especificaste uma conta, volta a tentar com o formato !withdraw <conta> ou !withdraw <valor> <conta>',
     'th': '',
-    'de': '',
+    'de': 'Du hast keinen Auszahlungsbetrag angegeben. Bitte versuche es noch einmal im Format !withdraw <Adresse> oder '
+          '!withdraw <Betrag> <Adresse>',
     'id': 'Anda tidak mengirim alamat wallet untuk menarik saldo. Harap kirim ulang dengan format '
           '!withdraw <account> atau !withdraw <amount> <account>',
     'vt': '',
@@ -1125,7 +1159,7 @@ not_enough_balance_text = {
           'envoyer !withdraw <compte>',
     'pt': 'Não tens {0} suficiente. Para enviar todo o saldo, usa !withdraw <conta>',
     'th': '',
-    'de': '',
+    'de': 'Soviel {0} hast Du nicht auf Deinem Bot-Konto.  Um Dein gesamtes Guthaben abzuheben, schicke !withdraw <Adresse>',
     'id': 'Anda tidak memiliki {0} sebanyak itu di akun Anda. Untuk menarik jumlah penuh Anda, kirim '
           '!withdraw <account>',
     'vt': '',
@@ -1155,7 +1189,8 @@ withdraw_text = {
           '{2}explorer/block/{3}',
     'pt': 'Enviaste {0} {1} com sucesso! Verifica a transação em {2}explorer/block/{3}',
     'th': '',
-    'de': '',
+    'de': 'Du hast erfolgreich {0} {1} abgehoben! Du kannst die Transaktion unter '
+          '{2}explorer/block/{3} ansehen',
     'id': 'Anda telah berhasil menarik {0} {1}! Anda dapat memeriksa transaksi di '
           '{2}explorer/block/{3}',
     'vt': '',
@@ -1199,7 +1234,9 @@ incorrect_withdraw_text = {
     'pt': 'Não compreendi o comando. Por favor, volta a tentar com !withdraw <valor> <conta>.  O valor é '
           'opcional. Se não for especificado, todo o saldo é enviado.',
     'th': '',
-    'de': '',
+    'de': 'Ich habe Deine Anfrage zur Abhebung nicht verstanden. Bitte probiere es erneut mit !withdraw <optional:Betrag> <Adresse>.  '
+          'Beispiel: !withdraw 1 {0} schickt 1 {1} zur Adresse {0}.  '
+          '!withdraw {0} schickt Dein gesamtes Guthaben zur Adresse {0}.',
     'id': 'Saya tidak mengerti permintaan penarikan Anda. Harap kirim ulang dengan !withdraw <opsional: amount> '
           '<account>. Contoh, !withdraw 1 {0} akan menarik 1 {1} ke akun '
           '{0}. Juga, !withdraw {0} akan menarik seluruh saldo Anda ke '
@@ -1246,7 +1283,7 @@ wrong_donate_text = {
     'fr': 'Seuls les montants en nombres sont acceptés. Veuillez réessayer avec !donate 1234',
     'pt': 'Só são aceites quantidades numéricas. Por favor volta a tentar como !donate 1234',
     'th': '',
-    'de': '',
+    'de': 'Als Betrag werden nur Zahlen akzeptiert. Probiere es bitte erneut mit !donate 1234',
     'id': 'Hanya jumlah angka yang diterima. Harap kirim ulang sebagai !donate 1234',
     'vt': '',
     'ru': 'Принимаются только цифровые суммы. Пожалуйста, отправьте как !донат 1234',
@@ -1274,7 +1311,8 @@ large_donate_text = {
     'pt': 'O teu saldo é apenas {0} {1} e tentaste enviar {2}. Deposita mais {1} na tua conta, '
           'ou reduz o montante da doação.',
     'th': '',
-    'de': '',
+    'de': 'Dein Guthaben beträgt nur {0} {1} und Du hast versucht, {2} zu schicken. Bitte zahle mehr {1} auf Dein Bot-Konto ein '
+          'oder reduziere den Spendenbetrag.',
     'id': 'Saldo Anda hanya {0} {1} dan Anda mencoba mengirim {2}. Silakan tambahkan lebih banyak {1} ke '
           'akun Anda, atau turunkan jumlah donasi Anda.',
     'vt': '',
@@ -1309,7 +1347,7 @@ small_donate_text = {
     'fr': 'Le montant de donation minimum est de {0}. Veuillez changer le montant de votre donation et réessayer.',
     'pt': 'A quantidade mínima de doação é {0}. Por favor corrige o momante e tenta novamente.',
     'th': '',
-    'de': '',
+    'de': 'Der Mindestbetrag beträgt {0}. Bitte passe den Betrag an und versuche es erneut.',
     'id': 'Jumlah donasi minimum adalah {0}. Harap perbarui jumlah donasi Anda dan kirim kembali.',
     'vt': '',
     'ru': 'Минимальная сумма тип составляет {0}. Пожалуйста, обновите сумму тип и '
@@ -1339,7 +1377,8 @@ donate_text = {
     'pt': 'Obrigado pela tua generosidade, doaste {0} {1} com sucesso! Verifica a transação em '
           '{2}explorer/block/{3}',
     'th': '',
-    'de': '',
+    'de': 'Danke für Deine Großzügigkeit! Du hast erfolgreich {0} {1} gespendet!  Du kannst die '
+          'Transaktion unter {2}explorer/block/{3} ansehen',
     'id': 'Terima kasih atas kedermawanan Anda! Anda telah berhasil menyumbang {0} {1}! Anda dapat memeriksa '
           'transaksi di {2}explorer/block/{3}',
     'vt': '',
@@ -1370,7 +1409,7 @@ incorrect_donate_text = {
     'fr': 'Syntaxe érronée. Veuillez utiliser le format !donate 1234',
     'pt': 'A sintaxe está incorreta. Por favor utiliza o formato !donate <valor>, por exemplo: !donate 1234',
     'th': '',
-    'de': '',
+    'de': 'Falsche Syntax. Bitte benutze das Format !donate 1234',
     'id': 'Sintaks salah. Silakan gunakan format !donate 1234',
     'vt': '',
     'ru': 'Неверный синтаксис. Пожалуйста, используйте формат !донат 1234',
@@ -1399,7 +1438,8 @@ language_change_success = {
     'pt': 'Atualizaste as preferências com sucesso. As mensagens que receberes de agora em diante serão na língua '
           'escolhida. Para voltar a alterar, envia novamente o comando !setlanguage com a nova língua.',
     'th': '',
-    'de': '',
+    'de': 'You hast erfolgreich die Spache geändert. Du wirst Nachrichten vom Tip Bot nun in der gewählten Sprache erhalten '
+          'Wenn Du die Sprache wieder ändern möchtest, schicke erneut den !setlanguage Befehl mit der neuen Sprache!',
     'id': 'Anda telah berhasil memperbarui bahasa Anda. Pesan yang Anda terima dari bot sekarang akan dalam bahasa '
           'baru Anda. Jika Anda ingin mengubah kembali, kirim ulang perintah !setlanguage dengan bahasa baru '
           'yang Anda inginkan!',
@@ -1433,7 +1473,8 @@ missing_language = {
           'langues et de leurs codes associés.',
     'pt': 'Essa língua não está disponível, por favor envia !languagelist para uma lista das opções e os códigos.',
     'th': '',
-    'de': '',
+    'de': 'Diese Sprache ist leider nicht verfügbar. Schicke !languagelist , um die Liste der verfügbaren'
+          'Sprachen und Codes zu erhalten.',
     'id': 'Bahasa ini tidak tersedia untuk terjemahan, silakan kirim !languagelist untuk daftar bahasa dan '
           'kode yang tersedia.',
     'vt': '',
@@ -1469,8 +1510,8 @@ auto_donate_notanum = {
           'donation percentage.',
     'th': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
-    'de': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
-          'donation percentage.',
+    'de': 'Der angegbene Prozentsatz war keine Nummer. Bitte schicke den Befehl erneut mit einer positiven Zahl, '
+          'um den Prozentsatz für Deine automatischen Spenden zu aktualisieren.',
     'id': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
     'vt': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
@@ -1509,8 +1550,8 @@ auto_donate_negative = {
           ' to update your donation percentage.',
     'th': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
-    'de': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
-          ' to update your donation percentage.',
+    'de': 'Der angegbene Prozentsatz war eine falsche Nummer. Bitte schicke den Befehl erneut mit einer positiven Zahl, '
+          'zwischen 1 und 100, um den Prozentsatz für Deine automatischen Spenden zu aktualisieren.',
     'id': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
     'vt': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
@@ -1549,8 +1590,8 @@ auto_donate_missing_num = {
           'to update your donation percentage.',
     'th': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
-    'de': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
-          'to update your donation percentage.',
+    'de': 'Der hast keinen Prozentsatz angegeben. Bitte schicke den Befehl erneut mit einer positiven Zahl, '
+          'um den Prozentsatz für Deine automatischen Spenden zu aktualisieren',
     'id': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
     'vt': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
@@ -1580,7 +1621,7 @@ auto_donate_success = {
     'fr': 'You have successfully updated your donation percentage to {0}%.',
     'pt': 'You have successfully updated your donation percentage to {0}%.',
     'th': 'You have successfully updated your donation percentage to {0}%.',
-    'de': 'You have successfully updated your donation percentage to {0}%.',
+    'de': 'Du hast den Prozentsatz für Deine automatischen Spenden erfolgreich auf {0}% gesetzt.',
     'id': 'You have successfully updated your donation percentage to {0}%.',
     'vt': 'You have successfully updated your donation percentage to {0}%.',
     'ru': 'You have successfully updated your donation percentage to {0}%.',
@@ -1604,7 +1645,7 @@ set_return_invalid_account = {
     'fr': 'Error: Invalid account number.  Please resend with a valid account.',
     'pt': 'Error: Invalid account number.  Please resend with a valid account.',
     'th': 'Error: Invalid account number.  Please resend with a valid account.',
-    'de': 'Error: Invalid account number.  Please resend with a valid account.',
+    'de': 'Fehler: Ungültige Account Nummer. Bitte erneut mit eine gültigem Account schicken',
     'id': 'Error: Invalid account number.  Please resend with a valid account.',
     'vt': 'Error: Invalid account number.  Please resend with a valid account.',
     'ru': 'Error: Invalid account number.  Please resend with a valid account.',
@@ -1626,7 +1667,7 @@ set_return_success = {
     'fr': 'You have successfully set your return address to {0}',
     'pt': 'You have successfully set your return address to {0}',
     'th': 'You have successfully set your return address to {0}',
-    'de': 'You have successfully set your return address to {0}',
+    'de': 'Du hast die Adresse für Auszahlungen erfolgreich auf {0} gesetzt.',
     'id': 'You have successfully set your return address to {0}',
     'vt': 'You have successfully set your return address to {0}',
     'ru': 'You have successfully set your return address to {0}',
@@ -1648,7 +1689,7 @@ unsupported_fiat = {
     'fr': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'pt': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'th': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
-    'de': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
+    'de': 'Du hast entweder einen ungültigen Betrag oder ein nicht unterstütztes Fiat Währungssymbol geschickt. Bitte versuche es erneut.',
     'id': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'vt': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'ru': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
@@ -1671,7 +1712,7 @@ mute = {
     'fr': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'pt': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'th': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
-    'de': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'de': 'Du hast den Bot stummgeschaltet. Du bekommst nun keine Nachrichten mehr. Du kannst dies mit !unmute or /unmute rückgängig machen. ',
     'id': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'vt': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'ru': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
@@ -1693,7 +1734,7 @@ unmute = {
     'fr': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'pt': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'th': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
-    'de': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'de': 'Du hast die Stummschaltung erfolgreich rückgängig gemacht. Um den Bot erneut stummzuschalten, sende !mute or /mute .',
     'id': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'vt': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'ru': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
@@ -1712,7 +1753,7 @@ language_list = (
     'Dutch - Nederlands\n'
     'English\n'
     'French - Français\n'
-    # 'German - Deutsche\n'
+    # 'German - Deutsch\n'
     'Indonesian - Indonesia\n'
     'Italian - Italiano\n'
     # 'Japanese - 日本語\n'
@@ -1743,7 +1784,10 @@ balance_commands = {
     ],
     'pt': ['!saldo', '/saldo'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
+		
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1771,7 +1815,9 @@ account_commands = {
     ],
     'pt': ['!conta', '/conta'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1799,7 +1845,9 @@ help_commands = {
     ],
     'pt': ['!ajuda', '/ajuda'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1827,7 +1875,9 @@ register_commands = {
     ],
     'pt': ['!registar', '/registar'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1855,7 +1905,9 @@ withdraw_commands = {
     ],
     'pt': ['!retirar', '/retirar'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1883,7 +1935,9 @@ donate_commands = {
     ],
     'pt': ['!doar', '/doar'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1913,7 +1967,9 @@ nano_tip_commands = {
     ],
     'pt': ['!tip', '/tip'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1948,7 +2004,9 @@ private_tip_commands = {
     ],
     'pt': ['!tipprivada', '/tipprivada'],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -1978,7 +2036,9 @@ auto_donate_commands = {
     ],
     'pt': [],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -2008,7 +2068,9 @@ set_return_commands = {
     ],
     'pt': [],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -2038,7 +2100,9 @@ set_mute_commands = {
     ],
     'pt': [],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -2068,7 +2132,9 @@ set_unmute_commands = {
     ],
     'pt': [],
     'th': [],
-    'de': [],
+    'de': [
+		# No German commands for now.
+	],
     'id': [
         # Users said they would prefer english commands
     ],
@@ -2128,7 +2194,7 @@ language_dict = {
     # 'ไทย': 'th',
     # 'de': 'de',
     # 'german': 'de',
-    # 'deutsche': 'de',
+    # 'deutsch': 'de',
     'id': 'id',
     'indonesian': 'id',
     'indonesia': 'id',
