@@ -1438,7 +1438,7 @@ language_change_success = {
     'pt': 'Atualizaste as preferências com sucesso. As mensagens que receberes de agora em diante serão na língua '
           'escolhida. Para voltar a alterar, envia novamente o comando !setlanguage com a nova língua.',
     'th': '',
-    'de': 'You hast erfolgreich die Spache geändert. Du wirst Nachrichten vom Tip Bot nun in der gewählten Sprache erhalten '
+    'de': 'Du hast erfolgreich die Sprache geändert. Du wirst Nachrichten vom Tip Bot nun in der gewählten Sprache erhalten. '
           'Wenn Du die Sprache wieder ändern möchtest, schicke erneut den !setlanguage Befehl mit der neuen Sprache!',
     'id': 'Anda telah berhasil memperbarui bahasa Anda. Pesan yang Anda terima dari bot sekarang akan dalam bahasa '
           'baru Anda. Jika Anda ingin mengubah kembali, kirim ulang perintah !setlanguage dengan bahasa baru '
@@ -1473,7 +1473,7 @@ missing_language = {
           'langues et de leurs codes associés.',
     'pt': 'Essa língua não está disponível, por favor envia !languagelist para uma lista das opções e os códigos.',
     'th': '',
-    'de': 'Diese Sprache ist leider nicht verfügbar. Schicke !languagelist , um die Liste der verfügbaren'
+    'de': 'Diese Sprache ist leider nicht verfügbar. Schicke !languagelist, um die Liste der verfügbaren'
           'Sprachen und Codes zu erhalten.',
     'id': 'Bahasa ini tidak tersedia untuk terjemahan, silakan kirim !languagelist untuk daftar bahasa dan '
           'kode yang tersedia.',
