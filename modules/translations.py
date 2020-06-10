@@ -681,7 +681,7 @@ help_message = {
                      'idioma para o russo.\n\n'
           + BULLET + ' !languages: retorna uma lista de idiomas disponíveis para tradução.',
     'th': '',
-    'de': 'Vielen Dank für die Benutzung des {0} Tip Bot! Im Folgenden sishst Du die Liste aller Befehle und Beschreibung der Funktionen:\n\n'
+    'de': 'Vielen Dank für die Benutzung des {0} Tip Bot! Im Folgenden siehst Du die Liste aller Befehle und Beschreibung der Funktionen:\n\n'
           + BULLET + '!help: Der Tip Bot antwortet mit dieser Liste aller Befehle und Beschreibung der Funktionen.\n\n'
           + BULLET + ' !register: Registriert für Deine Benutzerkennung ein Konto und verknüpft die beiden. Dieses Konto dienst dazu,'
                      ' Deine Tips zu speichern. Bitte übertrage Dein Guthaben regelmässig in ein privates Wallet, denn der Tip Bot ist nicht' be a '
@@ -1159,7 +1159,7 @@ not_enough_balance_text = {
           'envoyer !withdraw <compte>',
     'pt': 'Não tens {0} suficiente. Para enviar todo o saldo, usa !withdraw <conta>',
     'th': '',
-    'de': 'Soviel {0} hast Du nicht auf Deinem Bot-Konto.  Um Dein gesamtes Guthaben abzuheben, schicke !withdraw <Adresse>',
+    'de': 'Soviel {0} hast Du nicht auf Deinem Bot-Konto. Um Dein gesamtes Guthaben abzuheben, schicke !withdraw <Adresse>',
     'id': 'Anda tidak memiliki {0} sebanyak itu di akun Anda. Untuk menarik jumlah penuh Anda, kirim '
           '!withdraw <account>',
     'vt': '',
