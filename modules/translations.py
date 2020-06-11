@@ -684,7 +684,7 @@ help_message = {
     'de': 'Vielen Dank für die Benutzung des {0} Tip Bot! Im Folgenden siehst Du die Liste aller Befehle und Beschreibung der Funktionen:\n\n'
           + BULLET + '!help: Der Tip Bot antwortet mit dieser Liste aller Befehle und Beschreibung der Funktionen.\n\n'
           + BULLET + ' !register: Registriert für Deine Benutzerkennung ein Konto und verknüpft die beiden. Dieses Konto dienst dazu,'
-                     ' Deine Tips zu speichern. Bitte übertrage Dein Guthaben regelmässig in ein privates Wallet, denn der Tip Bot ist nicht' be a '
+                     ' Deine Tips zu speichern. Bitte übertrage Dein Guthaben regelmässig in ein privates Wallet, denn der Tip Bot ist nicht be a '
                      ' zur Langzeitlagerung von {0} gedacht.\n\n'
           + BULLET + '!balance: Ermittelt das Guthaben Deines Tip Bot Kontos.\n\n'
           + BULLET + '{4}: Tips werden mit öffentlichen Tweets oder in Telegram Gruppen gesendet.\n'
@@ -2192,8 +2192,8 @@ language_dict = {
     # 'th': 'th',
     # 'thai': 'th',
     # 'ไทย': 'th',
-    # 'de': 'de',
-    # 'german': 'de',
+    'de': 'de',
+    'german': 'de',
     # 'deutsch': 'de',
     'id': 'id',
     'indonesian': 'id',
