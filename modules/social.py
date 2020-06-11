@@ -10,6 +10,7 @@ import pyqrcode
 import telegram
 import tweepy
 from TwitterAPI import TwitterAPI
+from logging.handlers import TimedRotatingFileHandler
 
 import modules.currency
 import modules.db
@@ -17,8 +18,13 @@ import modules.orchestration
 import modules.translations as translations
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
-                    level=logging.INFO)
+logger = logging.getLogger("social_log")
+logger.setLevel(logging.INFO)
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-social.log'.format(os.getcwd(), datetime.now()),
+                                   when="d",
+                                   interval=1,
+                                   backupCount=5)
+logger.addHandler(handler)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
@@ -81,7 +87,7 @@ def get_language(message):
     try:
         message['language'] = language_return[0][0]
     except Exception as e:
-        logging.info("{}: There was no language entry, setting default".format(datetime.now()))
+        logger.info("{}: There was no language entry, setting default".format(datetime.now()))
         # Check if the user has an account - if not, create one
         no_lang_call = ("SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'"
                          .format(message['sender_id'], message['system']))
@@ -109,7 +115,7 @@ def get_receiver_language(user_id, system):
     try:
         return language_return[0][0]
     except Exception as e:
-        logging.info("{}: There was no language entry for the receiver, setting default".format(datetime.now()))
+        logger.info("{}: There was no language entry for the receiver, setting default".format(datetime.now()))
         return 'en'
 
 
@@ -125,7 +131,7 @@ def check_mute(user_id, system):
     try:
         return False if mute_return[0][0] == 0 else True
     except Exception as e:
-        logging.info("{}: No mute value found - returning False".format(datetime.now()))
+        logger.info("{}: No mute value found - returning False".format(datetime.now()))
         return False
 
 
@@ -134,11 +140,11 @@ def send_dm(receiver, message, system):
     Send the provided message to the provided receiver
     """
     if receiver == BOT_ID_TWITTER:
-        logging.info("{}: Bot should not be messaging itself.".format(datetime.now()))
+        logger.info("{}: Bot should not be messaging itself.".format(datetime.now()))
         return
 
     if check_mute(receiver, system):
-        logging.info("{}: User has muted bot.".format(datetime.now()))
+        logger.info("{}: User has muted bot.".format(datetime.now()))
         return
 
     if system == 'twitter':
@@ -157,20 +163,20 @@ def send_dm(receiver, message, system):
         r = twitterAPI.request('direct_messages/events/new', json.dumps(data))
 
         if r.status_code != 200:
-            logging.info('Send DM - Twitter ERROR: {} : {}'.format(r.status_code, r.text))
+            logger.info('Send DM - Twitter ERROR: {} : {}'.format(r.status_code, r.text))
 
     elif system == 'telegram':
         try:
             telegram_bot.sendMessage(chat_id=receiver, text=message)
         except Exception as e:
-            logging.info("{}: Send DM - Telegram ERROR: {}".format(datetime.now(), e))
+            logger.info("{}: Send DM - Telegram ERROR: {}".format(datetime.now(), e))
             pass
 
 
 def send_img(receiver, path, message, system):
 
     if check_mute(receiver, system):
-        logging.info("{}: User has muted bot.".format(datetime.now()))
+        logger.info("{}: User has muted bot.".format(datetime.now()))
         return
 
     if system == 'twitter':
@@ -180,7 +186,7 @@ def send_img(receiver, path, message, system):
 
         if r.status_code == 200:
             media_id = r.json()['media_id']
-            logging.info('media_id: {}'.format(media_id))
+            logger.info('media_id: {}'.format(media_id))
             msg_data = {
                 'event': {
                     'type': 'message_create',
@@ -204,23 +210,23 @@ def send_img(receiver, path, message, system):
             r = twitterAPI.request('direct_messages/events/new', json.dumps(msg_data))
 
             if r.status_code != 200:
-                logging.info('Send image ERROR: {} : {}'.format(r.status_code, r.text))
+                logger.info('Send image ERROR: {} : {}'.format(r.status_code, r.text))
     elif system == 'telegram':
         try:
             qr_data = '{}{}qr/{}-{}.png'.format(BASE_URL, CURRENCY, system, receiver)
-            logging.info("{}qr_data: {}".format(CURRENCY, qr_data))
+            logger.info("{}qr_data: {}".format(CURRENCY, qr_data))
             telegram_bot.send_photo(chat_id=receiver, photo=qr_data, caption=message)
         except Exception as e:
-            logging.info("ERROR SENDING QR PHOTO TELEGRAM: {}".format(e))
+            logger.info("ERROR SENDING QR PHOTO TELEGRAM: {}".format(e))
 
 
 def set_message_info(status, message):
     """
     Set the tweet information into the message dictionary
     """
-    logging.info("{}: in set_message_info".format(datetime.now()))
+    logger.info("{}: in set_message_info".format(datetime.now()))
     if status.get('retweeted_status'):
-        logging.info("{}: Retweets are ignored.".format(datetime.now()))
+        logger.info("{}: Retweets are ignored.".format(datetime.now()))
         message['id'] = None
     else:
         message['id'] = status.get('id')
@@ -228,7 +234,7 @@ def set_message_info(status, message):
         message['sender_id'] = Decimal(message['sender_id_str'])
 
         if Decimal(message['sender_id']) == Decimal(BOT_ID_TWITTER):
-            logging.info('Messages from the bot are ignored.')
+            logger.info('Messages from the bot are ignored.')
             message['id'] = None
             return message
 
@@ -270,7 +276,7 @@ def check_message_action(message):
                 for command in english_commands:
                     tip_commands.append(command)
 
-        logging.info("tip commands: {}".format(tip_commands))
+        logger.info("tip commands: {}".format(tip_commands))
 
         for command in tip_commands:
             if command in message['text']:
@@ -301,10 +307,10 @@ def validate_tip_amount(message):
         if message['language'] != 'en':
             english_commands = modules.translations.nano_tip_commands['en']
             for command in english_commands:
-                logging.info("commad: {}".format(command))
+                logger.info("commad: {}".format(command))
                 tip_commands.append(command)
 
-    logging.info("{}: in validate_tip_amount".format(datetime.now()))
+    logger.info("{}: in validate_tip_amount".format(datetime.now()))
     try:
         if not message['text'][message['starting_point']][0].isdigit() and message['text'][message['starting_point']][0] != '.':
             symbol = message['text'][message['starting_point']][0]
@@ -317,11 +323,11 @@ def validate_tip_amount(message):
         else:
             message['tip_amount'] = Decimal(message['text'][message['starting_point']])
     except IndexError as e:
-        logging.info("{}: Index out of range". format(datetime.now()))
+        logger.info("{}: Index out of range". format(datetime.now()))
         message['tip_amount'] = -1
         return message
     except Exception:
-        logging.info("{}: Tip amount was not a number".format(datetime.now()))
+        logger.info("{}: Tip amount was not a number".format(datetime.now()))
         if message['system'] == 'twitter':
             bot_name = BOT_NAME_TWITTER
         else:
@@ -335,17 +341,17 @@ def validate_tip_amount(message):
         try:
             send_reply(message, translations.min_tip_text[message['language']].format(MIN_TIP, CURRENCY.upper()))
         except Exception as e:
-            logging.info("{}: Error sending reply for a tip below the minimum.".format(datetime.now()))
+            logger.info("{}: Error sending reply for a tip below the minimum.".format(datetime.now()))
 
         message['tip_amount'] = -1
-        logging.info("{}: User tipped less than {} {}.".format(datetime.now(), MIN_TIP, CURRENCY.upper()))
+        logger.info("{}: User tipped less than {} {}.".format(datetime.now(), MIN_TIP, CURRENCY.upper()))
         return message
 
     try:
         message['tip_amount_raw'] = Decimal(message['tip_amount']) * CONVERT_MULTIPLIER[CURRENCY]
     except Exception as e:
-        logging.info("{}: Exception converting tip_amount to tip_amount_raw".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
+        logger.info("{}: Exception converting tip_amount to tip_amount_raw".format(datetime.now()))
+        logger.info("{}: {}".format(datetime.now(), e))
         message['tip_amount'] = -1
         return message
 
@@ -362,7 +368,7 @@ def validate_tip_amount(message):
             if int(message['tip_amount_text'][message['tip_amount_text'].index('.') + 1:]) == 0:
                 message['tip_amount_text'] = message['tip_amount_text'][:message['tip_amount_text'].index('.')]
     except Exception as e:
-        logging.info("{}: Error in removing trailing zeroes - ignoring {}".format(datetime.now(), e))
+        logger.info("{}: Error in removing trailing zeroes - ignoring {}".format(datetime.now(), e))
 
     return message
 
@@ -384,7 +390,7 @@ def set_tip_list(message, users_to_tip, request_json):
     Loop through the message starting after the tip amount and identify any users that were tagged for a tip.  Add the
     user object to the users_to_tip dict to process the tips.
     """
-    logging.info("{}: in set_tip_list.".format(datetime.now()))
+    logger.info("{}: in set_tip_list.".format(datetime.now()))
 
     # Identify the first user to string multi tips.  Once a non-user is mentioned, end the user list
 
@@ -393,7 +399,7 @@ def set_tip_list(message, users_to_tip, request_json):
     if message['system'] == 'twitter':
         for t_index in range(message['starting_point'] + 1, len(message['text'])):
             if first_user_flag and len(message['text'][t_index]) > 0 and str(message['text'][t_index][0]) != "@":
-                logging.info("users identified, regular text breaking the loop: {}".format(message['text'][t_index][0]))
+                logger.info("users identified, regular text breaking the loop: {}".format(message['text'][t_index][0]))
                 break
             if len(message['text'][t_index]) > 0 and (
                     str(message['text'][t_index][0]) == "@" and str(message['text'][t_index]).lower() != (
@@ -404,9 +410,9 @@ def set_tip_list(message, users_to_tip, request_json):
                 try:
                     user_info = api.get_user(message['text'][t_index])
                 except tweepy.TweepError as e:
-                    logging.info("{}: The user sent a !tip command with a mistyped user: {}".format(
+                    logger.info("{}: The user sent a !tip command with a mistyped user: {}".format(
                         datetime.now(), message['text'][t_index]))
-                    logging.info("{}: Tip List Tweep error: {}".format(datetime.now(), e))
+                    logger.info("{}: Tip List Tweep error: {}".format(datetime.now(), e))
                     users_to_tip.clear()
                     return message, users_to_tip
 
@@ -416,10 +422,10 @@ def set_tip_list(message, users_to_tip, request_json):
                              'receiver_account': None, 'receiver_register': None,
                              'receiver_language': receiver_language}
                 users_to_tip.append(user_dict)
-                logging.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
+                logger.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
 
     if message['system'] == 'telegram':
-        logging.info("trying to set tiplist in telegram: {}".format(message))
+        logger.info("trying to set tiplist in telegram: {}".format(message))
 
         if 'reply_to_message' in request_json['message']:
             if len(users_to_tip) == 0:
@@ -439,7 +445,7 @@ def set_tip_list(message, users_to_tip, request_json):
                                  'receiver_language': receiver_language}
                     users_to_tip.append(user_dict)
                 else:
-                    logging.info("User not found in DB: chat ID:{} - member name:{}".
+                    logger.info("User not found in DB: chat ID:{} - member name:{}".
                                  format(message['chat_id'], request_json['message']['reply_to_message']['from']
                                                                         ['first_name']))
                     send_reply(message, translations.missing_user_message[message['language']]
@@ -449,7 +455,7 @@ def set_tip_list(message, users_to_tip, request_json):
         else:
             for t_index in range(message['starting_point'] + 1, len(message['text'])):
                 if first_user_flag and len(message['text'][t_index]) > 0 and str(message['text'][t_index][0]) != "@":
-                    logging.info("users identified, regular text breaking the loop: {}".format(message['text'][t_index][0]))
+                    logger.info("users identified, regular text breaking the loop: {}".format(message['text'][t_index][0]))
                     break
                 if len(message['text'][t_index]) > 0:
                     if (str(message['text'][t_index][0]) == "@" and len(message['text'][t_index]) > 1 and message['text'][t_index][1] != ' ' 
@@ -472,14 +478,14 @@ def set_tip_list(message, users_to_tip, request_json):
                             if not duplicate_user:
                                 if not first_user_flag:
                                     first_user_flag = True
-                                logging.info("User tipped via searching the string for mentions")
+                                logger.info("User tipped via searching the string for mentions")
                                 receiver_language = get_receiver_language(receiver_id, message['system'])
                                 user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
                                              'receiver_account': None, 'receiver_register': None,
                                              'receiver_language': receiver_language}
                                 users_to_tip.append(user_dict)
                         else:
-                            logging.info("User not found in DB: chat ID:{} - member name:{}".
+                            logger.info("User not found in DB: chat ID:{} - member name:{}".
                                          format(message['chat_id'], message['text'][t_index][1:]))
                             send_reply(message, translations.missing_user_message[message['language']]
                                        .format(message['text'][t_index]))
@@ -497,8 +503,8 @@ def set_tip_list(message, users_to_tip, request_json):
                         if user_check_data:
                             receiver_id = user_check_data[0][0]
                             receiver_screen_name = user_check_data[0][1]
-                            logging.info("telegram user added via mention list.")
-                            logging.info("mention: {}".format(mention))
+                            logger.info("telegram user added via mention list.")
+                            logger.info("mention: {}".format(mention))
                             receiver_language = get_receiver_language(receiver_id, message['system'])
 
                             user_dict = {'receiver_id': receiver_id, 'receiver_screen_name': receiver_screen_name,
@@ -506,7 +512,7 @@ def set_tip_list(message, users_to_tip, request_json):
                                          'receiver_language': receiver_language}
                             users_to_tip.append(user_dict)
                         else:
-                            logging.info("User not found in DB: chat ID:{} - member name:{}".
+                            logger.info("User not found in DB: chat ID:{} - member name:{}".
                                          format(message['chat_id'], mention['user']['first_name']))
                             send_reply(message, translations.missing_user_message[message['language']]
                                        .format(mention['user']['first_name']))
@@ -515,7 +521,7 @@ def set_tip_list(message, users_to_tip, request_json):
             except:
                 pass
 
-    logging.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
+    logger.info("{}: Users_to_tip: {}".format(datetime.now(), users_to_tip))
     message['total_tip_amount'] = message['tip_amount']
     if len(users_to_tip) > 0 and message['tip_amount'] != -1:
         message['total_tip_amount'] *= len(users_to_tip)
@@ -527,9 +533,9 @@ def validate_sender(message):
     """
     Validate that the sender has an account with the tip bot, and has enough NANO to cover the tip.
     """
-    logging.info("{}: validating sender".format(datetime.now()))
-    logging.info("sender id: {}".format(message['sender_id']))
-    logging.info("system: {}".format(message['system']))
+    logger.info("{}: validating sender".format(datetime.now()))
+    logger.info("sender id: {}".format(message['sender_id']))
+    logger.info("system: {}".format(message['system']))
     db_call = "SELECT account, register FROM users where user_id = {} AND users.system = '{}'".format(message['sender_id'],
                                                                                                       message['system'])
     sender_account_info = modules.db.get_db_data(db_call)
@@ -537,7 +543,7 @@ def validate_sender(message):
     if not sender_account_info:
         send_reply(message, translations.no_account_text[message['language']])
 
-        logging.info("{}: User tried to send a tip without an account.".format(datetime.now()))
+        logger.info("{}: User tried to send a tip without an account.".format(datetime.now()))
         message['sender_account'] = None
         return message
 
@@ -560,13 +566,13 @@ def validate_total_tip_amount(message):
     """
     Validate that the sender has enough Nano to cover the tip to all users
     """
-    logging.info("{}: validating total tip amount".format(datetime.now()))
+    logger.info("{}: validating total tip amount".format(datetime.now()))
     if message['sender_balance_raw']['balance'] < (message['total_tip_amount'] * CONVERT_MULTIPLIER[CURRENCY]):
         send_reply(message, translations.not_enough_text[message['language']].format(CURRENCY.upper(),
                                                                                      message['total_tip_amount'],
                                                                                      CURRENCY.upper()))
 
-        logging.info("{}: User tried to send more than in their account.".format(datetime.now()))
+        logger.info("{}: User tried to send more than in their account.".format(datetime.now()))
         message['tip_amount'] = -1
         return message
 
@@ -575,7 +581,7 @@ def validate_total_tip_amount(message):
 
 def send_reply(message, text):
     if check_mute(message['sender_id'], message['system']):
-        logging.info("{}: User has muted bot.".format(datetime.now()))
+        logger.info("{}: User has muted bot.".format(datetime.now()))
         return
     
     if message['system'] == 'twitter':
@@ -583,13 +589,13 @@ def send_reply(message, text):
         try:
             api.update_status(text, message['id'])
         except tweepy.TweepError as e:
-            logging.info("{}: Send Reply Tweepy Error: {}".format(datetime.now(), e))
+            logger.info("{}: Send Reply Tweepy Error: {}".format(datetime.now(), e))
 
     elif message['system'] == 'telegram':
         try:
             telegram_bot.sendMessage(chat_id=message['chat_id'], reply_to_message_id=message['id'], text=text)
         except Exception as e:
-            logging.info("{}: Send reply telegram error3 {}".format(datetime.now(), e))
+            logger.info("{}: Send reply telegram error3 {}".format(datetime.now(), e))
 
 def check_telegram_member(chat_id, chat_name, member_id, member_name):
     check_user_call = ("SELECT member_id, member_name FROM telegram_chat_members "
@@ -598,14 +604,14 @@ def check_telegram_member(chat_id, chat_name, member_id, member_name):
     user_check_data = modules.db.get_db_data(check_user_call)
 
     if not user_check_data:
-        logging.info("{}: User {}-{} not found in DB, inserting".format(datetime.now(), chat_id, member_name))
+        logger.info("{}: User {}-{} not found in DB, inserting".format(datetime.now(), chat_id, member_name))
         new_chat_member_call = ("INSERT INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
                                 "VALUES (%s, %s, %s, %s)")
         new_chat_member_values = [chat_id, chat_name, member_id, member_name]
         modules.db.set_db_data(new_chat_member_call, new_chat_member_values)
 
     elif user_check_data[0][1] != member_name:
-        logging.info("Member ID {} name incorrect in DB.  Stored value: {}  Updating to {}"
+        logger.info("Member ID {} name incorrect in DB.  Stored value: {}  Updating to {}"
                      .format(member_id, user_check_data[0][1], member_name))
 
         update_name_call = ("UPDATE telegram_chat_members "
@@ -635,7 +641,7 @@ def send_account_message(account_text, message, account):
     """
 
     if check_mute(message['sender_id'], message['system']):
-        logging.info("{}: User has muted bot.".format(datetime.now()))
+        logger.info("{}: User has muted bot.".format(datetime.now()))
         return
 
     if message['system'] == 'twitter' or message['system'] == 'telegram':

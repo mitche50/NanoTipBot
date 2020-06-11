@@ -11,14 +11,20 @@ import requests
 import telegram
 import tweepy
 from TwitterAPI import TwitterAPI
+from logging.handlers import TimedRotatingFileHandler
 
 import modules.db
 import modules.social
 import modules.translations as translations
 
 # Set Log File
-logging.basicConfig(handlers=[logging.FileHandler('{}/webhooks.log'.format(os.getcwd()), 'a', 'utf-8')],
-                    level=logging.INFO)
+logger = logging.getLogger("currency_log")
+logger.setLevel(logging.INFO)
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-currency.log'.format(os.getcwd(), datetime.now()),
+                                   when="d",
+                                   interval=1,
+                                   backupCount=5)
+logger.addHandler(handler)
 
 # Read config and parse constants
 config = configparser.ConfigParser()
@@ -68,32 +74,32 @@ def receive_pending(sender_account):
     Check to see if the account has any pending blocks and process them
     """
     try:
-        logging.info("{}: in receive pending".format(datetime.now()))
+        logger.info("{}: in receive pending".format(datetime.now()))
         pending_data = {'action': 'pending', 'account': sender_account, 'include_active': 'true'}
         pending_data_json = json.dumps(pending_data)
         r = requests.post(NODE_IP, data=pending_data_json)
         pending_blocks = r.json()
-        logging.info("pending blocks: {}".format(pending_blocks['blocks']))
+        logger.info("pending blocks: {}".format(pending_blocks['blocks']))
         if len(pending_blocks['blocks']) > 0:
             try:
                 for block in pending_blocks['blocks']:
                     work = get_pow(sender_account)
                     if work == '':
-                        logging.info("{}: processing without pow".format(datetime.now()))
+                        logger.info("{}: processing without pow".format(datetime.now()))
                         receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
                                         'block': block}
                     else:
-                        logging.info("{}: processing with pow".format(datetime.now()))
+                        logger.info("{}: processing with pow".format(datetime.now()))
                         receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
                                         'block': block, 'work': work}
                     receive_json = json.dumps(receive_data)
                     requests.post('{}'.format(NODE_IP), data=receive_json)
-                    logging.info("{}: block {} received".format(datetime.now(), block))
+                    logger.info("{}: block {} received".format(datetime.now(), block))
             except Exception as e:
-                logging.info("Exception: {}".format(e))
+                logger.info("Exception: {}".format(e))
                 raise e
     except Exception as e:
-        logging.info("Receive Pending Error: {}".format(e))
+        logger.info("Receive Pending Error: {}".format(e))
         raise e
 
     return
@@ -104,32 +110,32 @@ def receive_pending_debug(sender_account, message):
     Check to see if the account has any pending blocks and process them
     """
     try:
-        logging.info("{}: in receive pending".format(datetime.now()))
+        logger.info("{}: in receive pending".format(datetime.now()))
         pending_data = {'action': 'pending', 'account': sender_account, 'include_active': 'true'}
         pending_data_json = json.dumps(pending_data)
         r = requests.post(NODE_IP, data=pending_data_json)
         pending_blocks = r.json()
-        logging.info("{}: {} - pending blocks: {}".format(datetime.now(), message['tip_id'], pending_blocks['blocks']))
+        logger.info("{}: {} - pending blocks: {}".format(datetime.now(), message['tip_id'], pending_blocks['blocks']))
         if len(pending_blocks['blocks']) > 0:
             try:
                 for block in pending_blocks['blocks']:
                     work = get_pow_debug(message)
                     if work == '':
-                        logging.info("{}: {} -  processing without pow".format(datetime.now(), message['tip_id']))
+                        logger.info("{}: {} -  processing without pow".format(datetime.now(), message['tip_id']))
                         receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
                                         'block': block}
                     else:
-                        logging.info("{}: {} -  processing with pow".format(datetime.now(), message['tip_id']))
+                        logger.info("{}: {} -  processing with pow".format(datetime.now(), message['tip_id']))
                         receive_data = {'action': "receive", 'wallet': WALLET, 'account': sender_account,
                                         'block': block, 'work': work}
                     receive_json = json.dumps(receive_data)
                     requests.post('{}'.format(NODE_IP), data=receive_json)
-                    logging.info("{}: {} - block {} received".format(datetime.now(), message['tip_id'], block))
+                    logger.info("{}: {} - block {} received".format(datetime.now(), message['tip_id'], block))
             except Exception as e:
-                logging.info("Exception: {}".format(e))
+                logger.info("Exception: {}".format(e))
                 raise e
     except Exception as e:
-        logging.info("{}: {} - Receive Pending Error: {}".format(datetime.now(), message['tip_id'], e))
+        logger.info("{}: {} - Receive Pending Error: {}".format(datetime.now(), message['tip_id'], e))
         raise e
 
     return
@@ -139,7 +145,7 @@ def get_pow(sender_account):
     """
     Retrieves the frontier (hash of previous transaction) of the provided account and generates work for the next block.
     """
-    logging.info("{}: in get_pow".format(datetime.now()))
+    logger.info("{}: in get_pow".format(datetime.now()))
     try:
         account_info_call = {'action': 'account_info', 'account': sender_account}
         json_request = json.dumps(account_info_call)
@@ -154,28 +160,28 @@ def get_pow(sender_account):
             rx = r.json()
             hash = rx['key']
 
-        logging.info("{}: hash retrieved from account info: {}".format(datetime.now(), hash))
+        logger.info("{}: hash retrieved from account info: {}".format(datetime.now(), hash))
     except Exception as e:
-        logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
+        logger.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
 
     work = ''
     try:
         work_data = {'hash': hash, 'api_key': WORK_KEY, 'user': WORK_USER}
 
-        logging.info("{}: work_data: {}".format(datetime.now(), work_data))
+        logger.info("{}: work_data: {}".format(datetime.now(), work_data))
         json_request = json.dumps(work_data)
-        logging.info("{}: json work_data: {}".format(datetime.now(), json_request))
+        logger.info("{}: json work_data: {}".format(datetime.now(), json_request))
         r = requests.post('{}'.format(WORK_SERVER), data=json_request)
         rx = r.json()
-        logging.info("{}: json response: {}".format(datetime.now(), rx))
+        logger.info("{}: json response: {}".format(datetime.now(), rx))
         if 'work' in rx:
             work = rx['work']
-            logging.info("{}: Work generated: {}".format(datetime.now(), work))
+            logger.info("{}: Work generated: {}".format(datetime.now(), work))
         else:
-            logging.info("{}: work not in keys, response from server: {}".format(datetime.now(), rx))
+            logger.info("{}: work not in keys, response from server: {}".format(datetime.now(), rx))
     except Exception as e:
-        logging.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
+        logger.info("{}: ERROR GENERATING WORK: {}".format(datetime.now(), e))
         pass
 
     return work
@@ -185,7 +191,7 @@ def get_pow_debug(message):
     """
     Retrieves the frontier (hash of previous transaction) of the provided account and generates work for the next block.
     """
-    logging.info("{}: in get_pow".format(datetime.now()))
+    logger.info("{}: in get_pow".format(datetime.now()))
     try:
         account_info_call = {'action': 'account_info', 'account': message['sender_account']}
         json_request = json.dumps(account_info_call)
@@ -200,27 +206,27 @@ def get_pow_debug(message):
             rx = r.json()
             hash = rx['key']
 
-        logging.info("{}: {} - hash retrieved from account info: {}".format(datetime.now(), message['tip_id'], hash))
+        logger.info("{}: {} - hash retrieved from account info: {}".format(datetime.now(), message['tip_id'], hash))
     except Exception as e:
-        logging.info("{}: Error checking frontier: {}".format(datetime.now(), e))
+        logger.info("{}: Error checking frontier: {}".format(datetime.now(), e))
         return ''
 
     work = ''
     try:
         work_data = {'hash': hash, 'api_key': WORK_KEY, 'user': WORK_USER}
-        logging.info("{}: {} - work_data: {}".format(datetime.now(), message['tip_id'], work_data))
+        logger.info("{}: {} - work_data: {}".format(datetime.now(), message['tip_id'], work_data))
         json_request = json.dumps(work_data)
         r = requests.post('{}'.format(WORK_SERVER), data=json_request)
         rx = r.json()
-        logging.info("{}: {} - json response: {}".format(datetime.now(), message['tip_id'], rx))
+        logger.info("{}: {} - json response: {}".format(datetime.now(), message['tip_id'], rx))
         if 'work' in rx:
             work = rx['work']
-            logging.info("{}: {} - Work generated: {}".format(datetime.now(), message['tip_id'], work))
+            logger.info("{}: {} - Work generated: {}".format(datetime.now(), message['tip_id'], work))
         else:
-            logging.info("{}: {} - work not in keys, response from server: {}".format(datetime.now(), message['tip_id'],
+            logger.info("{}: {} - work not in keys, response from server: {}".format(datetime.now(), message['tip_id'],
                                                                                       rx))
     except Exception as e:
-        logging.info("{}: {} - ERROR GENERATING WORK: {}".format(datetime.now(), message['tip_id'], e))
+        logger.info("{}: {} - ERROR GENERATING WORK: {}".format(datetime.now(), message['tip_id'], e))
         pass
 
     return work
@@ -236,13 +242,13 @@ def send_tip(message, users_to_tip, tip_index):
                                message['system'])
         return
     else:
-        logging.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
+        logger.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
         if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
             modules.social.send_reply(message,
                                       translations.self_tip_text[message['language']].format(CURRENCY.upper(),
                                                                                              message['system']))
 
-            logging.info("{}: User tried to tip themself").format(datetime.now())
+            logger.info("{}: User tried to tip themself").format(datetime.now())
             return
 
         # Check if the receiver has an account
@@ -259,7 +265,7 @@ def send_tip(message, users_to_tip, tip_index):
                                               users_to_tip[tip_index]['receiver_screen_name'],
                                               users_to_tip[tip_index]['receiver_account']]
             modules.db.set_db_data(create_receiver_account, create_receiver_account_values)
-            logging.info("{}: Sender sent to a new receiving account.  Created  account {}"
+            logger.info("{}: Sender sent to a new receiving account.  Created  account {}"
                          .format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
 
         else:
@@ -273,13 +279,13 @@ def send_tip(message, users_to_tip, tip_index):
 
         # work = get_pow(message['sender_account'])
         work = get_pow_debug(message)
-        logging.info("{}: {} - Sending Tip:".format(datetime.now(), message['tip_id']))
-        logging.info("{}: {} - From: {}".format(datetime.now(), message['tip_id'], message['sender_account']))
-        logging.info("{}: {} - To: {}".format(datetime.now(), message['tip_id'], users_to_tip[tip_index]['receiver_account']))
-        logging.info("{}: {} - amount: {:f}".format(datetime.now(), message['tip_id'], message['tip_amount_raw']))
-        logging.info("{}: {} - work: {}".format(datetime.now(), message['tip_id'], work))
+        logger.info("{}: {} - Sending Tip:".format(datetime.now(), message['tip_id']))
+        logger.info("{}: {} - From: {}".format(datetime.now(), message['tip_id'], message['sender_account']))
+        logger.info("{}: {} - To: {}".format(datetime.now(), message['tip_id'], users_to_tip[tip_index]['receiver_account']))
+        logger.info("{}: {} - amount: {:f}".format(datetime.now(), message['tip_id'], message['tip_amount_raw']))
+        logger.info("{}: {} - work: {}".format(datetime.now(), message['tip_id'], work))
         if work == '':
-            logging.info("{}: processed without work".format(datetime.now()))
+            logger.info("{}: processed without work".format(datetime.now()))
             send_data = {
                 'action': 'send',
                 'wallet': WALLET,
@@ -291,7 +297,7 @@ def send_tip(message, users_to_tip, tip_index):
             json_request = json.dumps(send_data)
             r = requests.post('{}'.format(NODE_IP), data=json_request)
             rx = r.json()
-            logging.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
+            logger.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
             if 'block' in rx:
                 message['send_hash'] = rx['block']
             else:
@@ -301,7 +307,7 @@ def send_tip(message, users_to_tip, tip_index):
                 return
 
         else:
-            logging.info("{}: processed with work: {}".format(datetime.now(), work))
+            logger.info("{}: processed with work: {}".format(datetime.now(), work))
             send_data = {
                 'action': 'send',
                 'wallet': WALLET,
@@ -311,11 +317,11 @@ def send_tip(message, users_to_tip, tip_index):
                 'id': 'tip-{}'.format(message['tip_id']),
                 'work': work
             }
-            logging.info("{}: send data: {}".format(datetime.now(), send_data))
+            logger.info("{}: send data: {}".format(datetime.now(), send_data))
             json_request = json.dumps(send_data)
             r = requests.post('{}'.format(NODE_IP), data=json_request)
             rx = r.json()
-            logging.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
+            logger.info("{}: {} - send return: {}".format(datetime.now(), message['tip_id'], rx))
             if 'block' in rx:
                 message['send_hash'] = rx['block']
             else:
@@ -330,7 +336,7 @@ def send_tip(message, users_to_tip, tip_index):
 
         # Get receiver's new balance
         try:
-            logging.info("{}: Checking to receive new tip")
+            logger.info("{}: Checking to receive new tip")
 
             receive_pending(users_to_tip[tip_index]['receiver_account'])
             balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
@@ -349,10 +355,10 @@ def send_tip(message, users_to_tip, tip_index):
                                                CURRENCY.upper(), CURRENCY.upper(), URL), message['system'])
 
         except Exception as e:
-            logging.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
+            logger.info("{}: ERROR IN RECEIVING NEW TIP - POSSIBLE NEW ACCOUNT NOT REGISTERED WITH DPOW: {}"
                          .format(datetime.now(), e))
 
-        logging.info(
+        logger.info(
             "{}: tip sent to {} via hash {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name'],
                                                     message['send_hash']))
 
@@ -373,7 +379,7 @@ def strip_emoji(text):
     """
     Remove Emojis from tweet text to prevent issues with logging
     """
-    logging.info('{}: removing emojis'.format(datetime.now()))
+    logger.info('{}: removing emojis'.format(datetime.now()))
     text = str(text)
     return RE_EMOJI.sub(r'', text)
 
@@ -410,8 +416,8 @@ def get_fiat_conversion(symbol, crypto_currency, fiat_amount):
 
         return final_convert
     except Exception as e:
-        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
+        logger.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logger.info("{}: {}".format(datetime.now(), e))
         raise e
 
 
@@ -438,19 +444,19 @@ def get_fiat_price(fiat, crypto_currency):
 
         return price
     except Exception as e:
-        logging.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
-        logging.info("{}: {}".format(datetime.now(), e))
+        logger.info("{}: Exception converting fiat price to crypto price".format(datetime.now()))
+        logger.info("{}: {}".format(datetime.now(), e))
         raise e
 
 
 def generate_accounts():
     accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
     # if CURRENCY == 'nano':
-    #     logging.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
+    #     logger.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
     #     work_data = {'accounts': accounts, 'key': WORK_KEY}
     #     json_request = json.dumps(work_data)
     #     r = requests.post('{}'.format(WORK_SERVER), data=json_request)
     #     rx = r.json()
-    #     logging.info("{}: return from dpow: {}".format(datetime.now(), rx))
+    #     logger.info("{}: return from dpow: {}".format(datetime.now(), rx))
 
     return accounts
