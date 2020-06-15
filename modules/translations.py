@@ -79,7 +79,7 @@ self_tip_text = {
     'de': 'Sich selbst zu tippen ist nicht erlaubt. Bitte benutze den Bot, um anderen {1} Usern ${0} zu schicken!',
     'id': 'Tidak boleh self tipping. Silakan gunakan bot ini untuk menyebarkan ${0} ke pengguna {1} lain!',
     'vt': '',
-    'ru': 'Делать тип самому себе не допускаются. Пожалуйста, используйте этот бот, чтобы распространять '
+    'ru': 'Делать тип самому себе не допускается. Пожалуйста, используйте этот бот, чтобы отправлять '
           '${0} другим пользователям {1}!',
     'sv': '',
     'it': 'Non è permesso dare la mancia a se stessi. Usa il tip bot per inviare ${0} agli altri utenti {1}!',
@@ -126,8 +126,8 @@ receiver_tip_text = {
           'Jika Anda belum mendaftarkan akun, kirim balasan dengan !register untuk memulai, atau !help untuk melihat '
           'daftar perintah! Pelajari lebih lanjut tentang {3} di {4}',
     'vt': '',
-    'ru': '@{0} только что отправил вам {1} {2} тип! Ответьте на этот DM с помощью  !баланс, чтобы увидеть '
-          'ваш новый баланс. Если вы еще не зарегистрировали учетную запись, отправьте ответ с сообщением !регистрация '
+    'ru': '@{0} только что отправил вам {1} {2} тип! Ответьте на это сообщение с помощью !баланс, чтобы увидеть '
+          'ваш новый баланс. Если вы еще не зарегистрировали учетную запись, отправьте ответ с сообщением !ру '
           'для начала или !помощь, чтобы увидеть список команд! Узнайте больше о {3} на {4}',
     'sv': '',
     'it': '@{0} ti ha inviato una mancia di {1} {2}! Rispondi a questo DM con !balance per vedere il tuo saldo. '
@@ -254,7 +254,7 @@ no_users_text = {
     'id': 'Sepertinya Anda tidak memasukkan siapapun untuk memberi tip, atau Anda salah mengetik nama pengguna '
           'seseorang. Anda dapat mencoba memberi tip lagi menggunakan format {0} {1} 1234 @username',
     'vt': '',
-    'ru': 'Похоже, вы не отметили никого, чтобы сделать тип, или набрали неверно. Вы можете попробовать сделать '
+    'ru': 'Похоже, вы никого не отметили, чтобы сделать тип или набрали имя пользователя неверно. Вы можете попробовать сделать '
           'тип снова, используя формат {0} {1} 1234 @имя_пользователя',
     'sv': '',
     'it': 'Sembra che tu non abbia inserito nessuno cui dare la mancia, oppure abbia sbagliato a scrivere il suo nome '
@@ -494,7 +494,7 @@ missing_user_message = {
     'id': '{0} tidak ditemukan dalam catatan kami. Untuk memberi tip, mereka harus menjadi anggota saluran. Jika ada '
           'di saluran, minta mereka mengirim pesan di obrolan sehingga saya dapat menambahkannya.',
     'vt': '',
-    'ru': '{0} не найдено в наших записях. Чтобы дать им тип, им нужно быть участником канала. Если они '
+    'ru': '{0} не найдено в наших записях. Чтобы отправить им тип, им нужно быть участником канала. Если они '
           'находятся на канале, попросите их отправить сообщение в чат, чтобы я мог добавить их.',
     'sv': '',
     'it': '{0} non trovato. Per dare loro una mancia, devono essere membri del gruppo. Se sono nel gruppo, dì '
@@ -531,7 +531,7 @@ no_account_text = {
     'id': 'Anda tidak memiliki akun dengan bot. Silakan kirim DM kepada saya dengan !register untuk mengatur '
           'sebuah akun.',
     'vt': '',
-    'ru': 'У вас нет аккаунта с ботом. Пожалуйста, пришлите мне Личное Сообщение с !регистрация, чтобы создать '
+    'ru': 'У вас нет аккаунта с ботом. Пожалуйста, пришлите мне личное сообщение с !регистрация, чтобы создать '
           'учетную запись.',
     'sv': '',
     'it': 'Non hai un account con il bot. Inviami un DM con !register per configurare un account.',
@@ -568,7 +568,7 @@ not_enough_text = {
           'mengirimkan DM kepada saya dengan !balance dan coba lagi.',
     'vt': '',
     'ru': 'У вас недостаточно {0}, чтобы покрыть этот {1} {0} тип. Пожалуйста, проверьте свой баланс, '
-          'отправив мне Личное Сообщение с !баланс и повторите попытку.',
+          'отправив мне личное сообщение с !баланс и повторите попытку.',
     'sv': '',
     'it': 'Non hai abbastanza {0} per coprire questa mancia di {1} {0}. Controlla il tuo saldo inviandomi un '
           'DM con !balance e riprova.',
@@ -808,8 +808,8 @@ help_message = {
                      'digunakan oleh Bot.',
     'vt': '',
     'ru': 'Спасибо за использование {0} Tip Bot! Ниже приведен список команд и описание того, что они делают:\n\n'
-          + BULLET + ' !помощь: Тип бот ответит на ваше Личное Сообщение со списком команд и их функций. Если вы '
-                     'что-то забыли, используйте это, чтобы получить подсказку, как это сделать!\n\n'
+          + BULLET + ' !помощь: Тип бот ответит на ваше личное сообщение со списком команд и их функций. Если вы '
+                     'что-то забыли, используйте эту команду, чтобы получить подсказку!\n\n'
           + BULLET + ' !регистрация: Регистрирует ваш идентификатор пользователя для учетной записи, которая связана с '
                      'ним. Это используется для хранения ваших тип. Обязательно выводите на собственный кошелек, '
                      'так как тип бот не предназначен для длительного хранения {0}.\n\n'
@@ -818,18 +818,18 @@ help_message = {
                      'В Твиттере: Отметьте {1} в твиттере и упомяните {4} <сумма> <@имя_пользователя>. '
                      'Пример: {1} {4} 5 @mitche50 будет отправлено 5 {0} тип пользователю @mitche50.\n'
                      'В Telegram отправьте {3} {4} <сумма> <@имя_пользователя> , чтобы сделать тип в группе.\n\n'
-          + BULLET + ' !приватныйтип: В настоящее время отключен. Это отправит тип другому пользователю через DM. '
+          + BULLET + ' !приватныйтип: В настоящее время отключен. Это отправит тип другому пользователю через личные сообщения. '
                      'Если вы хотите, чтобы сумма тип была конфиденциальной, используйте эту функцию! '
-                     'Правильное использование  !приватныйтип @имя_пользователя 1234\n\n'
+                     'Правильное использование !приватныйтип @имя_пользователя 1234\n\n'
           + BULLET + ' !аккаунт: Возвращает счёт учетной записи, связанный с вашим идентификатором пользователя '
-                     '(в настоящее время уникальным для платформы). Вы можете использовать это, чтобы пополнить '
+                     '(в настоящее время уникальным для платформы). Вы можете использовать команду, чтобы пополнить '
                      'счет {0} для получения тип с вашего собственного кошелька.\n\n'
-          + BULLET + ' !вывод: Правильное использование  !вывод {2}. Это отправит весь баланс вашего '
+          + BULLET + ' !вывод: Правильное использование !вывод {2}. Это отправит весь баланс вашего '
                      'счета на предоставленный адрес {0}. Необязательно: Вы можете указать сумму для вывода, '
-                     'отправив !вывод <сумма> <адрес>. Пример: !вывод 1 {2}  выведет 1 '
+                     'отправив !вывод <сумма> <адрес>. Пример: !вывод 1 {2} выведет 1 '
                      '{0} на адрес {2}.\n\n'
-          + BULLET + ' !донат: Правильное использование  !донат 1234. Это отправит пожертвование '
-                     'на адрес бота {0} Tip Bot, чтобы помочь в развитию его.\n\n'
+          + BULLET + ' !донат: Правильное использование !донат 1234. Это отправит пожертвование '
+                     'на адрес бота {0} Tip Bot, чтобы помочь его развитию.\n\n'
           + BULLET + ' !выборязыка: Используется для изменения языка бота по умолчанию. Список доступных языков '
                      'представлен в команде !языки. Правильное использование "!выборязыка русский" для '
                      'изменения вашего языка на русский.\n\n'
@@ -1260,7 +1260,7 @@ invalid_amount_text = {
     'id': 'Anda tidak mengirim alamat wallet untuk menarik saldo. Harap kirim ulang dengan format '
           '!withdraw <account> atau !withdraw <amount> <account>',
     'vt': '',
-    'ru': 'Вы не отправили адрес для вывода. Пожалуйста, повторите отправку в формате  '
+    'ru': 'Вы не отправили адрес для вывода. Пожалуйста, повторите отправку в формате '
           '!вывод <адрес> или !вывод <сумма> <адрес>;',
     'sv': '',
     'it': 'Non hai inviato un numero da prelevare. Rinvia con il formato !withdraw <account> o '
@@ -1384,8 +1384,8 @@ incorrect_withdraw_text = {
           '{0}. Juga, !withdraw {0} akan menarik seluruh saldo Anda ke '
           'akun {0}.',
     'vt': '',
-    'ru': 'Я не понял ваш запрос на снятие средств. Пожалуйста, повторно отправьте с помощью !withdraw '
-          '<необязательно: сумма> <адрес>. Например,  !вывод 1 {0} выведет 1 {1} на '
+    'ru': 'Я не понял ваш запрос на снятие средств. Пожалуйста, повторно отправьте с помощью !вывод '
+          '<необязательно: сумма> <адрес>. Например, !вывод 1 {0} выведет 1 {1} на '
           'адрес {0}. Также, !вывод {0} выведет весь ваш баланс на '
           'адрес {0}.',
     'sv': '',
@@ -1696,8 +1696,8 @@ auto_donate_notanum = {
           'donation percentage.',
     'vt': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
-    'ru': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
-          'donation percentage.',
+    'ru': 'Указанный вами процент не является числом. Пожалуйста, отправьте положительное число, чтобы обновить '
+          'процент для доната.',
     'sv': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
     'it': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
@@ -1741,8 +1741,8 @@ auto_donate_negative = {
           ' to update your donation percentage.',
     'vt': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
-    'ru': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
-          ' to update your donation percentage.',
+    'ru': 'Указанный вами процент не является числом. Пожалуйста, отправьте положительное число от 0 до 100,'
+          ' чтобы обновить процент для доната.',
     'sv': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
     'it': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
@@ -1788,6 +1788,8 @@ auto_donate_missing_num = {
           'to update your donation percentage.',
     'ru': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
+    'ru': 'Вы не указали число, на которое нужно обновить процента доната. Пожалуйста, укажите положительное число, '
+          'чтобы обновить процент для доната.',
     'sv': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
     'it': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
@@ -1819,7 +1821,7 @@ auto_donate_success = {
     'de': 'Du hast den Prozentsatz für Deine automatischen Spenden erfolgreich auf {0}% gesetzt.',
     'id': 'You have successfully updated your donation percentage to {0}%.',
     'vt': 'You have successfully updated your donation percentage to {0}%.',
-    'ru': 'You have successfully updated your donation percentage to {0}%.',
+    'ru': 'Вы успешно обновили процент для доната на {0}%.',
     'sv': 'You have successfully updated your donation percentage to {0}%.',
     'it': 'You have successfully updated your donation percentage to {0}%.',
     'tr': 'You have successfully updated your donation percentage to {0}%.',
@@ -1847,7 +1849,7 @@ set_return_invalid_account = {
     'de': 'Fehler: Ungültige Account Nummer. Bitte erneut mit eine gültigem Account schicken',
     'id': 'Error: Invalid account number.  Please resend with a valid account.',
     'vt': 'Error: Invalid account number.  Please resend with a valid account.',
-    'ru': 'Error: Invalid account number.  Please resend with a valid account.',
+    'ru': 'Ошибка: Неправильный аккаунт. Пожалуйста, отравьте с правильным аккаунтом.',
     'sv': 'Error: Invalid account number.  Please resend with a valid account.',
     'it': 'Error: Invalid account number.  Please resend with a valid account.',
     'tr': 'Error: Invalid account number.  Please resend with a valid account.',
@@ -1873,7 +1875,7 @@ set_return_success = {
     'de': 'Du hast die Adresse für Auszahlungen erfolgreich auf {0} gesetzt.',
     'id': 'You have successfully set your return address to {0}',
     'vt': 'You have successfully set your return address to {0}',
-    'ru': 'You have successfully set your return address to {0}',
+    'ru': 'Вы успешно задали ваш адрес {0}',
     'sv': 'You have successfully set your return address to {0}',
     'it': 'You have successfully set your return address to {0}',
     'tr': 'You have successfully set your return address to {0}',
@@ -1899,7 +1901,7 @@ unsupported_fiat = {
     'de': 'Du hast entweder einen ungültigen Betrag oder ein nicht unterstütztes Fiat Währungssymbol geschickt. Bitte versuche es erneut.',
     'id': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'vt': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
-    'ru': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
+    'ru': 'Вы либо указали неправильное количество, либо неподдерживаемый символ валюты . Пожалуйста, проверьте формат и отправьте еще раз.',
     'sv': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'it': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'tr': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
@@ -1926,7 +1928,7 @@ mute = {
     'de': 'Du hast den Bot stummgeschaltet. Du bekommst nun keine Nachrichten mehr. Du kannst dies mit !unmute or /unmute rückgängig machen. ',
     'id': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'vt': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
-    'ru': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'ru': 'Вы отключили оповещения бота. Вы больше не будете получать сообщения. Чтобы включить оповещения, отправьте !включитьоповещения или /включитьоповещения',
     'sv': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'it': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'tr': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
@@ -1952,7 +1954,7 @@ unmute = {
     'de': 'Du hast die Stummschaltung erfolgreich rückgängig gemacht. Um den Bot erneut stummzuschalten, sende !mute or /mute .',
     'id': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'vt': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
-    'ru': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'ru': 'Вы включили оповещения бота и будете получать сообщения. Чтобы отключить оповещения, отправьте !выключитьоповещения или /выключитьоповещения',
     'sv': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'it': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'tr': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
@@ -1978,7 +1980,7 @@ language_list = (
     # 'Japanese - 日本語\n'
     'Portuguese - Português\n'
     'Portuguese-BR - Português-BR\n'
-    'Russian - русский\n'
+    'Russian - Русский\n'
     'Spanish - Español\n'
     'Turkish - Türkçe\n'
     'Persian - فارسی\n'
@@ -2186,7 +2188,7 @@ donate_commands = {
         # Users said they would prefer english commands
     ],
     'vt': [],
-    'ru': ['!донат', '!д', '/донат', '/д'],
+    'ru': ['!donate', '!д', '/донат', '/д'],
     'sv': [],
     'it': ['!dona', '!d', '/dona', '/d'],
     'tr': ['!bağış', '/bağış'],
@@ -2371,7 +2373,7 @@ set_mute_commands = {
         # Users said they would prefer english commands
     ],
     'vt': [],
-    'ru': [],
+    'ru': ["!выключитьоповещения", "/выключитьоповещения"],
     'sv': [],
     'it': [],
     'tr': [],
@@ -2407,7 +2409,7 @@ set_unmute_commands = {
         # Users said they would prefer english commands
     ],
     'vt': [],
-    'ru': [],
+    'ru': ["!включитьоповещения", "/включитьоповещения"],
     'sv': [],
     'it': [],
     'tr': [],
