@@ -388,7 +388,7 @@ tip_success = {
     'fr': 'Vous avez envoyé votre tip de {0} ${1} avec succès. Hash: {3}',
     'pt': 'A tua tip de {0} ${1} foi enviada com sucesso. Hash: {3}',
     'th': '',
-    'de': 'Du hast  Deinen {0} ${1} Tip erfolgreich geschickt. Hash: ',
+    'de': 'Du hast  Deinen {0} ${1} Tip erfolgreich geschickt. Hash: {3}',
     'id': 'Anda telah berhasil mengirim tip {0} ${1} Anda. Hash: {3}',
     'vt': '',
     'ru': 'Вы успешно отправили свой {0} ${1} тип. Hash: {3}',
