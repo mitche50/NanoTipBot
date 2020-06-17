@@ -1974,7 +1974,7 @@ language_list = (
     'Dutch - Nederlands\n'
     'English\n'
     'French - Français\n'
-    # 'German - Deutsch\n'
+    'German - Deutsch\n'
     'Indonesian - Indonesia\n'
     'Italian - Italiano\n'
     # 'Japanese - 日本語\n'
