@@ -670,8 +670,19 @@ def telegram_event():
                             bot_status = config.get('main', 'bot_status')
                             if bot_status == 'maintenance':
                                 modules.social.send_dm(message['sender_id'],
-                                                       translations.maintenance_text[message['language']],
-                                                       message['system'])
+                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                    message['system'])
+                                return ''
+                            elif message['system'] == 'twitter' and bot_status == 'twitter-maintenance':
+                                modules.social.send_dm(message['sender_id'],
+                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                    message['system'])
+                                return ''
+                            elif message['system'] == 'telegram' and bot_status == 'telegram-maintenance':
+                                modules.social.send_dm(message['sender_id'],
+                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                    message['system'])
+                                return ''
                             else:
                                 modules.orchestration.tip_process(message, users_to_tip, request_json)
                         except Exception as e:
@@ -844,8 +855,19 @@ def twitter_event_received():
                     bot_status = config.get('main', 'bot_status')
                     if bot_status == 'maintenance':
                         modules.social.send_dm(message['sender_id'],
-                                               translations.maintenance_text[message['language']],
-                                               message['system'])
+                                            translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                            message['system'])
+                        return ''
+                    elif message['system'] == 'twitter' and bot_status == 'twitter-maintenance':
+                        modules.social.send_dm(message['sender_id'],
+                                            translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                            message['system'])
+                        return ''
+                    elif message['system'] == 'telegram' and bot_status == 'telegram-maintenance':
+                        modules.social.send_dm(message['sender_id'],
+                                            translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                            message['system'])
+                        return ''
                     else:
                         # Favoriting has been removed due to possible issues with Twitter automation rules.
                         # api.create_favorite(message['id'])

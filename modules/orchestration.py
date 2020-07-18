@@ -52,242 +52,254 @@ rpc = nano.rpc.Client(NODE_IP)
 
 def parse_action(message):
     # If the bot is in maintenance status, send a message and return.
-    bot_status = config.get('main', 'bot_status')
-    if bot_status == 'maintenance':
-        modules.social.send_dm(message['sender_id'],
-                               translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                               message['system'])
-        return ''
-    # Set tip commands
-    if CURRENCY == 'banano':
-        tip_commands = modules.translations.banano_tip_commands['en']
-    else:
-        tip_commands = modules.translations.nano_tip_commands[message['language']]
-        logger.info("language: {}".format(message['language']))
-        if message['language'] != 'en':
-            english_commands = modules.translations.nano_tip_commands['en']
-            for command in english_commands:
-                logger.info("commad: {}".format(command))
-                tip_commands.append(command)
-
-    logger.info('tip commands: {}'.format(tip_commands))
-
-    if message['dm_action'] in translations.help_commands['en'] or \
-            message['dm_action'] in translations.help_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                help_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
+    try:
+        bot_status = config.get('main', 'bot_status')
+        if bot_status == 'maintenance':
+            modules.social.send_dm(message['sender_id'],
+                                translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                message['system'])
+            return ''
+        elif message['system'] == 'twitter' and bot_status == 'twitter-maintenance':
+            modules.social.send_dm(message['sender_id'],
+                                translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                message['system'])
+            return ''
+        elif message['system'] == 'telegram' and bot_status == 'telegram-maintenance':
+            modules.social.send_dm(message['sender_id'],
+                                translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                message['system'])
+            return ''
+        # Set tip commands
+        if CURRENCY == 'banano':
+            tip_commands = modules.translations.banano_tip_commands['en']
         else:
-            return '', HTTPStatus.OK
+            tip_commands = modules.translations.nano_tip_commands[message['language']]
+            logger.info("language: {}".format(message['language']))
+            if message['language'] != 'en':
+                english_commands = modules.translations.nano_tip_commands['en']
+                for command in english_commands:
+                    logger.info("commad: {}".format(command))
+                    tip_commands.append(command)
 
-    if message['dm_action'] in translations.set_mute_commands['en'] or \
-            message['dm_action'] in translations.set_mute_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                mute_process(message, 1)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+        logger.info('tip commands: {}'.format(tip_commands))
 
-    if message['dm_action'] in translations.set_unmute_commands['en'] or \
-            message['dm_action'] in translations.set_unmute_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                mute_process(message, 0)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.balance_commands['en'] or \
-            message['dm_action'] in translations.balance_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                balance_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.register_commands['en'] or \
-            message['dm_action'] in translations.register_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                register_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in tip_commands:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                modules.social.send_dm(message['sender_id'],
-                                       translations.redirect_tip_text[message['language']].format(BOT_NAME_TWITTER,
-                                                                                                  tip_commands[0]),
-                                       message['system'])
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.withdraw_commands['en'] or \
-            message['dm_action'] in translations.withdraw_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                withdraw_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.donate_commands['en'] or \
-            message['dm_action'] in translations.donate_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                donate_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.account_commands['en'] or \
-            message['dm_action'] in translations.account_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                account_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.private_tip_commands['en'] or \
-            message['dm_action'] in translations.private_tip_commands[message['language']]:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                if CURRENCY == 'banano':
-                    tip_command = modules.translations.banano_tip_commands['en'][0]
-                else:
-                    if len(modules.translations.nano_tip_commands[message['language']]) > 0:
-                        tip_command = modules.translations.nano_tip_commands[message['language']][0]
-                    else:
-                        tip_command = modules.translations.nano_tip_commands['en'][0]
-
-                modules.social.send_dm(message['sender_id'],
-                                       translations.private_tip_text[message['language']].format(tip_command),
-                                       message['system'])
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
-
-    elif message['dm_action'] in translations.language_commands:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
+        if message['dm_action'] in translations.help_commands['en'] or \
+                message['dm_action'] in translations.help_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
                 try:
-                    new_language = message['text'].split(' ')[1].lower()
-                    if new_language == 'chinese':
-                        new_language += ' ' + message['text'].split(' ')[2].lower()
-                    language_process(message, new_language)
-                except Exception as f:
-                    logger.info("{}: Error in language process: {}".format(datetime.now(), f))
-                    modules.social.send_dm(message['sender_id'], translations.missing_language[message['language']],
-                                           message['system'])
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+                    help_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
 
-    elif message['dm_action'] in translations.language_list_commands:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                language_list_process(message)
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+        if message['dm_action'] in translations.set_mute_commands['en'] or \
+                message['dm_action'] in translations.set_mute_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    mute_process(message, 1)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
 
-    elif message['dm_action'] in translations.auto_donate_commands['en'] or \
-            message['dm_action'] in translations.auto_donate_commands[message['language']]:
-        logger.info("auto donate command identified")
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                auto_donation_process(message)
-            except Exception as e:
-                logger.info(
-                    "{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+        if message['dm_action'] in translations.set_unmute_commands['en'] or \
+                message['dm_action'] in translations.set_unmute_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    mute_process(message, 0)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
 
-    elif message['dm_action'] in translations.set_return_commands['en'] or \
-            message['dm_action'] in translations.set_return_commands[message['language']]:
-        logger.info("set return address command identified")
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                set_return_address_process(message)
-            except Exception as e:
-                logger.info(
-                    "{}: Exception in set_return_address_process section of parse_action: {}".format(datetime.now(), e))
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+        elif message['dm_action'] in translations.balance_commands['en'] or \
+                message['dm_action'] in translations.balance_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    balance_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
 
-    else:
-        new_pid = os.fork()
-        if new_pid == 0:
-            try:
-                modules.social.send_dm(message['sender_id'], translations.wrong_format_text[message['language']],
-                                       message['system'])
-                logger.info('unrecognized syntax')
-            except Exception as e:
-                logger.info("Exception: {}".format(e))
-                raise e
-            os._exit(0)
-        else:
-            return '', HTTPStatus.OK
+        elif message['dm_action'] in translations.register_commands['en'] or \
+                message['dm_action'] in translations.register_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    register_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
 
+        elif message['dm_action'] in tip_commands:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    modules.social.send_dm(message['sender_id'],
+                                        translations.redirect_tip_text[message['language']].format(BOT_NAME_TWITTER,
+                                                                                                    tip_commands[0]),
+                                        message['system'])
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.withdraw_commands['en'] or \
+                message['dm_action'] in translations.withdraw_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    withdraw_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.donate_commands['en'] or \
+                message['dm_action'] in translations.donate_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    donate_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.account_commands['en'] or \
+                message['dm_action'] in translations.account_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    account_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.private_tip_commands['en'] or \
+                message['dm_action'] in translations.private_tip_commands[message['language']]:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    if CURRENCY == 'banano':
+                        tip_command = modules.translations.banano_tip_commands['en'][0]
+                    else:
+                        if len(modules.translations.nano_tip_commands[message['language']]) > 0:
+                            tip_command = modules.translations.nano_tip_commands[message['language']][0]
+                        else:
+                            tip_command = modules.translations.nano_tip_commands['en'][0]
+
+                    modules.social.send_dm(message['sender_id'],
+                                        translations.private_tip_text[message['language']].format(tip_command),
+                                        message['system'])
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.language_commands:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    try:
+                        new_language = message['text'].split(' ')[1].lower()
+                        if new_language == 'chinese':
+                            new_language += ' ' + message['text'].split(' ')[2].lower()
+                        language_process(message, new_language)
+                    except Exception as f:
+                        logger.info("{}: Error in language process: {}".format(datetime.now(), f))
+                        modules.social.send_dm(message['sender_id'], translations.missing_language[message['language']],
+                                            message['system'])
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.language_list_commands:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    language_list_process(message)
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.auto_donate_commands['en'] or \
+                message['dm_action'] in translations.auto_donate_commands[message['language']]:
+            logger.info("auto donate command identified")
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    auto_donation_process(message)
+                except Exception as e:
+                    logger.info(
+                        "{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        elif message['dm_action'] in translations.set_return_commands['en'] or \
+                message['dm_action'] in translations.set_return_commands[message['language']]:
+            logger.info("set return address command identified")
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    set_return_address_process(message)
+                except Exception as e:
+                    logger.info(
+                        "{}: Exception in set_return_address_process section of parse_action: {}".format(datetime.now(), e))
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+
+        else:
+            new_pid = os.fork()
+            if new_pid == 0:
+                try:
+                    modules.social.send_dm(message['sender_id'], translations.wrong_format_text[message['language']],
+                                        message['system'])
+                    logger.info('unrecognized syntax')
+                except Exception as e:
+                    logger.info("Exception: {}".format(e))
+                    raise e
+                os._exit(0)
+            else:
+                return '', HTTPStatus.OK
+    except Exception as e:
+        logger.info("{}: Error identified: {}".format(datetime.now, e))
     return '', HTTPStatus.OK
 
 
