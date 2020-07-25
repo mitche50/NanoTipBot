@@ -26,7 +26,7 @@ maintenance_text = {
     'no': '',
     'da': 'Tip bot er i vedligeholdelsesstatus. Tjek {0} på Twitter for mere information',
     'ar': '',
-    'hi': ''
+    'hi': 'टिपबॉट अभी मैन्टनन्स में है। अधिक जानकारी के लिए ट्विटर पर {0} की जाँच करें।'
 }
 # 2
 redirect_tip_text = {
@@ -60,7 +60,7 @@ redirect_tip_text = {
     'no': '',
     'da': 'Tips processeres nu i offentlige beskeder. Send venligst jf. formatet: {0} {1} 5 @user1',
     'ar': '',
-    'hi': ''
+    'hi': 'टिप्स अब पब्लिक संदेशों के माध्यम से प्रोसेस की जा रही है। कृपया टिप्स इस फार्मेट {0} {1} 5 @ user1। ’में भेजें।'
 }
 # 3
 self_tip_text = {
@@ -93,7 +93,7 @@ self_tip_text = {
     'no': '',
     'da': 'Det er ikke tilladt at sende tips til sig selv. Benyt venligst denne bot til distribution af ${0} til andre {1}-brugere!',
     'ar': '',
-    'hi': ''
+    'hi': 'खुद को टिप करने की अनुमति नहीं है। कृपया इस बॉट का उपयोग $ {0} को अन्य {1} यूज़र तक फैलाने के लिए करें!'
 }
 # 4
 receiver_tip_text = {
@@ -156,8 +156,9 @@ receiver_tip_text = {
     'no': '',
     'da': '@{0} har netop sendt dig et {1} {2} tip! Besvar denne DM med !balance for at se din nye balance.',
     'ar': '',
-    'hi': ''
-}
+    'hi': ' @ {0} ने आपको {1} {2} टिप भेजी है! अपने नए बैलेंस को देखने के लिए इस !balance के साथ उत्तर दें। '
+		'यदि आपने कोई खाता पंजीकृत नहीं किया है, तो जवाब !register भेजें आरंभ करने के लिए रजिस्टर करें, या'
+		'आदेशों की सूची देखे !help से,  {3} के बारे में {4} 'पर अधिक जानें '
 # 5
 private_tip_text = {
     'en': 'Private Tip is under maintenance.  To send your tip, use the {0} function in a tweet or reply!',
@@ -191,7 +192,7 @@ private_tip_text = {
     'no': '',
     'da': 'Funktionen Private Tip er i vedligeholdelsesstatus. Benyt funktionen {0} i et tweet eller svar, for at sende dit tip!',
     'ar': '',
-    'hi': ''
+    'hi': 'निजी टिप अभी मैन्टनन्स में है। अपनी टिप भेजने के लिए, ट्वीट या उत्तर में {0} फ़ंक्शन का उपयोग करें!' ,
 }
 # 6
 wrong_format_text = {
@@ -231,7 +232,8 @@ wrong_format_text = {
     'da': 'Den kommando eller syntax, du har forsøgt at benytte, kunne ikke genkendes. Send !help for en liste af'
           'tilgængelige kommandoer og beskrivelse heraf',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके द्वारा भेजा गया कमांड या सिंटैक्स सही नहीं है। कृपया 'कमांड की सूची के लिए !help भेजें'
+                         'देखे और वे क्या करते हैं।'
 }
 # 7
 no_users_text = {
@@ -272,7 +274,8 @@ no_users_text = {
     'da': 'Det ser ud til at du ikke har indtastet en modtager af dit tip, eller at du har skrevet vedkommendes brugernavn forkert. Du kan prøve '
           'at sende dit tip igen jf. formatet {0} {1} 1234 @brugernavn',
     'ar': '',
-    'hi': ''
+    'hi': 'ऐसा लगता है कि आपने टिप करने के लिए किसी को भी दर्ज नहीं किया है, या आपने किसी के हैंडल को यूज़ किया है। आप फिरसे कोशिश कर सकते हो '
+	             'प्रारूप {0} {1} 1234 @username का उपयोग करके फिर से टिप करने के लिए '
 }
 # 8
 multi_tip_success_dm = {
@@ -311,7 +314,8 @@ multi_tip_success_dm = {
     'da': 'Du har succesfuldt afsendt {0} ${1} tips. '
           'Se din konto på {2}explorer/account/{3}',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने {0} $ {1} टिप को सफलतापूर्वक भेज दिया है। '
+                        '{2} एक्सप्लोरर / अकाउन्ट / {3}' पर अपने अकाउन्ट की जाँच करें,'
 }
 multi_tip_success = {
     'en': 'You have successfully sent your {0} ${1} tips.',
@@ -337,7 +341,7 @@ multi_tip_success = {
     'no': '',
     'da': 'Dine tips på {0} ${1} blev succesfuldt afsendt.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने {0} $ {1} टिप्स को सफलतापूर्वक भेज दिया है।'
 }
 # 9
 tip_success_dm = {
@@ -375,7 +379,7 @@ tip_success_dm = {
     'da': 'Dit tip på {0} ${1} blev succesfuldt afsendt. '
           'Se denne transaktion på {2}explorer/block/{3}',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने {0} $ {1} टिप को सफलतापूर्वक भेज दिया है।'
 }
 
 tip_success = {
@@ -402,7 +406,7 @@ tip_success = {
     'no': '',
     'da': '',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने {0} $ {1} टिप को सफलतापूर्वक भेज दिया है। हैश: {3}'
 }
 # 10
 not_a_number_text = {
@@ -441,7 +445,8 @@ not_a_number_text = {
     'da': 'Det ser ud som at den indtastede tip-værdi ikke er et tal.  Du kan prøve at tippe '
           'igen ved at anvende formatet {0} {1} 1234 @brugernavn',
     'ar': '',
-    'hi': ''
+    'hi': 'लगता है कि आपके द्वारा टिप में दर्ज किया गया मान कोई संख्या नहीं थी। आप टिप करने की कोशिश कर सकते हैं '
+                       'फिर से प्रारूप {0} {1} 1234 @username का उपयोग करके'
 }
 # 11
 min_tip_text = {
@@ -470,7 +475,7 @@ min_tip_text = {
     'no': '',
     'da': 'Den minimale tip-værdi er {0} {1}.  Opdater venligst den angivne tip-værdi og prøv igen.',
     'ar': '',
-    'hi': ''
+    'hi': 'न्यूनतम टिप राशि {0} {1} है। कृपया अपनी टिप राशि अपडेट करें और पुनः प्रयास करें। '
 }
 # 12
 missing_user_message = {
@@ -512,7 +517,8 @@ missing_user_message = {
     'da': 'Brugeren {0} findes ikke i vores system.  For at sende et tip til vedkommende, skal de være medlem af denne kanal. Hvis vedkommende er '
           'medlem af kanalen, bedes du sende dem en besked i chatten, så jeg kan tilføje dem.',
     'ar': '',
-    'hi': ''
+    'hi': '{0} हमारे रिकॉर्ड में नहीं मिले। उन्हें टिप देने के लिए, उन्हें चैनल का सदस्य होना चाहिए। अगर वे हैं '
+                           'चैनल में, कृपया उन्हें चैट में संदेश भेजने को बोले ताकि मैं उन्हें जोड़ सकूं।'
 }
 # 13
 no_account_text = {
@@ -544,7 +550,7 @@ no_account_text = {
     'no': '',
     'da': 'Du har ikke oprettet en konto hos botten. Send venligst en DM med !register for at oprette en konto.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपका बॉट के साथ खाता नहीं है। कृपया मेरे साथ एक डीएम !register भेजें एक खाता स्थापित करने के लिए पंजीकरण करें'
 }
 # 14
 not_enough_text = {
@@ -587,7 +593,8 @@ not_enough_text = {
     'no': '',
     'da': 'Du har ikke nok {0} til at dække dette {1} {0} tip.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके पास इस {1} {0} टिप को कवर करने के लिए पर्याप्त {0} नहीं है। '
+                         'कृपया मेरे साथ एक डीएम भेजकर अपना बेलन्स जांचें! शेष राशि और पुनः प्रयास करें।'
 }
 # 15
 help_message = {
@@ -1035,7 +1042,33 @@ help_message = {
                      'sprog til russisk.\n\n'
           + BULLET + ' !languages: Returnerer en liste af tilgængelige sprog, som kan anvendes af tip botten.',
     'ar': '',
-    'hi': ''
+    'hi': ''{0} टिप बॉट का उपयोग करने के लिए धन्यवाद! नीचे आदेशों की एक सूची है, और वे क्या करते हैं का वर्णन है: \ n\n'
+
+          + BULLET + 'टिप बॉट के डीएम मे !help भेजे टिप बॉट  कमांड्स और उनके कार्यों की एक सूची के साथ जवाब देगा। अगर तुम'
+                                                   'कुछ भूल जाएं, इसका उपयोग करें! \ n\n'
+          + BULLET + !register:यह आपकी यूज़र आईडी पंजीकृत करता है, जो आपके अकाउंट से जोड़ी है। इसका उपयोग आपकी टिप स्टोर करने के लिए किया जाता है '
+                                                   ' आपकी टिप एक निजी वॉलेट में विद्ड्रॉ  जाना सुनिश्चित करें, क्योंकि टिप बॉट का मतलब  है'
+                                                   'एक निजी वॉलेट {0} के लिए नहीं है । \ n\n' 
+          + BULLET + '!balance: यह आपके उपयोगकर्ता आईडी के साथ जुड़े खाते का बैलेंस देता है। \ n\n'
+          + BULLET + '{4}: सुझाव सार्वजनिक ट्वीट या टेलीग्राम समूहों में भेजे जाते हैं। \ n'
+                                                   'ट्विटर पर: टैग {1} एक ट्वीट में और {4} <राशि> <@username>। \ N' का उल्लेख करें।'
+                                                   'उदाहरण: {1} {4} 5 @ mitche50 उपयोगकर्ता को @ mitche50। \' 'टिप 5 {0} टिप भेजेगा।'
+                                                   'टेलीग्राम पर {3} {4} <राशि> <@username> को समूह में टिप करने के लिए भेजें। \ n\n'
+          + BULLET + '!privatetip: वर्तमान में अक्षम। यह डीएम के माध्यम से दूसरे उपयोगकर्ता को एक टिप भेजेगा। अगर तुम '
+                                                   'अपनी टिप राशि को निजी होना चाहते हैं, इस फ़ंक्शन का उपयोग करें! उचित उपयोग है!'
+                     '@username 1234 \n \          + BULLET + '!account: वह खाता संख्या लौटाता है जो आपकी यूज़र  आईडी से जुड़ी होती है (वर्तमान में यूनीक् है)'
+                                                  'मंच)। आप अपने व्यक्तिगत बटुए से टिप करने के लिए और अधिक {0} जमा करने के लिए इसका उपयोग कर सकते हैं। \ n\n'
+          + BULLET + '!withdraw: उचित उपयोग है !withdraw {2}। यह आपके टिप का पूरा बैलेंस भेजेगा '
+                                                     'दिए गए {0} खाते के मे । वैकल्पिक: आप 'द्वारा विद्ड्रॉ  लेने के लिए एक राशि शामिल कर सकते हैं'
+                      '!withdraw <राशि> <खाता>। उदाहरण: !withdraw 1 {2} विद्ड्रॉ  '
+                                                      'करेगा withdraw 1 {0} खाते में। \ n\n' 
+          + BULLET + '!donate: उचित उपयोग है! !donate 1234। यह अनुरोधित दान को {0} टिप पर भेजेगा''
+                                                   'बॉट डोनेशन अकाउंट से फंड डेवलपमेंट के प्रयासों में मदद मिलेगी। \ n\n'
+          + BULLET + '!setlanguage: बॉट की डिफ़ॉल्ट भाषा को बदलने के लिए उपयोग किया जाता है। उपलब्ध भाषाओं की एक सूची '
+                     '!languages में प्रदान की जाती है। उचित उपयोग "!setlanguage Russian" है! 
+                                                   'आपकी भाषा रूसी के लिए। \ n\n'
+          + BULLET + '!languages: अनुवाद के लिए उपलब्ध भाषाओं की सूची लौटाता है।',
+         
 }
 # 16
 account_text = {
@@ -1061,7 +1094,7 @@ account_text = {
     'no': '',
     'da': 'Dit kontonummer er:',
     'ar': '',
-    'hi': ''
+    'hi': 'आपका खाता नंबर है:'
 }
 # 17
 balance_text = {
@@ -1103,7 +1136,8 @@ balance_text = {
     'da': 'Tilgængelig: {0} {1}\n'
           'Afventer: {2} {1}',
     'ar': '',
-    'hi': ''
+    'hi': 'उपलब्ध: {0} {1} \ n '
+                        'लंबित: {2} {1}'
 }
 # 18
 account_register_text = {
@@ -1129,7 +1163,7 @@ account_register_text = {
     'no': '',
     'da': 'Du har succesfuldt oprettet en konto. Dit kontonummer er:',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने एक खाते के लिए सफलतापूर्वक पंजीकरण किया है। आपका खाता नंबर है:'
 }
 # 19
 account_already_registered = {
@@ -1155,7 +1189,7 @@ account_already_registered = {
     'no': '',
     'da': 'Du har allerede oprettet en konto. Dit kontonummer er:',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने पहले ही अपना खाता पंजीकृत कर लिया है। आपका खाता नंबर है:'
 }
 # 20
 account_create_text = {
@@ -1181,7 +1215,7 @@ account_create_text = {
     'no': '',
     'da': 'Du havde ikke oprettet en konto, så jeg har gjort det for dig. Dit kontonummer er:',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके पास कोई खाता सेट नहीं है, इसलिए मैंने आपके लिए एक सेट किया है। आपका खाता नंबर है:'
 }
 # 21
 invalid_account_text = {
@@ -1208,7 +1242,7 @@ invalid_account_text = {
     'no': '',
     'da': 'Det angivne kontonummer er ikke korrekt. Dobbelttjek venligst din forespørgsel og prøv igen.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके द्वारा प्रदान किया गया खाता नंबर अमान्य है। कृपया अपने अनुरोध को दोबारा जांचें और पुनः भेजें।'
 }
 # 22
 no_balance_text = {
@@ -1238,7 +1272,7 @@ no_balance_text = {
     'no': '',
     'da': 'Du har 0 beholdning på din konto. Indsæt venligst beholdning til din konto {0} for at sende flere tips!',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके खाते में 0 शेष है। अधिक टिप भेजने के लिए कृपया अपने खाते में जमा करें {0}!'
 }
 # 23
 invalid_amount_text = {
@@ -1277,7 +1311,8 @@ invalid_amount_text = {
     'da': 'Du har ikke angivet et tal til hævning. Forsøg venligst igen ved anvendelse af formatet !withdraw <konto> eller '
           '!withdraw <tip-værdi> <konto>',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने विद्ड्रॉ  लेने के लिए एक नंबर नहीं भेजा। कृपया प्रारूप के साथ पुनः भेजें !withdraw <खाता> या 'विद्ड्रॉ  लें'
+          '!withdraw <राशि> <खाता>''
 }
 # 24
 not_enough_balance_text = {
@@ -1309,7 +1344,7 @@ not_enough_balance_text = {
     'no': '',
     'da': 'Du har ikke så mange {0} på din konto. For at hæve hele din beholdning, send !withdraw <konto>',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके खाते में इतना {0} नहीं है। अपनी पूरी राशि निकालने के लिए !withdraw <खाता> भेजें '
 }
 # 25
 withdraw_text = {
@@ -1347,7 +1382,8 @@ withdraw_text = {
     'da': 'Du har succesfuldt hævet {0} {1}! Du kan følge din transaktion på '
           '{2}explorer/block/{3}',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने सफलतापूर्वक {0} {1} विद्ड्रॉ  ले लिया है! आप ट्रेन्ज़ेक्शन की जांच कर सकते हैं '
+                         '{2} एक्सप्लोरर / ब्लॉक / {3}'
 }
 # 26
 incorrect_withdraw_text = {
@@ -1418,7 +1454,9 @@ incorrect_withdraw_text = {
           'Eksempel: !withdraw 1 {0} vil hæve 1 {1} til konto {0}.  '
           'Yderligere: !withdraw {0} vil hæve hele din beholdining til kontoen {0}.',
     'ar': '',
-    'hi': ''
+    'hi': 'मुझे आपका विद्ड्रॉ  लेने का अनुरोध समझ में नहीं आया। कृपया के साथ फिर से !withdraw <वैकल्पिक: राशि> <खाता> वापस लें। '
+                       'उदाहरण; !withdraw 1 {0} 1 विद्ड्रॉ करेगा {1} इस अकाउन्ट मे {0}। '
+                        'इसके अलावा, {0} खाते में अपना संपूर्ण शेष राशि वापस ले लेंगे {0}।'
 }
 # 27
 wrong_donate_text = {
@@ -1445,7 +1483,7 @@ wrong_donate_text = {
     'no': '',
     'da': 'Kun talværdier kan godtages. Forsøg venligst igen jf. formatet !donate 1234',
     'ar': '',
-    'hi': ''
+    'hi': 'केवल संख्या राशि स्वीकार की जाती है। कृपया के रूप में फिर से भेजें !donate 1234'
 }
 # 28
 large_donate_text = {
@@ -1490,7 +1528,8 @@ large_donate_text = {
     'da': 'Din beholdning forlyder på {0} {1} og du forsøgte at afsende {2}. Tilføj venligst flere {1} til din konto, eller nedsæt '
           'den angivne donations-værdi.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपका बैलेंस केवल {0} {1} है और आपने {2} भेजने का प्रयास किया है। कृपया अपने खाते में अधिक {1} जोड़ें, या कम करें ’
+                       'आपकी दान राशि।'
 }
 # 29
 small_donate_text = {
@@ -1520,7 +1559,7 @@ small_donate_text = {
     'no': '',
     'da': 'Den minimale donations-værdi er {0}. Opdater venligst den angivne donations-værdi og prøv igen.',
     'ar': '',
-    'hi': ''
+    'hi': 'न्यूनतम दान राशि {0} है। कृपया अपनी दान राशि अपडेट करें और पुनः भेजें। '
 }
 # 30
 donate_text = {
@@ -1562,7 +1601,8 @@ donate_text = {
     'da': 'Tak for din generøsitet! Du har succesfuldt doneret {0} {1}! Du kan følge din '
           'transaktion på {2}explorer/block/{3}',
     'ar': '',
-    'hi': ''
+    'hi': 'उदारता के लिए आपका धन्यवाद! आपने सफलतापूर्वक {0} {1} दान किया है! आप देख सकते हैं '
+                        ट्रेन्ज़ेक्शन  {2} एक्सप्लोरर / ब्लॉक / {3} '
 }
 # 31
 incorrect_donate_text = {
@@ -1589,7 +1629,7 @@ incorrect_donate_text = {
     'no': '',
     'da': 'Forkert syntaks. Benyt venligst formatet !donate 1234',
     'ar': '',
-    'hi': ''
+    'hi': ' गलत सिंटैक्स। कृपया प्रारूप !donate 1234 का उपयोग करें '
 }
 # 32
 language_change_success = {
@@ -1632,7 +1672,7 @@ language_change_success = {
     'da': 'Du har succesfuldt opdateret dit sprog. Modtagne beskeder fra tip botten vil nu være på dit angivne '
           'sprog. Såfremt du ønsker at skifte tilbage, kan du benytte kommandoen !setlanguage med dit ønskede sprog!',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपनी भाषा को सफलतापूर्वक अपडेट कर दिया है। बॉट से आपको मिलने वाला संदेश अब आपके नए भाषा  में होगा'
 }
 # 33
 missing_language = {
@@ -1668,7 +1708,8 @@ missing_language = {
     'da': 'Dette sprog er ikke tilgængeligt til oversættelse. Anvend kommendoen !languagelist for en '
           'liste af tilgængelige sprog og dertilhørende sprogkoder.',
     'ar': '',
-    'hi': ''
+    'hi': ' आपके द्वारा दर्ज की गई प्रतिशत एक संख्या नहीं थी। कृपया अपना दान का प्रतिशत 'अपडेट' करने के लिए एक पॉजिटिव नंबर का उपयोग करके पुनः सबमिट करें '
+        
 }
 # 34
 auto_donate_notanum = {
@@ -1713,7 +1754,8 @@ auto_donate_notanum = {
     'da': 'Den indtastede procentsats er ikke et tal. Afsend venligst igen med et positivt tal for at opdatere din '
           'donations-procentdel.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके द्वारा प्रदत्त प्रतिशत एक संख्या नहीं थी। कृपया अपना 'अपडेट' करने के लिए एक पॉजिटिव नंबर का उपयोग करके पुनः सबमिट करें
+                        'दान का प्रतिशत।'
 }
 # 35
 auto_donate_negative = {
@@ -1758,7 +1800,8 @@ auto_donate_negative = {
     'da': 'Den indtastede procentsats er ikke angivet korrekt. Afsend venligst igen med et positivt tal mellem 0 og 100'
           ' for at opdatere din donations-procentdel.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपके द्वारा  प्रतिशत एक गलत संख्या थी। कृपया 0 और 100 के बीच एक सकारात्मक संख्या के साथ फिर से सबमिट करें
+          '               अपने दान प्रतिशत को अपडेट  करने के लिए।'
 }
 # 36
 auto_donate_missing_num = {
@@ -1805,7 +1848,8 @@ auto_donate_missing_num = {
     'da': 'Du har ikke angivet et tal, som din donations-procentdel skal opdateres til. Afsend venligst igen med et positivt tal '
           'for at opdatere din donations-procentdel.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने दान प्रतिशत को अपडेट करने के लिए एक संख्या प्रदान नहीं की। कृपया सकारात्मक संख्या के साथ पुनः सबमिट करें '
+                        'अपने दान प्रतिशत को अपडेट करने के लिए।'
 }
 # 37
 auto_donate_success = {
@@ -1833,7 +1877,7 @@ auto_donate_success = {
     'no': '',
     'da': 'Du har succesfuldt opdateret din donations-procentdel til {0}%.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपने दान प्रतिशत को सफलतापूर्वक {0}% मे अपडेट कर दिया है।'
 }
 # 38
 set_return_invalid_account = {
@@ -1859,7 +1903,7 @@ set_return_invalid_account = {
     'no': '',
     'da': 'Fejl: Ugyldigt kontonummer. Afsend venligst igen med et gyldigt kontonummer.',
     'ar': '',
-    'hi': ''
+    'hi': 'एरर: अमान्य खाता संख्या। कृपया सही खाते के साथ पुनः भेजें।'
 }
 # 39
 set_return_success = {
@@ -1885,7 +1929,7 @@ set_return_success = {
     'no': '',
     'da': 'Du har succesfuldt ændret din returadresse til {0}',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने अपना रिटर्न अड्रेस सफलतापूर्वक {0} पर सेट कर दिया है'
 }
 # 40
 unsupported_fiat = {
@@ -1911,7 +1955,7 @@ unsupported_fiat = {
     'no': '',
     'da': 'Du har enten indtastet en ugyldig værdi eller et usupporteret fiat-symbol. Prøv venligst igen.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने या तो एक अमान्य राशि दर्ज की है या एक अन्सपॉर्टिड फाइट सिंबल। कृपया सुधार करें और फिरसे भेजें। '
 }
 
 # 41
@@ -1938,7 +1982,7 @@ mute = {
     'no': '',
     'da': 'Du har gjort botten tavs. Du vil ikke længere modtage beskeder. Du kan skifte tilbage ved at sende !unmute eller /unmute.',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने बॉट को म्यूट कर दिया है। अब आपको संदेश प्राप्त नहीं होंगे। अनम्यूट करने के लिए, !unmute या / unmute भेजें।'
 }
 
 unmute = {
@@ -1964,7 +2008,7 @@ unmute = {
     'no': '',
     'da': 'Du har succesfuldt gjort botten snakkesalig igen og vil fortsætte med at modtage beskeder. For at gøre botten tavs igen, send !mute eller /mute',
     'ar': '',
-    'hi': ''
+    'hi': 'आपने बॉट को सफलतापूर्वक अनम्यूट कर दिया है और आप संदेश प्राप्त करना फिर से शुरू करेंगे। फिर से म्यूट करने के लिए, !mute या / unmute भेजें।'
 }
 
 language_list = (
@@ -2275,7 +2319,7 @@ private_tip_commands = {
     'no': [],
     'da': [],
     'ar': [],
-    'hi': []
+    'hi': [],
 }
 
 auto_donate_commands = {
