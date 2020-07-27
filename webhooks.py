@@ -66,8 +66,6 @@ BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
 BOT_NAME_TWITTER = config.get(CURRENCY, 'bot_name_twitter')
 BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
 
-# Set key for webhook challenge from Twitter
-key = config.get(CURRENCY, 'consumer_secret')
 
 # Set route variables
 TWITTER_URI = config.get('routes', 'twitter_uri')
@@ -459,23 +457,26 @@ def get_all_users_twitter():
 @app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
     # creates HMAC SHA-256 hash from incoming token and your consumer secret
+    logger.info("starting webhook challenge from twitter")
+    try:
+        crc = request.args.get('crc_token')
 
-    crc = request.args.get('crc_token')
+        validation = hmac.new(
+            key=bytes(CONSUMER_SECRET, 'utf-8'),
+            msg=bytes(crc, 'utf-8'),
+            digestmod=hashlib.sha256
+        )
 
-    validation = hmac.new(
-        key=bytes(key, 'utf-8'),
-        msg=bytes(crc, 'utf-8'),
-        digestmod=hashlib.sha256
-    )
+        digested = base64.b64encode(validation.digest())
 
-    digested = base64.b64encode(validation.digest())
+        # construct response data with base64 encoded hash
+        response = {
+            'response_token': 'sha256=' + format(str(digested)[2:-1])
+        }
 
-    # construct response data with base64 encoded hash
-    response = {
-        'response_token': 'sha256=' + format(str(digested)[2:-1])
-    }
-
-    return json.dumps(response), 200
+        return json.dumps(response), 200
+    except Exception as e:
+        logger.info("Error: {}".format(e))
 
 
 @app.route('/webhooks/twitter/getaccount/<screen_name>', methods=["GET"])
@@ -757,7 +758,7 @@ def twitter_event_received():
     auth_header = request.headers.get('X-Twitter-Webhooks-Signature')
     request_data = request.get_data()
     validation = hmac.new(
-        key=bytes(key, 'utf-8'),
+        key=bytes(CONSUMER_SECRET, 'utf-8'),
         msg=request_data,
         digestmod=hashlib.sha256
     )
