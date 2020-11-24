@@ -2,6 +2,7 @@ import configparser
 import json
 import logging
 import os
+import sys
 import requests
 from datetime import datetime
 from decimal import Decimal
@@ -81,8 +82,6 @@ def parse_action(message):
                     logger.info("commad: {}".format(command))
                     tip_commands.append(command)
 
-        logger.info('tip commands: {}'.format(tip_commands))
-
         if message['dm_action'] in translations.help_commands['en'] or \
                 message['dm_action'] in translations.help_commands[message['language']]:
             new_pid = os.fork()
@@ -92,7 +91,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -105,7 +104,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -118,7 +117,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -131,7 +130,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -144,7 +143,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -159,7 +158,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -172,7 +171,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -185,7 +184,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -198,7 +197,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -221,7 +220,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -241,7 +240,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -253,7 +252,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -267,7 +266,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info(
                         "{}: Exception in auto_donate_commands section of parse_action: {}".format(datetime.now(), e))
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -281,7 +280,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info(
                         "{}: Exception in set_return_address_process section of parse_action: {}".format(datetime.now(), e))
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
@@ -295,7 +294,7 @@ def parse_action(message):
                 except Exception as e:
                     logger.info("Exception: {}".format(e))
                     raise e
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
     except Exception as e:
@@ -415,13 +414,13 @@ def balance_process(message):
         new_pid = os.fork()
         if new_pid == 0:
             modules.currency.receive_pending(message['sender_account'])
-            os._exit(0)
+            sys.exit()
         else:
-            balance_return = rpc.account_balance(account="{}".format(message['sender_account']))
+            balance_return = modules.currency.get_balance(message['sender_account'])
             message['sender_balance_raw'] = balance_return['balance']
             message['sender_pending_raw'] = balance_return['pending']
-            message['sender_balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
-            message['sender_pending'] = balance_return['pending'] / CONVERT_MULTIPLIER[CURRENCY]
+            message['sender_balance'] = Decimal(balance_return['balance']) / CONVERT_MULTIPLIER[CURRENCY]
+            message['sender_pending'] = Decimal(balance_return['pending']) / CONVERT_MULTIPLIER[CURRENCY]
 
             modules.social.send_dm(message['sender_id'], translations.balance_text[message['language']]
                                    .format(message['sender_balance'],
@@ -490,6 +489,8 @@ def account_process(message):
     sender_account_call = (
         "SELECT account, register FROM users WHERE user_id = {} AND users.system = '{}'".format(message['sender_id'],
                                                                                                 message['system']))
+
+    logger.info("{}: Getting account using call: {}".format(datetime.now(), sender_account_call))
     account_data = modules.db.get_db_data(sender_account_call)
     if not account_data:
         sender_account = modules.db.get_spare_account()
@@ -516,7 +517,7 @@ def account_process(message):
         account_text = translations.account_text[message['language']]
         modules.social.send_account_message(account_text, message, sender_account)
 
-        logger.info("{}: Sent the user their account number.".format(datetime.now()))
+        logger.info("{}: Sent user {} their account number - {}.".format(datetime.now(), message['sender_id'], sender_account))
 
 
 def withdraw_process(message):
@@ -548,20 +549,23 @@ def withdraw_process(message):
                 set_register_values = [message['sender_id'], message['system']]
                 modules.db.set_db_data(set_register_call, set_register_values)
 
+            logger.info("receiving pending")
             modules.currency.receive_pending(sender_account)
-            balance_return = rpc.account_balance(account='{}'.format(sender_account))
+            logger.info("getting balance")
+            balance_return = modules.currency.get_balance(sender_account)
 
             if len(message['dm_array']) == 2:
                 receiver_account = message['dm_array'][1].lower()
             else:
                 receiver_account = message['dm_array'][2].lower()
 
-            if rpc.validate_account_number(receiver_account) == 0:
+            logger.info("receiver account: {}".format(receiver_account))
+            if modules.currency.validate_checksum_xrb(receiver_account) == 0:
                 modules.social.send_dm(message['sender_id'], translations.invalid_account_text[message['language']],
                                        message['system'])
                 logger.info("{}: The xrb account number is invalid: {}".format(datetime.now(), receiver_account))
 
-            elif balance_return['balance'] == 0:
+            elif Decimal(balance_return['balance']) == 0:
                 modules.social.send_dm(message['sender_id'], translations.no_balance_text[message['language']]
                                        .format(sender_account), message['system'])
                 logger.info("{}: The user tried to withdraw with 0 balance".format(datetime.now()))
@@ -585,17 +589,17 @@ def withdraw_process(message):
                         return
                 else:
                     withdraw_amount_raw = balance_return['balance']
-                    withdraw_amount = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
+                    withdraw_amount = Decimal(balance_return['balance']) / CONVERT_MULTIPLIER[CURRENCY]
                 # send the total balance to the provided account
                 work = modules.currency.get_pow(sender_account)
                 if work == '':
                     logger.info("{}: processed without work".format(datetime.now()))
-                    send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
-                                         destination="{}".format(receiver_account), amount=withdraw_amount_raw)
+                    send_hash = modules.currency.send_nano(wallet="{}".format(WALLET), source="{}".format(sender_account),
+                                         destination="{}".format(receiver_account), amount="{}".format(int(withdraw_amount_raw)))
                 else:
                     logger.info("{}: processed with work: {} using wallet: {}".format(datetime.now(), work, WALLET))
-                    send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
-                                         destination="{}".format(receiver_account), amount=withdraw_amount_raw,
+                    send_hash = modules.currency.send_nano(wallet="{}".format(WALLET), source="{}".format(sender_account),
+                                         destination="{}".format(receiver_account), amount="{}".format(int(withdraw_amount_raw)),
                                          work=work)
                 logger.info("{}: send_hash = {}".format(datetime.now(), send_hash))
                 # respond that the withdraw has been processed
@@ -627,8 +631,9 @@ def donate_process(message):
 
         modules.currency.receive_pending(sender_account)
 
-        balance_return = rpc.account_balance(account='{}'.format(sender_account))
-        balance = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
+        balance_return = modules.currency.get_balance(sender_account)
+        
+        balance = Decimal(balance_return['balance']) / CONVERT_MULTIPLIER[CURRENCY]
         receiver_account = BOT_ACCOUNT
 
         try:
@@ -666,12 +671,12 @@ def donate_process(message):
             work = modules.currency.get_pow(sender_account)
             if work == '':
                 logger.info("{}: Processing donation without work.".format(datetime.now()))
-                send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
+                send_hash = modules.currency.send_nano(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                      destination="{}".format(receiver_account),
                                      amount="{}".format(int(send_amount_raw)))
             else:
                 logger.info("{}: Processing donation with work: {}".format(datetime.now(), work))
-                send_hash = rpc.send(wallet="{}".format(WALLET), source="{}".format(sender_account),
+                send_hash = modules.currency.send_nano(wallet="{}".format(WALLET), source="{}".format(sender_account),
                                      destination="{}".format(receiver_account),
                                      amount="{}".format(int(send_amount_raw)),
                                      work=work)
@@ -719,7 +724,7 @@ def tip_process(message, users_to_tip, request_json):
     message = modules.social.validate_total_tip_amount(message)
     if message['tip_amount'] <= 0:
         return
-
+    logger.info("sending tips: {}".format(users_to_tip))
     for t_index in range(0, len(users_to_tip)):
         modules.currency.send_tip(message, users_to_tip, t_index)
 

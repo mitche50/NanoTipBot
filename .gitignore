@@ -12,3 +12,5 @@ subscribe.py
 test.py
 dbbackup
 1
+logs/
+private/

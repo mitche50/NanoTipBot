@@ -263,6 +263,8 @@ def get_db_data(db_call):
     """
     Retrieve data from DB
     """
+    logger.info("db host: {}".format(DB_HOST))
+    logger.info("DB Schema: {}".format(DB_SCHEMA))
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8mb4")
     db_cursor = db.cursor()
@@ -338,14 +340,14 @@ def set_spare_accounts(accounts):
     insert_accounts_call = "INSERT INTO {}.spare_accounts (account) VALUES ".format(DB_SCHEMA)
 
     try:
-        for index, account in enumerate(accounts):
+        for index, account in enumerate(accounts['accounts']):
             if index == 0:
                 insert_accounts_call += "(%s)"
             else:
                 insert_accounts_call += ", (%s)"
         insert_accounts_call += ';'
         logger.info("insert accounts call: {}".format(insert_accounts_call))
-        set_db_data(insert_accounts_call, accounts)
+        set_db_data(insert_accounts_call, accounts['accounts'])
 
     except Exception as e:
         logger.info("Error inserting spare accounts: {}".format(e))
@@ -359,8 +361,11 @@ def get_spare_account():
     """
     check_accounts_call = "SELECT count(account) FROM {}.spare_accounts;".format(DB_SCHEMA)
     check_accounts_return = get_db_data(check_accounts_call)
+    logger.info("check accounts return: {}".format(check_accounts_return[0][0]))
     if int(check_accounts_return[0][0]) <= 5:
+        logger.info("Too few accounts, generating new ones: {}".format(check_accounts_return[0][0]))
         accounts = modules.currency.generate_accounts()
+        logger.info("generated new accounts: {}".format(accounts))
         set_spare_accounts(accounts)
 
     get_account_call = "SELECT account FROM {}.spare_accounts LIMIT 1;".format(DB_SCHEMA)

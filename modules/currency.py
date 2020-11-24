@@ -5,6 +5,8 @@ import os
 import re
 from datetime import datetime
 from decimal import Decimal
+from bitstring import BitArray
+from hashlib import blake2b
 
 import nano
 import requests
@@ -69,6 +71,89 @@ api = tweepy.API(auth)
 twitterAPI = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 
+def validate_checksum_xrb(address: str) -> bool:
+    """Given an xrb/nano/ban address validate the checksum"""
+    if (address[:5] == 'nano_' and len(address) == 65) or (address[:4] in ['ban_', 'xrb_']  and len(address) == 64):
+        # Populate 32-char account index
+        account_map = "13456789abcdefghijkmnopqrstuwxyz"
+        account_lookup = {}
+        for i in range(0, 32):
+            account_lookup[account_map[i]] = BitArray(uint=i, length=5)
+
+        # Extract key from address (everything after prefix)
+        acrop_key = address[4:-8] if address[:5] != 'nano_' else address[5:-8]
+        # Extract checksum from address
+        acrop_check = address[-8:]
+
+        # Convert base-32 (5-bit) values to byte string by appending each 5-bit value to the bitstring, essentially bitshifting << 5 and then adding the 5-bit value.
+        number_l = BitArray()
+        for x in range(0, len(acrop_key)):
+            number_l.append(account_lookup[acrop_key[x]])
+        number_l = number_l[4:]  # reduce from 260 to 256 bit (upper 4 bits are never used as account is a uint256)
+
+        check_l = BitArray()
+        for x in range(0, len(acrop_check)):
+            check_l.append(account_lookup[acrop_check[x]])
+        check_l.byteswap()  # reverse byte order to match hashing format
+
+        # verify checksum
+        h = blake2b(digest_size=5)
+        h.update(number_l.bytes)
+        return h.hexdigest() == check_l.hex
+    return False
+
+
+def get_balance(sender_account):
+    """
+    Retrieve the balance for the provided account
+    """
+    logger.info("getting balance")
+    account_balance_call = {'action': 'account_balance', 'account': sender_account}
+    logger.info(account_balance_call)
+    json_request = json.dumps(account_balance_call)
+    r = requests.post('{}'.format(NODE_IP), data=json_request)
+    rx = r.json()
+    logger.info("balance: {}".format(rx))
+    return rx
+
+
+def get_blocks():
+    """
+    Retrieve a count of blocks from the node
+    """
+    block_count_call = {'action': 'block_count'}
+    json_request = json.dumps(block_count_call)
+    r = requests.post('{}'.format(NODE_IP), data=json_request)
+    rx = r.json()
+    return rx
+
+
+def send_nano(wallet, source, destination, amount, work=None):
+    """
+    Create a send hash for nano and post to the node
+    """
+    if work:
+        send_call = {
+            'action': 'send', 
+            "wallet": wallet,
+            "source": source,
+            "destination": destination,
+            "amount": amount,
+            "work": work
+        }
+    else:
+        send_call = {
+            'action': 'send', 
+            "wallet": wallet,
+            "source": source,
+            "destination": destination,
+            "amount": amount
+        }
+    json_request = json.dumps(send_call)
+    r = requests.post('{}'.format(NODE_IP), data=json_request)
+    rx = r.json()
+    return rx['block']
+
 def receive_pending(sender_account):
     """
     Check to see if the account has any pending blocks and process them
@@ -79,6 +164,7 @@ def receive_pending(sender_account):
         pending_data_json = json.dumps(pending_data)
         r = requests.post(NODE_IP, data=pending_data_json)
         pending_blocks = r.json()
+        logger.info("is there pending: {}".format(pending_blocks))
         logger.info("pending blocks: {}".format(pending_blocks['blocks']))
         if len(pending_blocks['blocks']) > 0:
             try:
@@ -243,7 +329,7 @@ def send_tip(message, users_to_tip, tip_index):
         return
     else:
         logger.info("{}: sending tip to {}".format(datetime.now(), users_to_tip[tip_index]['receiver_screen_name']))
-        if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']):
+        if str(users_to_tip[tip_index]['receiver_id']) == str(message['sender_id']) and str(users_to_tip[tip_index]['receiver_id']) != '470554316':
             modules.social.send_reply(message,
                                       translations.self_tip_text[message['language']].format(CURRENCY.upper(),
                                                                                              message['system']))
@@ -255,10 +341,12 @@ def send_tip(message, users_to_tip, tip_index):
         receiver_account_get = ("SELECT account FROM users where user_id = {} and users.system = '{}'"
                                 .format(int(users_to_tip[tip_index]['receiver_id']), message['system']))
         receiver_account_data = modules.db.get_db_data(receiver_account_get)
-
+        logger.info("{}: reciever account return: {}".format(datetime.now(), receiver_account_data))
         # If they don't, check reserve accounts and assign one.
         if not receiver_account_data:
+            logger.info("{}: No account detected, getting a new one.".format(datetime.now()))
             users_to_tip[tip_index]['receiver_account'] = modules.db.get_spare_account()
+            logger.info("{}: Got a new account: {}".format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
             create_receiver_account = ("INSERT INTO users (user_id, system, user_name, account, register) "
                                        "VALUES(%s, %s, %s, %s, 0)")
             create_receiver_account_values = [users_to_tip[tip_index]['receiver_id'], message['system'],
@@ -270,6 +358,7 @@ def send_tip(message, users_to_tip, tip_index):
 
         else:
             users_to_tip[tip_index]['receiver_account'] = receiver_account_data[0][0]
+        logger.info("{}: user account: {}".format(datetime.now(), users_to_tip[tip_index]['receiver_account']))
 
         # Send the tip
         if message['system'] == 'telegram':
@@ -339,8 +428,8 @@ def send_tip(message, users_to_tip, tip_index):
             logger.info("{}: Checking to receive new tip")
 
             receive_pending(users_to_tip[tip_index]['receiver_account'])
-            balance_return = rpc.account_balance(account="{}".format(users_to_tip[tip_index]['receiver_account']))
-            users_to_tip[tip_index]['balance'] = balance_return['balance'] / CONVERT_MULTIPLIER[CURRENCY]
+            balance_return = get_balance(users_to_tip[tip_index]['receiver_account'])
+            users_to_tip[tip_index]['balance'] = Decimal(balance_return['balance']) / CONVERT_MULTIPLIER[CURRENCY]
             # create a string to remove scientific notation from small decimal tips
             if str(users_to_tip[tip_index]['balance'])[0] == ".":
                 users_to_tip[tip_index]['balance'] = "0{}".format(str(users_to_tip[tip_index]['balance']))
@@ -367,8 +456,10 @@ def get_energy(nano_energy):
     """
     Calculate the total energy used by Nano at time of loading the webpage.
     """
-    block_count_get = rpc.block_count()
-    checked_blocks = block_count_get['count']
+
+    block_count_get = get_blocks()
+    logger.info(block_count_get)
+    checked_blocks = int(block_count_get['count'])
 
     total_energy = checked_blocks * nano_energy
 
@@ -450,7 +541,19 @@ def get_fiat_price(fiat, crypto_currency):
 
 
 def generate_accounts():
-    accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
+
+    generate_call = {
+            "action": "accounts_create",
+            "wallet": WALLET,
+            "count": 50
+        }
+    json_request = json.dumps(generate_call)
+    r = requests.post('{}'.format(NODE_IP), data=json_request)
+    rx = r.json()
+    logger.info("returning accounts: {}".format(rx))
+    return rx
+
+    # accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
     # if CURRENCY == 'nano':
     #     logger.info("{}: providing accounts to dpow for precaching.".format(datetime.now()))
     #     work_data = {'accounts': accounts, 'key': WORK_KEY}
@@ -459,4 +562,4 @@ def generate_accounts():
     #     rx = r.json()
     #     logger.info("{}: return from dpow: {}".format(datetime.now(), rx))
 
-    return accounts
+    # return accounts
