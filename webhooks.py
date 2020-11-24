@@ -6,6 +6,7 @@ import hmac
 import json
 import logging
 import os
+import sys
 from datetime import timedelta, datetime
 from http import HTTPStatus
 from logging.handlers import TimedRotatingFileHandler
@@ -65,7 +66,6 @@ BOT_ID_TELEGRAM = config.get(CURRENCY, 'bot_id_telegram')
 BOT_ACCOUNT = config.get(CURRENCY, 'bot_account')
 BOT_NAME_TWITTER = config.get(CURRENCY, 'bot_name_twitter')
 BOT_NAME_TELEGRAM = config.get(CURRENCY, 'bot_name_telegram')
-
 
 # Set route variables
 TWITTER_URI = config.get('routes', 'twitter_uri')
@@ -457,26 +457,22 @@ def get_all_users_twitter():
 @app.route(TWITTER_URI, methods=["GET"])
 def webhook_challenge():
     # creates HMAC SHA-256 hash from incoming token and your consumer secret
-    logger.info("starting webhook challenge from twitter")
-    try:
-        crc = request.args.get('crc_token')
+    crc = request.args.get('crc_token')
 
-        validation = hmac.new(
-            key=bytes(CONSUMER_SECRET, 'utf-8'),
-            msg=bytes(crc, 'utf-8'),
-            digestmod=hashlib.sha256
-        )
+    validation = hmac.new(
+        key=bytes(CONSUMER_SECRET, 'utf-8'),
+        msg=bytes(crc, 'utf-8'),
+        digestmod=hashlib.sha256
+    )
 
-        digested = base64.b64encode(validation.digest())
+    digested = base64.b64encode(validation.digest())
 
-        # construct response data with base64 encoded hash
-        response = {
-            'response_token': 'sha256=' + format(str(digested)[2:-1])
-        }
+    # construct response data with base64 encoded hash
+    response = {
+        'response_token': 'sha256=' + format(str(digested)[2:-1])
+    }
 
-        return json.dumps(response), 200
-    except Exception as e:
-        logger.info("Error: {}".format(e))
+    return json.dumps(response), 200
 
 
 @app.route('/webhooks/twitter/getaccount/<screen_name>', methods=["GET"])
@@ -589,7 +585,7 @@ def telegram_event():
         if request_json['message']['chat']['type'] == 'private':
             logger.info("Direct message received in Telegram.  Processing.")
             message['sender_id'] = request_json['message']['from']['id']
-            bot_ids = ['1115793994024464384', '894722023', '966739513195335680', '624103005']
+            bot_ids = ['1303696278','1115793994024464384', '894722023', '966739513195335680', '624103005']
             if message['sender_id'] in bot_ids:
                 return 'ok'
             try:
@@ -690,7 +686,7 @@ def telegram_event():
                             logger.info("Exception: {}".format(e))
                             raise e
 
-                        os._exit(0)
+                        sys.exit()
                     else:
                         return '', HTTPStatus.OK
             elif 'new_chat_member' in request_json['message']:
@@ -877,7 +873,7 @@ def twitter_event_received():
                     logger.info("Exception: {}".format(e))
                     raise e
 
-                os._exit(0)
+                sys.exit()
             else:
                 return '', HTTPStatus.OK
 
