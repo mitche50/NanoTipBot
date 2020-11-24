@@ -313,11 +313,14 @@ def return_unused_balance():
         balance = Decimal(balance_raw) / CONVERT_MULTIPLIER[CURRENCY]
         # send from tip account to return account
         if Decimal(balance) > 0:
-            donation_amount, send_amount = calculate_donation_amount(Decimal(balance), user[0], user[1])
-            work = get_pow(tip_account)
-            donation_hash = rpc.send(wallet=WALLET, source=tip_account, destination=BOT_ACCOUNT, work=work, amount=donation_amount)
-            work = get_pow(tip_account)
-            inactive_hash = rpc.send(wallet=WALLET, source=tip_account, destination=user[2], work=work, amount=send_amount)
+            try:
+                donation_amount, send_amount = calculate_donation_amount(Decimal(balance), user[0], user[1])
+                work = get_pow(tip_account)
+                donation_hash = rpc.send(wallet=WALLET, source=tip_account, destination=BOT_ACCOUNT, work=work, amount=donation_amount)
+                work = get_pow(tip_account)
+                inactive_hash = rpc.send(wallet=WALLET, source=tip_account, destination=user[2], work=work, amount=send_amount)
+            except Exception as e:
+                logging.info("{}: ERROR: {}".format(datetime.now, e))
             logging.info(
                 "{}: Inactive user {} on {} had their funds returned to their recovery address {} under hash {}".format(
                     datetime.now(),

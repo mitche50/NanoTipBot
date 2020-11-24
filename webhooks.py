@@ -648,6 +648,7 @@ def telegram_event():
                 modules.social.get_language(message)
 
                 message = modules.social.check_message_action(message)
+                logger.info(message)
                 if message['action'] is None:
                     return '', HTTPStatus.OK
 
@@ -748,7 +749,6 @@ def telegram_event():
 def twitter_event_received():
     message = {}
     users_to_tip = []
-
     message['system'] = 'twitter'
     request_json = request.get_json()
     auth_header = request.headers.get('X-Twitter-Webhooks-Signature')
@@ -759,7 +759,6 @@ def twitter_event_received():
         digestmod=hashlib.sha256
     )
 
-    tweet_log.info("{}: Message received from twitter: {}".format(datetime.now(), request_json))
 
     digested = base64.b64encode(validation.digest())
     compare_auth = 'sha256=' + format(str(digested)[2:-1])
@@ -910,5 +909,5 @@ def initdb_command():
 if __name__ == "__main__":
     modules.db.db_init()
     logger.info("db initialized from wsgi")
-    modules.social.telegram_set_webhook()
+    # modules.social.telegram_set_webhook()
     app.run(host='0.0.0.0')
