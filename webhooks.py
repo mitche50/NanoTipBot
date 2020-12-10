@@ -620,125 +620,126 @@ def telegram_event():
 
         elif (request_json['message']['chat']['type'] == 'supergroup' or
               request_json['message']['chat']['type'] == 'group'):
-
-            if 'forward_from' in request_json['message']:
-                return '', HTTPStatus.OK
-
-            if 'text' in request_json['message']:
-                message['sender_id'] = request_json['message']['from']['id']
-                if 'username' in request_json['message']['from']:
-                    message['sender_screen_name'] = request_json['message']['from']['username']
-                else:
-                    if 'first_name' in request_json['message']['from'].keys():
-                        message['sender_screen_name'] = request_json['message']['from']['first_name']
-                    if 'last_name' in request_json['message']['from'].keys():
-                        message['sender_screen_name'] = \
-                            message['sender_screen_name'] + ' ' + request_json['message']['from']['last_name']
-                message['id'] = request_json['message']['message_id']
-                message['chat_id'] = request_json['message']['chat']['id']
-                message['chat_name'] = request_json['message']['chat']['title']
-
-                modules.social.check_telegram_member(message['chat_id'], message['chat_name'], message['sender_id'],
-                                                     message['sender_screen_name'])
-
-                message['text'] = request_json['message']['text']
-                message['text'] = message['text'].replace('\n', ' ')
-                message['text'] = message['text'].lower()
-                message['text'] = message['text'].split(' ')
-                modules.social.get_language(message)
-
-                message = modules.social.check_message_action(message)
-                logger.info(message)
-                if message['action'] is None:
+            try:
+                if 'forward_from' in request_json['message']:
                     return '', HTTPStatus.OK
 
-                message = modules.social.validate_tip_amount(message)
-                if message['tip_amount'] <= 0:
-                    return '', HTTPStatus.OK
-
-                logger.info("Got past initial checks.")
-                logger.info("message: {}".format(message))
-                logger.info("bot_id_telegram: {}".format(BOT_ID_TELEGRAM))
-                logger.info("sender id: {}".format(message['sender_id']))
-
-                if message['action'] != -1 and str(message['sender_id']) != str(BOT_ID_TELEGRAM):
-                    new_pid = os.fork()
-                    if new_pid == 0:
-                        try:
-                            bot_status = config.get('main', 'bot_status')
-                            if bot_status == 'maintenance':
-                                modules.social.send_dm(message['sender_id'],
-                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                                    message['system'])
-                                return ''
-                            elif message['system'] == 'twitter' and bot_status == 'twitter-maintenance':
-                                modules.social.send_dm(message['sender_id'],
-                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                                    message['system'])
-                                return ''
-                            elif message['system'] == 'telegram' and bot_status == 'telegram-maintenance':
-                                modules.social.send_dm(message['sender_id'],
-                                                    translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
-                                                    message['system'])
-                                return ''
-                            else:
-                                modules.orchestration.tip_process(message, users_to_tip, request_json)
-                        except Exception as e:
-                            logger.info("Exception: {}".format(e))
-                            raise e
-
-                        sys.exit()
+                if 'text' in request_json['message']:
+                    message['sender_id'] = request_json['message']['from']['id']
+                    if 'username' in request_json['message']['from']:
+                        message['sender_screen_name'] = request_json['message']['from']['username']
                     else:
+                        if 'first_name' in request_json['message']['from'].keys():
+                            message['sender_screen_name'] = request_json['message']['from']['first_name']
+                        if 'last_name' in request_json['message']['from'].keys():
+                            message['sender_screen_name'] = \
+                                message['sender_screen_name'] + ' ' + request_json['message']['from']['last_name']
+                    message['id'] = request_json['message']['message_id']
+                    message['chat_id'] = request_json['message']['chat']['id']
+                    message['chat_name'] = request_json['message']['chat']['title']
+
+                    modules.social.check_telegram_member(message['chat_id'], message['chat_name'], message['sender_id'],
+                                                        message['sender_screen_name'])
+
+                    message['text'] = request_json['message']['text']
+                    message['text'] = message['text'].replace('\n', ' ')
+                    message['text'] = message['text'].lower()
+                    message['text'] = message['text'].split(' ')
+                    modules.social.get_language(message)
+
+                    message = modules.social.check_message_action(message)
+                    logger.info(message)
+                    if message['action'] is None:
                         return '', HTTPStatus.OK
-            elif 'new_chat_member' in request_json['message']:
-                logger.info("new member joined chat, adding to DB")
-                chat_id = request_json['message']['chat']['id']
-                chat_name = request_json['message']['chat']['title']
-                member_id = request_json['message']['new_chat_member']['id']
-                if 'username' in request_json['message']['new_chat_member']:
-                    member_name = request_json['message']['new_chat_member']['username']
-                else:
-                    member_name = None
 
-                new_chat_member_call = (
-                    "INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
-                    "VALUES (%s, %s, %s, %s)")
-                new_member_values = [chat_id, chat_name, member_id, member_name]
-                err = modules.db.set_db_data(new_chat_member_call, new_member_values)
-                if err is not None:
-                    return 'ok'
+                    message = modules.social.validate_tip_amount(message)
+                    if message['tip_amount'] <= 0:
+                        return '', HTTPStatus.OK
 
-            elif 'left_chat_member' in request_json['message']:
-                chat_id = request_json['message']['chat']['id']
-                chat_name = request_json['message']['chat']['title']
-                member_id = request_json['message']['left_chat_member']['id']
-                if 'username' in request_json['message']['left_chat_member']:
-                    member_name = request_json['message']['left_chat_member']['username']
-                else:
-                    member_name = None
-                logger.info("member {}-{} left chat {}-{}, removing from DB.".format(member_id, member_name, chat_id,
-                                                                                      chat_name))
+                    logger.info("Got past initial checks.")
+                    logger.info("message: {}".format(message))
+                    logger.info("bot_id_telegram: {}".format(BOT_ID_TELEGRAM))
+                    logger.info("sender id: {}".format(message['sender_id']))
 
-                remove_member_call = ("DELETE FROM telegram_chat_members "
-                                      "WHERE chat_id = %s AND member_id = %s")
-                remove_member_values = [chat_id, member_id]
-                err = modules.db.set_db_data(remove_member_call, remove_member_values)
-                if err is not None:
-                    return 'ok'
+                    if message['action'] != -1 and str(message['sender_id']) != str(BOT_ID_TELEGRAM):
+                        new_pid = os.fork()
+                        if new_pid == 0:
+                            try:
+                                bot_status = config.get('main', 'bot_status')
+                                if bot_status == 'maintenance':
+                                    modules.social.send_dm(message['sender_id'],
+                                                        translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                        message['system'])
+                                    return ''
+                                elif message['system'] == 'twitter' and bot_status == 'twitter-maintenance':
+                                    modules.social.send_dm(message['sender_id'],
+                                                        translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                        message['system'])
+                                    return ''
+                                elif message['system'] == 'telegram' and bot_status == 'telegram-maintenance':
+                                    modules.social.send_dm(message['sender_id'],
+                                                        translations.maintenance_text[message['language']].format(BOT_NAME_TWITTER),
+                                                        message['system'])
+                                    return ''
+                                else:
+                                    modules.orchestration.tip_process(message, users_to_tip, request_json)
+                            except Exception as e:
+                                logger.info("Exception: {}".format(e))
+                                raise e
 
-            elif 'group_chat_created' in request_json['message']:
-                chat_id = request_json['message']['chat']['id']
-                chat_name = request_json['message']['chat']['title']
-                member_id = request_json['message']['from']['id']
-                member_name = request_json['message']['from']['username']
-                logger.info("member {} created chat {}, inserting creator into DB.".format(member_name, chat_name))
-                new_chat_call = ("INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
-                                 "VALUES (%s, %s, %s, %s)")
-                new_chat_values = [chat_id, chat_name, member_id, member_name]
-                err = modules.db.set_db_data(new_chat_call, new_chat_values)
-                if err is not None:
-                    return 'ok'
+                            sys.exit()
+                        else:
+                            return '', HTTPStatus.OK
+                elif 'new_chat_member' in request_json['message']:
+                    logger.info("new member joined chat, adding to DB")
+                    chat_id = request_json['message']['chat']['id']
+                    chat_name = request_json['message']['chat']['title']
+                    member_id = request_json['message']['new_chat_member']['id']
+                    if 'username' in request_json['message']['new_chat_member']:
+                        member_name = request_json['message']['new_chat_member']['username']
+                    else:
+                        member_name = None
 
+                    new_chat_member_call = (
+                        "INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
+                        "VALUES (%s, %s, %s, %s)")
+                    new_member_values = [chat_id, chat_name, member_id, member_name]
+                    err = modules.db.set_db_data(new_chat_member_call, new_member_values)
+                    if err is not None:
+                        return 'ok'
+
+                elif 'left_chat_member' in request_json['message']:
+                    chat_id = request_json['message']['chat']['id']
+                    chat_name = request_json['message']['chat']['title']
+                    member_id = request_json['message']['left_chat_member']['id']
+                    if 'username' in request_json['message']['left_chat_member']:
+                        member_name = request_json['message']['left_chat_member']['username']
+                    else:
+                        member_name = None
+                    logger.info("member {}-{} left chat {}-{}, removing from DB.".format(member_id, member_name, chat_id,
+                                                                                        chat_name))
+
+                    remove_member_call = ("DELETE FROM telegram_chat_members "
+                                        "WHERE chat_id = %s AND member_id = %s")
+                    remove_member_values = [chat_id, member_id]
+                    err = modules.db.set_db_data(remove_member_call, remove_member_values)
+                    if err is not None:
+                        return 'ok'
+
+                elif 'group_chat_created' in request_json['message']:
+                    chat_id = request_json['message']['chat']['id']
+                    chat_name = request_json['message']['chat']['title']
+                    member_id = request_json['message']['from']['id']
+                    member_name = request_json['message']['from']['username']
+                    logger.info("member {} created chat {}, inserting creator into DB.".format(member_name, chat_name))
+                    new_chat_call = ("INSERT IGNORE INTO telegram_chat_members (chat_id, chat_name, member_id, member_name) "
+                                    "VALUES (%s, %s, %s, %s)")
+                    new_chat_values = [chat_id, chat_name, member_id, member_name]
+                    err = modules.db.set_db_data(new_chat_call, new_chat_values)
+                    if err is not None:
+                        return 'ok'
+            except Exception as e:
+                            logger.info("ERROR: {}".format(e))
         else:
             logger.info("request: {}".format(request_json))
     return 'ok'

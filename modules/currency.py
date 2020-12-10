@@ -237,6 +237,7 @@ def get_pow(sender_account):
         json_request = json.dumps(account_info_call)
         r = requests.post('{}'.format(NODE_IP), data=json_request)
         rx = r.json()
+        logger.info("{}: pow return: {}".format(datetime.now(), rx))
         if 'frontier' in rx:
             hash = rx['frontier']
         else:
@@ -283,6 +284,7 @@ def get_pow_debug(message):
         json_request = json.dumps(account_info_call)
         r = requests.post('{}'.format(NODE_IP), data=json_request)
         rx = r.json()
+        logger.info("{}: debug pow return: {}".format(datetime.now(), rx))
         if 'frontier' in rx:
             hash = rx['frontier']
         else:
@@ -550,7 +552,6 @@ def generate_accounts():
     json_request = json.dumps(generate_call)
     r = requests.post('{}'.format(NODE_IP), data=json_request)
     rx = r.json()
-    logger.info("returning accounts: {}".format(rx))
     return rx
 
     # accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
