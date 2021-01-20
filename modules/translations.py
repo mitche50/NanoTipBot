@@ -3,6 +3,7 @@ BULLET = u'\u2022'
 maintenance_text = {
     'en': 'The tip bot is in maintenance.  Check {0} on Twitter for more information.',
     'es': 'El tip bot está en mantenimiento. Revisa {0} en Twitter para más información.',
+    'ca': 'El tip bot està en manteniment. Revisa {0} a Twitter per a més informació.',
     'nl': 'De Tip Bot is momenteel in onderhoud. Check {0} op Twitter voor meer informatie.',
     'ja': '',
     'zh-t': '小費助手正在維修中。請觀看{0}來獲得更多信息。',
@@ -33,6 +34,8 @@ redirect_tip_text = {
     'en': 'Tips are processed through public messages now.  Please send in the format {0} {1} 5 @user1.',
     'es': 'Los tips ahora están siendo procesados a través de mensajes públicos. Por favor, envíalos con el formato '
           '{0} {1} 5 @usuario1.',
+    'ca': 'Els tips ara estan sent processats a través de missatges públics. Si us plau, envieu-amb el format '
+          '{0} {1} 5 @usuari1.',
     'nl': 'Tips worden nu verwerkt via openbare berichten. Verstuur a.u.b. in dit formaat: {0} {1} 5 '
           '@gebruikersnaam.',
     'ja': '',
@@ -67,6 +70,8 @@ self_tip_text = {
     'en': 'Self tipping is not allowed.  Please use this bot to spread the ${0} to other {1} users!',
     'es': 'Enviarte tips a ti mismo no está permitido. Por favor, ¡usa este bot para difundir el ${0} a otros '
           'usuarios de {1}!',
+    'ca': 'Enviar tips a un mateix no està permès. Si us plau, fes servir aquest bot per difondre el ${0} a d\'altres '
+           'usuaris de {1}!',
     'nl': 'Jezelf tippen is niet toegestaan. Gebruik deze bot om ${0} naar andere {1}-gebruikers te verspreiden!',
     'ja': '',
     'zh-t': '不可以給自己小費。請用這個助手來轉發${0}給其他的{1}用戶們！',
@@ -103,6 +108,9 @@ receiver_tip_text = {
     'es': '¡@{0} acaba de enviarte un tip de {1} {2}! Responde a este mensaje directo con !balance para revisar tu '
           'nuevo saldo. Si no has registrado una cuenta, responde con !register para comenzar, o con !help para ver '
           'una lista de comandos. Aprende más sobre {3} en {4}',
+    'ca': '@{0} acaba de enviar-te un tip de {1} {2}! Respon a aquest missatge directe amb !balance per veure el teu '
+           'nou saldo. Si no heu registrat un compte, respon amb !register per començar, o amb !help per veure '
+           'una llista de comandes. Aprèn més sobre {3} a {4}',
     'nl': '@{0} heeft je zojuist een {1} {2} tip gestuurd! Reageer op deze DM met !balance om jouw nieuwe saldo te '
           'zien. Als je nog geen account hebt geregistreerd, stuur dan een antwoord met !register om aan de slag te '
           'gaan, of !help om een lijst met opdrachten te bekijken! Meer informatie over {3} op {4}',
@@ -157,14 +165,16 @@ receiver_tip_text = {
     'da': '@{0} har netop sendt dig et {1} {2} tip! Besvar denne DM med !balance for at se din nye balance.',
     'ar': '',
     'hi': ' @ {0} ने आपको {1} {2} टिप भेजी है! अपने नए बैलेंस को देखने के लिए इस !balance के साथ उत्तर दें। '
-		'यदि आपने कोई खाता पंजीकृत नहीं किया है, तो जवाब !register भेजें आरंभ करने के लिए रजिस्टर करें, या'
-		'आदेशों की सूची देखे !help से,  {3} के बारे में {4} \'पर अधिक जानें '
+    'यदि आपने कोई खाता पंजीकृत नहीं किया है, तो जवाब !register भेजें आरंभ करने के लिए रजिस्टर करें, या'
+    'आदेशों की सूची देखे !help से,  {3} के बारे में {4} \'पर अधिक जानें '
 }
 # 5
 private_tip_text = {
     'en': 'Private Tip is under maintenance.  To send your tip, use the {0} function in a tweet or reply!',
     'es': 'Los tips privados están en mantenimiento. Para poder enviar tu tip, usa la función '
           '{0} en un tweet o en una respuesta.',
+    'ca': 'Els tips privats estan en manteniment. Per poder enviar el teu tip, fa servir la funció '
+          '{0} en un tweet o en una resposta.',
     'nl': 'Privé tippen is momenteel in onderhoud. Gebruik de tipfunctie in een tweet of antwoord om '
           'jouw tip te verzenden!',
     'ja': '',
@@ -201,6 +211,8 @@ wrong_format_text = {
           'commands and what they do.',
     'es': 'El comando o sintaxis que enviaste no fue reconocido. Por favor, envía !help para recibir una lista de '
           'comandos junto con sus funciones.',
+    'ca': 'La comanda o sintaxi que has enviat no s\'ha reconegut. Si us plau, envia !help per rebre una llista de '
+          'comandes juntament amb les seves funcions.',
     'nl': 'De opdracht of syntax die je hebt verzonden wordt niet herkend. Stuur a.u.b !help voor '
           'een lijst met opdrachten en wat ze doen.',
     'ja': '',
@@ -242,6 +254,8 @@ no_users_text = {
           'to tip again using the format {0} {1} 1234 @username',
     'es': 'Parece que no ingresaste a nadie para enviar un tip, o te equivocaste en la escritura de su nombre. '
           'Puedes intentar realizar un tip nuevamente usando el formato {0} {1} 1234 @usuario',
+    'ca': 'Sembla que no heu introduït a ningú per enviar un tip, o et t\'has equivocat a l\'hora d\'escriure del seu nom. '
+          'Pots intentar realitzar un tip novament utilitzant el format {0} {1} 1234 @usuari',
     'nl': 'Het lijkt erop dat je niemand hebt genoemd om te ​​tippen, of dat je iemands naam verkeerd hebt '
           'getypt. Je kan proberen opnieuw een tip te versturen in het formaat: {0} {1} 1234 @gebruikersnaam',
     'ja': '',
@@ -276,13 +290,15 @@ no_users_text = {
           'at sende dit tip igen jf. formatet {0} {1} 1234 @brugernavn',
     'ar': '',
     'hi': 'ऐसा लगता है कि आपने टिप करने के लिए किसी को भी दर्ज नहीं किया है, या आपने किसी के हैंडल को यूज़ किया है। आप फिरसे कोशिश कर सकते हो '
-	             'प्रारूप {0} {1} 1234 @username का उपयोग करके फिर से टिप करने के लिए '
+               'प्रारूप {0} {1} 1234 @username का उपयोग करके फिर से टिप करने के लिए '
 }
 # 8
 multi_tip_success_dm = {
     'en': 'You have successfully sent your {0} ${1} tips.  '
           'Check your account at {2}explorer/account/{3}',
     'es': 'Has enviado exitosamente tus tips de {0} ${1}. Revisa tu cuenta en '
+          '{2}explorer/account/{3}',
+    'ca': 'Has enviat amb èxit els teus tips de {0} ${1}. Revisa el teu compte a '
           '{2}explorer/account/{3}',
     'nl': 'Je hebt jouw {0} ${1} tips met succes verzonden. Controleer jouw account op '
           '{2}explorer/account/{3}',
@@ -321,6 +337,7 @@ multi_tip_success_dm = {
 multi_tip_success = {
     'en': 'You have successfully sent your {0} ${1} tips.',
     'es': 'Has enviado exitosamente tus tips de {0} ${1}.',
+    'ca': 'Has enviat amb èxit els teus tips de {0} ${1}.',
     'nl': 'Je hebt jouw {0} ${1} tips met succes verzonden.',
     'ja': '',
     'zh-t': '成功發送了{0} ${1} 的小費。',
@@ -349,6 +366,8 @@ tip_success_dm = {
     'en': 'You have successfully sent your {0} ${1} tip.  '
           'Check out this transaction at {2}explorer/block/{3}',
     'es': 'Has enviado exitosamente tu tip de {0} ${1}. Verifica esta transacción en '
+          '{2}explorer/block/{3}',
+    'ca': 'Has enviat amb èxit el teu tip de {0} ${1}. Verifica aquesta transacció a '
           '{2}explorer/block/{3}',
     'nl': 'Je hebt jouw {0} ${1} tip succesvol verzonden. Bekijk deze transactie op '
           '{2}explorer/block/{3}',
@@ -386,6 +405,7 @@ tip_success_dm = {
 tip_success = {
     'en': 'You have successfully sent your {0} ${1} tip. Hash: {3}',
     'es': 'Has enviado exitosamente tu tip de {0} ${1}. Hash: {3}',
+    'ca': 'Has enviat amb èxit el teu tip de {0} ${1}. Hash: {3}',
     'nl': 'Je hebt jouw {0} ${1} tip succesvol verzonden. Hash: {3}',
     'ja': '',
     'zh-t': '成功發送了{0} ${1} 的小費。您可以在 {2}explorer/block/{3} 查看這筆交易。',
@@ -415,6 +435,8 @@ not_a_number_text = {
           'again using the format {0} {1} 1234 @username',
     'es': 'Parece que el valor que ingresaste para realizar un tip no fue un número. Puedes intentarlo nuevamente '
           'usando el formato {0} {1} 1234 @usuario',
+    'ca': 'Sembla quela quantitat que has introduït per realitzar un tip no va es un nombre. Pots intentar-ho novament '
+          'utilitzant el format {0} {1} 1234 @usuari',
     'nl': 'Het lijkt erop dat de waarde die je hebt ingevoerd om een tip te geven geen getal was. '
           'Je kan proberen opnieuw een tip te geven in het formaat: {0} {1} 1234 @gebruikersnaam',
     'ja': '',
@@ -454,6 +476,8 @@ min_tip_text = {
     'en': 'The minimum tip amount is {0} {1}.  Please update your tip amount and try again.',
     'es': 'El monto mínimo para realizar un tip es de {0} {1}. Por favor, actualiza el monto de tu tip e '
           'intenta nuevamente.',
+    'ca': 'L\'import mínim per a realitzar un tip és de {0} {1}. Si us plau, actualitza l\'import del teu tip i '
+          'intenta-ho de nou.',
     'nl': 'Het minimale tipbedrag is {0} {1}. Pas je tipbedrag aan en probeer het opnieuw.',
     'ja': '',
     'zh-t': '最低小費額度是{0} {1}。請更新您的小費額度後再試一次。',
@@ -484,6 +508,8 @@ missing_user_message = {
           'in the channel, please have them send a message in the chat so I can add them.',
     'es': '{0} no se encontró en nuestros registros. Para poder realizarle un tip, el usuario debe ser miembro del '
           'grupo. Si está en el grupo, por favor que envíe un mensaje en el chat para poderlo agregar.',
+    'ca': '{0} no s\'ha trobat en els nostres registres. Per poder realitzar-li un tip, l\'usuari ha de ser membre del '
+          'grup. Si està en el grup, per favor que envia un missatge al xat per poder-lo afegir.',
     'nl': '{0} wordt niet gevonden in onze administratie. Om personen een tip te geven, moeten ze lid zijn van het '
           'kanaal. Als ze deel uitmaken van het kanaal, stuur ze dan een bericht in de chat zodat ik ze kan toevoegen.',
     'ja': '',
@@ -526,6 +552,8 @@ no_account_text = {
     'en': 'You do not have an account with the bot.  Please send a DM to me with !register to set up an account.',
     'es': 'No tienes una cuenta registrada con el bot. Por favor, envíame un mensaje directo con !register para '
           'configurar una cuenta.',
+    'ca': 'No tens un compte registrat amb el bot. Si us plau, enviam un missatge directe amb !register per a '
+          'configurar un compte.',
     'nl': 'Je hebt nog geen account bij de bot. Stuur een DM naar mij met !register om een ​​account aan te maken.',
     'ja': '',
     'zh-t': '您沒有小費助手的賬戶。請向我發送私信 “！註冊” 來註冊一個新賬戶。',
@@ -559,6 +587,8 @@ not_enough_text = {
           'Please check your balance by sending a DM to me with !balance and retry.',
     'es': 'No tienes suficiente {0} para cubrir este tip de {1} {0}. Por favor verifica tu saldo enviándome un '
           'mensaje directo con !balance e intenta nuevamente.',
+    'ca': 'No tens prou {0} per cobrir aquest tip de {1} {0}. Si us plau comprova el teu saldo enviant-me un '
+          'missatge directe amb !balance i intenta-ho de nou.',
     'nl': 'Je hebt niet genoeg {0} om deze {1} {0} tip te dekken. Controleer jouw saldo door een DM naar mij '
           'te sturen met !balance en probeer het opnieuw.',
     'ja': '',
@@ -652,6 +682,33 @@ help_message = {
           + BULLET + ' !setlanguage o !configuraridioma: Se usa para cambiar el idioma predeterminando del bot. El '
                      'uso correcto es: !setlanguage Russian, lo que cambiaría  tu idioma al ruso.\n\n'
           + BULLET + ' !languages o !idiomas: Te muestra una lista de idiomas disponibles para traducción.',
+     'ca': '¡Gràcies por utilizar el {0} Tip Bot!\n'
+          'A sota hi ha una llista de comandes juntament amb una descripció del que fa cadascuna\n\n'
+          + BULLET + ' !help: El tip bot respondrpà al teu missatge directe amb una llista de comandes i les seves '
+                     'funcions. Si oblides alguna cosa, fes servir això per tenir una pista de com fer-ho.\n\n'
+          + BULLET + ' !register: Registra el teu ID d\'usuari a un compte que estigui vinculada a aquest. això '
+                     's\'utilitza per emmagatzemar les teves tips. Assegura\'t de retirar els fons a una cartera privada, ja '
+                     'que el tip bot no pretén ser enmagatzematge a llarg termini per {0}.\n\n'
+          + BULLET + ' !balance: Et mostra el saldo del compte vinculat amb el teu ID d\'usuari.\n\n'
+          + BULLET + ' {4}: Els tips s\'envien a través de tweets públics o en grups de Telegram.\n'
+                     'A Twitter: Etiqueta a {1} en un tweet i esmenta {4} <import> <@usuari>. Exemple: '
+                     '{1} {4} 5 @mitche50 enviaria un tip de 5 {0} a l\'usuari @mitche50.\n'
+                     'A Telegram: Envia {3} {4} <import> <@usuari> per fer un tip al grup. \n\n'
+          + BULLET + ' !privatetip: Actualment deshabilitat. Això enviarà un tip a un altre usuari a través d\'un '
+                     'missatge directe. Si vols que la quantitat de la teva tip sigui privada, fes servir aquesta funció! L\'ús '
+                     'correcte és: !privatetip @usuari 1234\n\n'
+          + BULLET + ' !account: Rebràs el número de compte que està vinculat al teu ID d\'usuari '
+                     '(actualment exclusiu de la plataforma). Pots utilitzar això per dipositar més {0} per a '
+                     'realitzar tips de la teva cartera personal.\n\n'
+          + BULLET + ' !withdraw: L\'ús adequat és !withdraw {2}. Enviarà el saldo complet '
+                     'del teu compte de tips al compte {0} proveïda. Opcional: Pots incloure una quantitat per a '
+                     'retirar utilitzant !withdraw <quantitat> <compte>. Exemple: !withdraw 1 {2} '
+                     'retiraria 1 {0} al compte {2}.\n\n'
+          + BULLET + ' !donate: L\'ús adequat és !donate 1234. Això enviarà la donació sol·licitada a '
+                     'el compte de donació del {0} Tip Bot per ajudar a finançar els esforços de desenvolupament. \n\n'
+           + BULLET + ' !setlanguage: S\'usa per canviar l\'idioma predeterminant del bot. '
+                      'l\'ús correcte és: !setlanguage Russian, el que canviaria el teu idioma al rus.\n\n'
+          + BULLET + ' !languages: Et mostra una llista d\'idiomes disponibles per a traducció.',
     'nl': 'Bedankt voor het gebruik van de {0} Tip Bot! Hieronder staat een lijst met opdrachten en een beschrijving van wat ze doen:\n\n'
           + BULLET + ' !help: De tipbot reageert op je DM met een lijst met opdrachten en hun functies. Als je iets vergeet, gebruik dit dan om een ​​hint van hoe je het moet doen te krijgen!\n\n'
           + BULLET + ' !register: Gegistreert jouw gebruikers-ID voor een account dat hieraan is gekoppeld. Dit wordt gebruikt om jouw tips op te slaan. Zorg ervoor dat je jouw saldo regelmatig naar een privé-account verstuurt, want de Tip Bot is niet bedoeld als lange termijn opslag voor jouw {0}.\n\n'
@@ -1075,6 +1132,7 @@ help_message = {
 account_text = {
     'en': 'Your account number is:',
     'es': 'Tu número de cuenta es:',
+    'ca': 'El teu número de compte és:',
     'nl': 'Jouw accountnummer is:',
     'ja': '',
     'zh-t': '您的賬戶號碼是：',
@@ -1103,6 +1161,8 @@ balance_text = {
           'Pending: {2} {1}',
     'es': 'Disponible: {0} {1}\n'
           'Pendiente: {2} {1}',
+    'ca': 'Disponible: {0} {1}\n'
+          'Pendent: {2} {1}',
     'nl': 'Beschikbaar: {0} {1}\n'
           'In afwachting: {2} {1}',
     'ja': '',
@@ -1144,6 +1204,7 @@ balance_text = {
 account_register_text = {
     'en': 'You have successfully registered for an account.  Your account number is:',
     'es': 'Te has registrado exitosamente para obtener una cuenta. Tu número de cuenta es:',
+    'ca': 'T\'has registrat amb èxit per obtenir un compte. El teu número de compte és:',
     'nl': 'Je bent succesvol geregistreerd voor een account. Jouw accountnummer is:',
     'ja': '',
     'zh-t': '您成功註冊了新賬戶。你的賬戶號碼是：',
@@ -1170,6 +1231,7 @@ account_register_text = {
 account_already_registered = {
     'en': 'You already have registered your account.  Your account number is:',
     'es': 'Ya habías registrado tu cuenta. Tu número de cuenta es:',
+    'ca': 'Ja havies registrat teu compte. El teu número de compte és:',
     'nl': 'Je hebt al een account geregistreerd. Jouw accountnummer is:',
     'ja': '',
     'zh-t': '您已經有賬戶了。你的賬戶號碼是：',
@@ -1196,6 +1258,7 @@ account_already_registered = {
 account_create_text = {
     'en': 'You didn\'t have an account set up, so I set one up for you.  Your account number is:',
     'es': 'No tenías una cuenta configurada, así que he configurado una para ti. Tu número de cuenta es:',
+    'ca': 'No tenies cap compte configurada, així que he configurat una per a tu. El teu número de compte és:',
     'nl': 'Je had nog geen account ingesteld, dus ik heb er één voor je aangemaakt. Jouw accountnummer is:',
     'ja': '',
     'zh-t': '您還沒有賬戶，所以我幫您註冊了新賬戶。您的賬戶號碼是：',
@@ -1221,7 +1284,8 @@ account_create_text = {
 # 21
 invalid_account_text = {
     'en': 'The account number you provided is invalid.  Please double check and resend your request.',
-    'es': 'El número de cuenta que proveíste no es válido. Por favor revisa nuevamente y vuelve a enviar tu solicitud.',
+    'es': 'El número de cuenta que proveíste no es válido. Por favor revisa y vuelve a enviar tu solicitud.',
+    'ca': 'El número de compte que has enviat no és vàlid. Si us plau revisa i torna a enviar la teva sol·licitud.',
     'nl': 'Het accountnummer dat je hebt opgegeven is ongeldig. Controleer het nogmaals en verzend je verzoek opnieuw.',
     'ja': '',
     'zh-t': '您所提供的帳戶號碼無效。請檢查一遍後再嘗試。',
@@ -1249,6 +1313,7 @@ invalid_account_text = {
 no_balance_text = {
     'en': 'You have 0 balance in your account.  Please deposit to your account {0} to send more tips!',
     'es': 'Tienes 0 saldo en tu cuenta. ¡Por favor deposita en tu cuenta {0} para enviar más tips!',
+    'ca': 'Tens 0 saldo al teu compte. Si us plau diposita en el teu compte {0} per enviar més tips!',
     'nl': 'U heeft 0 saldo in uw account. Stort meer op uw adres {0} om meer tips te kunnen sturen!',
     'ja': '',
     'zh-t': '您的賬戶沒有任何餘額。請在 {0} 存款後再發送小費！',
@@ -1281,6 +1346,8 @@ invalid_amount_text = {
           '!withdraw <amount> <account>',
     'es': 'No enviaste un número para retirar. Por favor vuelve a enviar con el formato !withdraw <cuenta> o '
           '!withdraw <monto> <cuenta>',
+    'ca': 'No has enviat un nombre per a retirar. Si us plau torna a enviar amb el format !withdraw <compte> o '
+          '!withdraw <quantitat> <compte>',
     'nl': 'Je hebt geen bedrag genoemd om op te nemen. Gelieve opnieuw te verzenden in het formaat: !withdraw '
           '<account>, of: !withdraw <bedrag> <account>',
     'ja': '',
@@ -1319,6 +1386,7 @@ invalid_amount_text = {
 not_enough_balance_text = {
     'en': 'You do not have that much {0} in your account.  To withdraw your full amount, send !withdraw <account>',
     'es': 'No tienes esa cantidad de {0} en tu cuenta. Para retirar el monto total, envía !withdraw <cuenta>',
+    'ca': 'No tens aquesta quantitat de {0} al teu compte. Per retirar la suma total, envia !withdraw <compte>',
     'nl': 'Je hebt niet zoveel {0} in jouw account. Om het volledige bedrag op te nemen, verzendt '
           'je !withdraw <account>',
     'ja': '',
@@ -1352,6 +1420,8 @@ withdraw_text = {
     'en': 'You have successfully withdrawn {0} {1}!  You can check the transaction at '
           '{2}explorer/block/{3}',
     'es': '¡Has retirado con éxito {0} {1}! Puedes verificar la transacción en '
+          '{2}explorer/block/{3}',
+    'ca': 'Has retirat amb èxit {0} {1}! Pots verificar la transacció a '
           '{2}explorer/block/{3}',
     'nl': 'Je hebt met succes {0} {1} opgenomen! Je kan de transactie bekijken op '
           '{2}explorer/block/{3}',
@@ -1394,6 +1464,10 @@ incorrect_withdraw_text = {
     'es': 'No comprendí tu solicitud de retiro. Por favor, vuelve a enviarla con !withdraw <opcional:cantidad> '
           '<cuenta>. Por ejemplo, !withdraw 1 {0} retiraría 1 {1} a la cuenta '
           '{0}. Además, !withdraw {0} retiraría tu saldo completo a la cuenta '
+          '{0}.',
+    'ca': 'No he entés la teva sol·licitud de retirada. Si us plau, torna a enviar-la amb !withdraw <opcional:quantitat> '
+          '<compte>. Per exemple, !withdraw 1 {0} retiraria 1 {1} al compte '
+          '{0}. A més, !withdraw {0} retiraria el teu saldo complet al compte'
           '{0}.',
     'nl': 'Ik heb jouw opnameverzoek niet begrepen. Stuur opnieuw met !withdraw <optioneel: bedrag> <account>. '
           'Voorbeeld: !withdraw 1 {0} zou 1 {1} opnemen en versturen naar rekening '
@@ -1463,6 +1537,7 @@ incorrect_withdraw_text = {
 wrong_donate_text = {
     'en': 'Only number amounts are accepted.  Please resend as !donate 1234',
     'es': 'Solo se aceptan cantidades en números. Por favor vuelve a intentar con !donate 1234',
+    'ca': 'Només s\'accepten quantitats en nombres. Si us plau torna a intentar amb !donate 1234',
     'nl': 'Alleen bedragen met genoemde aantallen worden geaccepteerd. Gelieve opnieuw te verzenden als !donate 1234',
     'ja': '',
     'zh-t': '金額只能輸入數字。請重發 "！捐款 <金額>"。',
@@ -1492,6 +1567,8 @@ large_donate_text = {
           'your donation amount.',
     'es': 'Tu saldo es de solo {0} {1} e intentaste enviar {2}. Agrega más {1} a tu cuenta, o reduce el monto de '
           'tu donación.',
+    'es': 'El teu saldo és de només {0} {1} i vas intentar enviar {2}. Afegeix més {1} al teu compte, o redueix la suma de '
+          'la teva donació.',    
     'nl': 'Jouw saldo is slechts {0} {1} en je hebt geprobeerd {2} te verzenden. Voeg meer {1} toe aan '
           'jouw account of verlaag je donatiebedrag.',
     'ja': '',
@@ -1537,6 +1614,8 @@ small_donate_text = {
     'en': 'The minimum donation amount is {0}.  Please update your donation amount and resend.',
     'es': 'La cantidad mínima de donación es de {0}. Por favor actualiza el monto de tu donación e '
           'intenta nuevamente.',
+    'ca': 'La quantitat mínima de donació és de {0}. Si us plau actualitza la quantitat de la teva donació i '
+          'intenta-ho de nou.',
     'nl': 'Het minimale donatiebedrag is {0}. Pas je donatiebedrag aan en verzend het opnieuw.',
     'ja': '',
     'zh-t': '最低捐款是{0}。請改變捐款額後再嘗試。',
@@ -1567,6 +1646,8 @@ donate_text = {
     'en': 'Thank you for your generosity!  You have successfully donated {0} {1}!  You can check the '
           'transaction at {2}explorer/block/{3}',
     'es': '¡Gracias por tu generosidad! Has donado {0} {1} de manera exitosa. Puedes verificar esta transacción en '
+          '{2}explorer/block/{3}',
+    'ca': 'Gràcies per la teva generositat! Has donat {0} {1} correctament. Pots verificar aquesta transacció a '
           '{2}explorer/block/{3}',
     'nl': 'Bedankt voor jouw vrijgevigheid! Je hebt met succes {0} {1} gedoneerd! Je kan de transactie '
           'bekijken op {2}explorer/block/{3}',
@@ -1608,6 +1689,7 @@ donate_text = {
 incorrect_donate_text = {
     'en': 'Incorrect syntax.  Please use the format !donate 1234',
     'es': 'Sintaxis incorrecta. Por favor usa el formato !donate 1234',
+    'ca': 'Sintaxi incorrecta. Si us plau usa el format !donate 1234',
     'nl': 'Onjuiste syntax. Gebruik het formaat !donate 1234',
     'ja': '',
     'zh-t': '無效語法。請用格式 “！捐款 1234”',
@@ -1637,6 +1719,8 @@ language_change_success = {
           'language.  If you\'d like to change back, resend the !setlanguage command with your new language!',
     'es': 'Has actualizado exitosamente tu idioma. Los mensajes que recibas del bot ahora estarán en tu nuevo idioma. '
           'Si deseas cambiarlo nuevamente, vuelve a enviar el comando !setlanguage con tu nuevo lenguaje.',
+    'ca': 'Has actualitzat amb èxit la teva llengua. Els missatges que rebis del bot ara estaran en el teu nou idioma. '
+          'Si es vol canviar-nou, torna a enviar la comanda! Setlanguage amb el teu nou llenguatge.',
     'nl': 'U hebt uw taal met succes bijgewerkt. Het bericht dat u van de bot ontvangt, is nu in uw nieuwe taal. '
           'Als je terug wilt veranderen, stuur dan !setlanguage met je nieuwe taal!',
     'ja': '',
@@ -1679,7 +1763,9 @@ missing_language = {
     'en': 'This language is not available for translations, please send !languagelist for a '
           'list of languages and codes.',
     'es': 'Este idioma no está disponible para traducciones, por favor envía !languagelist para obtener una lista '
-          'de lenguajes y códigos.',
+          'de idiomas y códigos.',
+    'ca': 'Aquest idioma no està disponible per a traduccions, si us plau envia !languagelist per obtenir una llista '
+          'd\'idiomes i codis.',
     'nl': 'Deze taal is niet beschikbaar voor vertalingen, stuur aub !languagelist voor een lijst met talen en codes.',
     'ja': '',
     'zh-t': '這個語言還沒有被翻譯，請用 "！語言" 來查看現有語言單。',
@@ -1715,8 +1801,10 @@ missing_language = {
 auto_donate_notanum = {
     'en': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
-    'es': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
-          'donation percentage.',
+    'es': 'El porcentaje que proporcionó no es un número. Vuelva a enviar utilizando un número positivo para actualizar su '
+          'porcentaje de donación.',
+    'ca': 'El percentatge que heu proporcionat no és un nombre. Torneu a enviar mitjançant un nombre positiu per actualitzar el vostre '
+          'percentatge de donació.',
     'nl': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
     'ja': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
@@ -1761,8 +1849,10 @@ auto_donate_notanum = {
 auto_donate_negative = {
     'en': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
-    'es': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
-          ' to update your donation percentage.',
+    'es': 'El porcentaje que proporcionó fue un número incorrecto. Vuelva a enviar con un número positivo entre 0 y 100 '
+          ' para actualizar su porcentaje de donación.',
+    'ca': 'El percentatge que heu proporcionat és un nombre incorrecte. Torneu a enviar amb un nombre positiu entre 0 i 100 '
+          ' per actualitzar el percentatge de donació.',
     'nl': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
     'ja': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
@@ -1807,8 +1897,10 @@ auto_donate_negative = {
 auto_donate_missing_num = {
     'en': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
-    'es': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
-          'to update your donation percentage.',
+    'es': 'No proporcionó un número para actualizar su porcentaje de donación. Vuelva a enviar con un número positivo '
+          'para actualizar su porcentaje de donación.',
+    'ca': 'No heu proporcionat cap nombre per actualitzar el percentatge de donació. Torneu a enviar amb un nombre positiu '
+          'per actualitzar el percentatge de donació.',
     'nl': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
     'ja': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
@@ -1854,7 +1946,8 @@ auto_donate_missing_num = {
 # 37
 auto_donate_success = {
     'en': 'You have successfully updated your donation percentage to {0}%.',
-    'es': 'You have successfully updated your donation percentage to {0}%.',
+    'es': 'Ha actualizado correctamente su porcentaje de donación a {0}%.',
+    'ca': 'Heu actualitzat correctament el percentatge de donació a {0}%.',
     'nl': 'You have successfully updated your donation percentage to {0}%.',
     'ja': 'You have successfully updated your donation percentage to {0}%.',
     'zh-t': 'You have successfully updated your donation percentage to {0}%.',
@@ -1882,7 +1975,8 @@ auto_donate_success = {
 # 38
 set_return_invalid_account = {
     'en': 'Error: Invalid account number.  Please resend with a valid account.',
-    'es': 'Error: Invalid account number.  Please resend with a valid account.',
+    'es': 'Error: número de cuenta no válido. Vuelva a enviar con una cuenta válida.',
+    'ca': 'Error: el número de compte no és vàlid. Torneu a enviar-lo amb un compte vàlid.',
     'nl': 'Error: Invalid account number.  Please resend with a valid account.',
     'ja': 'Error: Invalid account number.  Please resend with a valid account.',
     'zh-t': 'Error: Invalid account number.  Please resend with a valid account.',
@@ -1908,7 +2002,8 @@ set_return_invalid_account = {
 # 39
 set_return_success = {
     'en': 'You have successfully set your return address to {0}',
-    'es': 'You have successfully set your return address to {0}',
+    'es': 'Ha configurado correctamente su dirección de devolución en {0}',
+    'ca': 'Heu definit correctament la vostra adreça de retorn {0}',
     'nl': 'You have successfully set your return address to {0}',
     'ja': 'You have successfully set your return address to {0}',
     'zh-t': 'You have successfully set your return address to {0}',
@@ -1934,7 +2029,8 @@ set_return_success = {
 # 40
 unsupported_fiat = {
     'en': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
-    'es': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
+    'es': 'Ha introducido una cantidad no válida o un símbolo fiduciario no admitido. Vuelva a formatear y envíe de nuevo.',
+    'ca': 'Heu introduït un import no vàlid o un símbol fiat no admès. Si us plau, reformateu i envieu de nou.',
     'nl': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'ja': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'zh-t': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
@@ -1961,7 +2057,8 @@ unsupported_fiat = {
 # 41
 mute = {
     'en': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
-    'es': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
+    'es': 'Has silenciado al bot. Ya no recibirás mensajes. Para dejar de silenciar, envíe !unmute o /unmute.',
+    'ca': 'Heu silenciat el bot. Ja no rebreu missatges. Per activar el so, envieu !unmute o /unmute.',
     'nl': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'ja': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'zh-t': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
@@ -1987,7 +2084,8 @@ mute = {
 
 unmute = {
     'en': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
-    'es': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
+    'es': 'Ha reactivado el bot con éxito y continuará recibiendo mensajes. Para volver a silenciar, envíe !mute o /mute',
+    'ca': 'Heu desactivat el bot i reprendreu la recepció de missatges. Per silenciar de nou, envieu !mute o /mute',
     'nl': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'ja': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'zh-t': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
@@ -2025,6 +2123,7 @@ language_list = (
     'Portuguese - Português\n'
     'Portuguese-BR - Português-BR\n'
     'Russian - Русский\n'
+    'Catalan - Català\n'
     'Spanish - Español\n'
     'Turkish - Türkçe\n'
     'Persian - فارسی\n'
@@ -2040,6 +2139,9 @@ language_list = (
 balance_commands = {
     'en': ['!balance', '!bal', '!b', '/balance', '/bal', '/b'],
     'es': [
+        # Users said they would prefer english commands
+    ],
+    'ca': [
         # Users said they would prefer english commands
     ],
     'nl': [
@@ -2077,6 +2179,8 @@ balance_commands = {
 account_commands = {
     'en': ['!account', '!acc', '!a', '!deposit', '/account', '/acc', '/a', '/deposit'],
     'es': ['!cuenta', '!depósito', '/cuenta', '/depósito'],
+    'ca': [# No Catalan commands for now.
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2112,6 +2216,9 @@ account_commands = {
 help_commands = {
     'en': ['!help', '!h', '/help', '/h', '/start'],
     'es': ['!ayuda', '/ayuda', '/iniciar'],
+    'ca': [
+        # Users said they would prefer english commands
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2149,6 +2256,9 @@ register_commands = {
     'nl': [
         # Users said they would prefer english commands
     ],
+    'nl': [
+        # Users said they would prefer english commands
+    ],
     'ja': [],
     'zh-t': ['！註冊', '！註', '！註', '/註冊', '/註', '/註'],
     'zh-s': ['！注册', '！注', '/注册', '/注'],
@@ -2180,6 +2290,9 @@ register_commands = {
 withdraw_commands = {
     'en': ['!withdraw', '!w', '/withdraw', '/w'],
     'es': ['!retiro', '/retiro'],
+    'ca': [
+        # Users said they would prefer english commands
+    ], 
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2214,6 +2327,9 @@ withdraw_commands = {
 donate_commands = {
     'en': ['!donate', '!d', '/donate', '/d'],
     'es': ['!donar', '/donar'],
+    'ca': [
+        # Users said they would prefer english commands
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2248,6 +2364,9 @@ donate_commands = {
 nano_tip_commands = {
     'en': ['!tip', '!t', '/tip', '/t'],
     'es': [
+        # Users said they would prefer english commands
+    ],
+    'ca': [
         # Users said they would prefer english commands
     ],
     'nl': [
@@ -2291,6 +2410,9 @@ private_tip_commands = {
     'es': [
         # Users said they would prefer english commands
     ],
+    'ca': [
+        # Users said they would prefer english commands
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2325,6 +2447,9 @@ private_tip_commands = {
 auto_donate_commands = {
     'en': ['!setdonation', '!sd', '/setdonation', '/sd'],
     'es': [
+        # Users said they would prefer english commands
+    ],
+    'ca': [
         # Users said they would prefer english commands
     ],
     'nl': [
@@ -2363,6 +2488,9 @@ set_return_commands = {
     'es': [
         # Users said they would prefer english commands
     ],
+    'ca': [
+        # Users said they would prefer english commands
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2399,6 +2527,9 @@ set_mute_commands = {
     'es': [
         # Users said they would prefer english commands
     ],
+    'ca': [
+        # Users said they would prefer english commands
+    ],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2433,6 +2564,9 @@ set_mute_commands = {
 set_unmute_commands = {
     'en': ['!unmute', '/unmute'],
     'es': [
+        # Users said they would prefer english commands
+    ],
+    'ca': [
         # Users said they would prefer english commands
     ],
     'nl': [
@@ -2536,6 +2670,7 @@ language_dict = {
     'português-br': 'pt-br',
     'spanish': 'es',
     'es': 'es',
+    'català': 'ca',
     'español': 'es',
     'turkish': 'tr',
     'tr': 'tr',
