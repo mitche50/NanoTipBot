@@ -109,7 +109,7 @@ receiver_tip_text = {
           'nuevo saldo. Si no has registrado una cuenta, responde con !register para comenzar, o con !help para ver '
           'una lista de comandos. Aprende más sobre {3} en {4}',
     'ca': '@{0} acaba de enviar-te un tip de {1} {2}! Respon a aquest missatge directe amb !balance per veure el teu '
-           'nou saldo. Si no heu registrat un compte, respon amb !register per començar, o amb !help per veure '
+           'nou saldo. Si no has registrat un compte, respon amb !register per començar, o amb !help per veure '
            'una llista de comandes. Aprèn més sobre {3} a {4}',
     'nl': '@{0} heeft je zojuist een {1} {2} tip gestuurd! Reageer op deze DM met !balance om jouw nieuwe saldo te '
           'zien. Als je nog geen account hebt geregistreerd, stuur dan een antwoord met !register om aan de slag te '
@@ -254,8 +254,8 @@ no_users_text = {
           'to tip again using the format {0} {1} 1234 @username',
     'es': 'Parece que no ingresaste a nadie para enviar un tip, o te equivocaste en la escritura de su nombre. '
           'Puedes intentar realizar un tip nuevamente usando el formato {0} {1} 1234 @usuario',
-    'ca': 'Sembla que no heu introduït a ningú per enviar un tip, o et t\'has equivocat a l\'hora d\'escriure del seu nom. '
-          'Pots intentar realitzar un tip novament utilitzant el format {0} {1} 1234 @usuari',
+    'ca': 'Sembla que no has introduït a ningú per enviar un tip, o t\'has equivocat a l\'hora d\'escriure del seu nom. '
+          'Pots intentar-ho de nou utilitzant el format {0} {1} 1234 @usuari',
     'nl': 'Het lijkt erop dat je niemand hebt genoemd om te ​​tippen, of dat je iemands naam verkeerd hebt '
           'getypt. Je kan proberen opnieuw een tip te versturen in het formaat: {0} {1} 1234 @gebruikersnaam',
     'ja': '',
@@ -435,7 +435,7 @@ not_a_number_text = {
           'again using the format {0} {1} 1234 @username',
     'es': 'Parece que el valor que ingresaste para realizar un tip no fue un número. Puedes intentarlo nuevamente '
           'usando el formato {0} {1} 1234 @usuario',
-    'ca': 'Sembla quela quantitat que has introduït per realitzar un tip no va es un nombre. Pots intentar-ho novament '
+    'ca': 'Sembla que la quantitat que has introduït per realitzar un tip no és un nombre. Pots intentar-ho novament '
           'utilitzant el format {0} {1} 1234 @usuari',
     'nl': 'Het lijkt erop dat de waarde die je hebt ingevoerd om een tip te geven geen getal was. '
           'Je kan proberen opnieuw een tip te geven in het formaat: {0} {1} 1234 @gebruikersnaam',
@@ -682,7 +682,7 @@ help_message = {
           + BULLET + ' !setlanguage o !configuraridioma: Se usa para cambiar el idioma predeterminando del bot. El '
                      'uso correcto es: !setlanguage Russian, lo que cambiaría  tu idioma al ruso.\n\n'
           + BULLET + ' !languages o !idiomas: Te muestra una lista de idiomas disponibles para traducción.',
-     'ca': '¡Gràcies por utilizar el {0} Tip Bot!\n'
+     'ca': 'Gràcies per utilitzar el {0} Tip Bot!\n'
           'A sota hi ha una llista de comandes juntament amb una descripció del que fa cadascuna\n\n'
           + BULLET + ' !help: El tip bot respondrpà al teu missatge directe amb una llista de comandes i les seves '
                      'funcions. Si oblides alguna cosa, fes servir això per tenir una pista de com fer-ho.\n\n'
@@ -1567,7 +1567,7 @@ large_donate_text = {
           'your donation amount.',
     'es': 'Tu saldo es de solo {0} {1} e intentaste enviar {2}. Agrega más {1} a tu cuenta, o reduce el monto de '
           'tu donación.',
-    'es': 'El teu saldo és de només {0} {1} i vas intentar enviar {2}. Afegeix més {1} al teu compte, o redueix la suma de '
+    'es': 'El teu saldo és de només {0} {1} i has intentat enviar {2}. Afegeix més {1} al teu compte, o redueix l\'import de '
           'la teva donació.',    
     'nl': 'Jouw saldo is slechts {0} {1} en je hebt geprobeerd {2} te verzenden. Voeg meer {1} toe aan '
           'jouw account of verlaag je donatiebedrag.',
@@ -1614,7 +1614,7 @@ small_donate_text = {
     'en': 'The minimum donation amount is {0}.  Please update your donation amount and resend.',
     'es': 'La cantidad mínima de donación es de {0}. Por favor actualiza el monto de tu donación e '
           'intenta nuevamente.',
-    'ca': 'La quantitat mínima de donació és de {0}. Si us plau actualitza la quantitat de la teva donació i '
+    'ca': 'La quantitat mínima per a una donació és de {0}. Si us plau actualitza la quantitat de la teva donació i '
           'intenta-ho de nou.',
     'nl': 'Het minimale donatiebedrag is {0}. Pas je donatiebedrag aan en verzend het opnieuw.',
     'ja': '',
@@ -1720,7 +1720,7 @@ language_change_success = {
     'es': 'Has actualizado exitosamente tu idioma. Los mensajes que recibas del bot ahora estarán en tu nuevo idioma. '
           'Si deseas cambiarlo nuevamente, vuelve a enviar el comando !setlanguage con tu nuevo lenguaje.',
     'ca': 'Has actualitzat amb èxit la teva llengua. Els missatges que rebis del bot ara estaran en el teu nou idioma. '
-          'Si es vol canviar-nou, torna a enviar la comanda! Setlanguage amb el teu nou llenguatge.',
+          'Si vols canviar-lo de nou, torna a enviar la comanda !setlanguage amb el teu nou idioma.',
     'nl': 'U hebt uw taal met succes bijgewerkt. Het bericht dat u van de bot ontvangt, is nu in uw nieuwe taal. '
           'Als je terug wilt veranderen, stuur dan !setlanguage met je nieuwe taal!',
     'ja': '',
@@ -1803,7 +1803,7 @@ auto_donate_notanum = {
           'donation percentage.',
     'es': 'El porcentaje que proporcionó no es un número. Vuelva a enviar utilizando un número positivo para actualizar su '
           'porcentaje de donación.',
-    'ca': 'El percentatge que heu proporcionat no és un nombre. Torneu a enviar mitjançant un nombre positiu per actualitzar el vostre '
+    'ca': 'El percentatge que has proporcionat no és un nombre. Torneu a enviar mitjançant un nombre positiu per actualitzar el vostre '
           'percentatge de donació.',
     'nl': 'The percentage you provided was not a number.  Please resubmit using a positive number to update your '
           'donation percentage.',
@@ -1851,7 +1851,7 @@ auto_donate_negative = {
           ' to update your donation percentage.',
     'es': 'El porcentaje que proporcionó fue un número incorrecto. Vuelva a enviar con un número positivo entre 0 y 100 '
           ' para actualizar su porcentaje de donación.',
-    'ca': 'El percentatge que heu proporcionat és un nombre incorrecte. Torneu a enviar amb un nombre positiu entre 0 i 100 '
+    'ca': 'El percentatge que has proporcionat és un nombre incorrecte. Torneu a enviar amb un nombre positiu entre 0 i 100 '
           ' per actualitzar el percentatge de donació.',
     'nl': 'The percentage you provided was an incorrect number.  Please resubmit with a positive number between 0 and 100'
           ' to update your donation percentage.',
@@ -1899,7 +1899,7 @@ auto_donate_missing_num = {
           'to update your donation percentage.',
     'es': 'No proporcionó un número para actualizar su porcentaje de donación. Vuelva a enviar con un número positivo '
           'para actualizar su porcentaje de donación.',
-    'ca': 'No heu proporcionat cap nombre per actualitzar el percentatge de donació. Torneu a enviar amb un nombre positiu '
+    'ca': 'No has proporcionat cap nombre per actualitzar el percentatge de donació. Torneu a enviar amb un nombre positiu '
           'per actualitzar el percentatge de donació.',
     'nl': 'You did not provide a number to update your donation percentage to.  Please resubmit with a positive number '
           'to update your donation percentage.',
@@ -1947,7 +1947,7 @@ auto_donate_missing_num = {
 auto_donate_success = {
     'en': 'You have successfully updated your donation percentage to {0}%.',
     'es': 'Ha actualizado correctamente su porcentaje de donación a {0}%.',
-    'ca': 'Heu actualitzat correctament el percentatge de donació a {0}%.',
+    'ca': 'Has actualitzat correctament el percentatge de donació a {0}%.',
     'nl': 'You have successfully updated your donation percentage to {0}%.',
     'ja': 'You have successfully updated your donation percentage to {0}%.',
     'zh-t': 'You have successfully updated your donation percentage to {0}%.',
@@ -2003,7 +2003,7 @@ set_return_invalid_account = {
 set_return_success = {
     'en': 'You have successfully set your return address to {0}',
     'es': 'Ha configurado correctamente su dirección de devolución en {0}',
-    'ca': 'Heu definit correctament la vostra adreça de retorn {0}',
+    'ca': 'Has definit correctament la vostra adreça de retorn {0}',
     'nl': 'You have successfully set your return address to {0}',
     'ja': 'You have successfully set your return address to {0}',
     'zh-t': 'You have successfully set your return address to {0}',
@@ -2030,7 +2030,7 @@ set_return_success = {
 unsupported_fiat = {
     'en': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'es': 'Ha introducido una cantidad no válida o un símbolo fiduciario no admitido. Vuelva a formatear y envíe de nuevo.',
-    'ca': 'Heu introduït un import no vàlid o un símbol fiat no admès. Si us plau, reformateu i envieu de nou.',
+    'ca': 'Has introduït un import no vàlid o un símbol fiat no admès. Si us plau, reformateu i envieu de nou.',
     'nl': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'ja': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
     'zh-t': 'You have either entered an invalid amount or an unsupported fiat symbol.  Please reformat and send again.',
@@ -2058,7 +2058,7 @@ unsupported_fiat = {
 mute = {
     'en': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'es': 'Has silenciado al bot. Ya no recibirás mensajes. Para dejar de silenciar, envíe !unmute o /unmute.',
-    'ca': 'Heu silenciat el bot. Ja no rebreu missatges. Per activar el so, envieu !unmute o /unmute.',
+    'ca': 'Has silenciat el bot. Ja no rebreu missatges. Per activar el so, envieu !unmute o /unmute.',
     'nl': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'ja': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
     'zh-t': 'You have muted the bot.  You will no longer receive messages.  To unmute, send !unmute or /unmute.',
@@ -2085,7 +2085,7 @@ mute = {
 unmute = {
     'en': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'es': 'Ha reactivado el bot con éxito y continuará recibiendo mensajes. Para volver a silenciar, envíe !mute o /mute',
-    'ca': 'Heu desactivat el bot i reprendreu la recepció de missatges. Per silenciar de nou, envieu !mute o /mute',
+    'ca': 'Has desactivat el bot i reprendreu la recepció de missatges. Per silenciar de nou, envieu !mute o /mute',
     'nl': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'ja': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
     'zh-t': 'You have successfully unmuted the bot and will resume receiving messages.  To mute again, send !mute or /mute',
