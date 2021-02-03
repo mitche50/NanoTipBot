@@ -218,7 +218,7 @@ def receive_pending_debug(sender_account, message):
                     requests.post('{}'.format(NODE_IP), data=receive_json)
                     logger.info("{}: {} - block {} received".format(datetime.now(), message['tip_id'], block))
             except Exception as e:
-                logger.info("Exception: {}".format(e))
+                logger.info("Exception receiving block: {}".format(e))
                 raise e
     except Exception as e:
         logger.info("{}: {} - Receive Pending Error: {}".format(datetime.now(), message['tip_id'], e))
@@ -543,16 +543,21 @@ def get_fiat_price(fiat, crypto_currency):
 
 
 def generate_accounts():
-
-    generate_call = {
-            "action": "accounts_create",
-            "wallet": WALLET,
-            "count": 50
-        }
-    json_request = json.dumps(generate_call)
-    r = requests.post('{}'.format(NODE_IP), data=json_request)
-    rx = r.json()
-    return rx
+    try:
+        logger.info("Generating accounts in currency.py")
+        generate_call = {
+                "action": "accounts_create",
+                "wallet": WALLET,
+                "count": 50
+            }
+        json_request = json.dumps(generate_call)
+        logger.info("json request to node: {} - {}".format(NODE_IP, json_request))
+        r = requests.post('{}'.format(NODE_IP), data=json_request)
+        rx = r.json()
+        logger.info("generated accounts: ", rx)
+        return rx
+    except Exception as e:
+        logger.info("error generating accounts: ", e)
 
     # accounts = rpc.accounts_create(wallet=WALLET, count=50, work=False)
     # if CURRENCY == 'nano':

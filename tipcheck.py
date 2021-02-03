@@ -212,7 +212,7 @@ def return_tips():
                            "FROM tip_list "
                            "INNER JOIN users "
                            "ON tip_list.receiver_id = users.user_id AND tip_list.system = users.system "
-                           "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 30 day) "
+                           "WHERE DATE(tip_list.timestamp) < DATE_SUB(now(), interval 7 day) "
                            "AND users.register = 0 "
                            "AND tip_list.processed = 2;")
     tip_list = get_db_data(tips_to_return_call)

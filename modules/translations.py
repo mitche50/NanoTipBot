@@ -2253,6 +2253,7 @@ help_commands = {
 register_commands = {
     'en': ['!register', '!reg', '!r', '/register', '/reg', '/r'],
     'es': ['!registro', '/registro'],
+    'ca': [],
     'nl': [
         # Users said they would prefer english commands
     ],
@@ -2686,5 +2687,7 @@ language_dict = {
     'dansk': 'da',
     'ar': 'ar',
     "hindi": 'hi',
-    'hi': 'hi'
+    'hi': 'hi',
+    'ca': 'ca',
+    'catalan': 'ca'
 }
